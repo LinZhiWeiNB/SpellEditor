@@ -1,6 +1,4 @@
 using FairyGUI;
-using PackageAtrribute;
-using PackageLaunch;
 using PackageMain;
 using SpellEditor;
 using UnityEngine;
@@ -138,7 +136,7 @@ namespace UILogic
             bg.AddRelation(root, RelationType.Size);
             root.AddChild(bg);
 
-            back = UI_ButtonGhost.CreateInstance();
+            back = PackageLaunch.UI_ButtonGhost.CreateInstance();
             back.title = "返回";
             back.SetXY(48, 24);
             back.SetSize(88, 36);
@@ -156,7 +154,7 @@ namespace UILogic
             root.AddChild(game);
             Label(game, 0, 0, "导出位置");
             location = Input(game, 0, 28, 640, 36, "选择要写出描述文件和数据的文件夹");
-            pick = UI_ButtonSecondary.CreateInstance();
+            pick = PackageAtrribute.UI_ButtonSecondary.CreateInstance();
             pick.title = "选择文件夹";
             pick.SetXY(652, 26);
             pick.SetSize(148, 40);
@@ -177,7 +175,7 @@ namespace UILogic
             directory = Input(mod, 0, 248, 800, 36, "仅英语，例如 RunePack");
             modFields = mod;
 
-            export = UI_ButtonPrimary.CreateInstance();
+            export = PackageAtrribute.UI_ButtonPrimary.CreateInstance();
             export.title = "导出";
             export.SetXY(1040, 26);
             export.SetSize(160, 40);
