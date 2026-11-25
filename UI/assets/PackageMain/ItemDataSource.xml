@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1504,56">
+  <controller name="cRemove" pages="0,可删除,1,保留" selected="0"/>
+  <displayList>
+    <graph id="n0_mni02" name="bg" xy="0,0" size="1504,56" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff1e2128">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <text id="n1_mni02" name="title" xy="16,6" size="240,22" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" singleLine="true" text="数据源"/>
+    <text id="n2_mni02" name="kind" xy="260,6" size="280,22" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="模组数据源"/>
+    <text id="n3_mni02" name="state" xy="560,6" size="280,22" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="只读"/>
+    <text id="n4_mni02" name="path" xy="16,30" size="1280,18" fontSize="12" color="#ff8d887e" vAlign="middle" autoSize="none" singleLine="true" text="/SpellProjects">
+      <relation target="" sidePair="width-width"/>
+    </text>
+    <component id="n5_mni02" name="remove" src="g8bt1" fileName="ButtonGhost.xml" pkg="m5lrgzhj" xy="1388,12" size="88,32">
+      <gearDisplay controller="cRemove" pages="0"/>
+      <relation target="" sidePair="right-right"/>
+      <Button title="删除"/>
+    </component>
+  </displayList>
+</component>

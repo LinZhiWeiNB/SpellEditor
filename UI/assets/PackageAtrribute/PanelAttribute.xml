@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1600,900">
+  <controller name="cOthers" pages="0,显示,1,隐藏" selected="0"/>
+  <controller name="cFilter" pages="0,全部,1,资源,2,数值,3,标记" selected="0"/>
+  <controller name="cType" pages="0,资源,1,数值,2,标记" selected="0"/>
+  <displayList>
+    <graph id="n0_g8bt7" name="bg" xy="0,0" size="1600,900" type="rect" lineSize="0" fillColor="#ff16181d">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <graph id="n4_g8bt7" name="leftBg" xy="0,48" size="300,852" group="n200_g8bt7" type="rect" lineSize="0" fillColor="#ff1e2128"/>
+    <graph id="n5_g8bt7" name="searchBg" xy="16,129" size="268,32" group="n200_g8bt7" type="rect" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
+    <text id="n6_g8bt7" name="search" xy="28,129" size="244,32" group="n200_g8bt7" fontSize="13" color="#e8e6e3" vAlign="middle" autoSize="none" text="" input="true" prompt="搜索名称或属性 ID"/>
+    <component id="n7_g8bt7" name="filterAll" src="g8bt2" fileName="ButtonPill.xml" xy="16,173" size="60,28" group="n200_g8bt7">
+      <Button checked="true" title="全部" controller="cFilter" page="0"/>
+    </component>
+    <component id="n8_g8bt7" name="filterResource" src="g8bt2" fileName="ButtonPill.xml" xy="82,173" size="60,28" group="n200_g8bt7">
+      <Button title="资源" controller="cFilter" page="1"/>
+    </component>
+    <component id="n9_g8bt7" name="filterNumeric" src="g8bt2" fileName="ButtonPill.xml" xy="148,173" size="60,28" group="n200_g8bt7">
+      <Button title="数值" controller="cFilter" page="2"/>
+    </component>
+    <component id="n10_g8bt7" name="filterMarker" src="g8bt2" fileName="ButtonPill.xml" xy="214,173" size="60,28" group="n200_g8bt7">
+      <Button title="标记" controller="cFilter" page="3"/>
+    </component>
+    <component id="n11_g8bt7" name="toggleOthers" src="g8bt0" fileName="ButtonCheck.xml" xy="16,213" size="268,28" group="n200_g8bt7">
+      <Button checked="true" title="显示其他数据源" controller="cOthers" page="0"/>
+    </component>
+    <text id="n40_g8bt7" name="modSource" xy="16,61" size="268,26" group="n211_g8bt7" fontSize="16" color="#e8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="符文模组"/>
+    <text id="n41_g8bt7" name="modSourceSub" xy="16,89" size="268,22" group="n211_g8bt7" fontSize="12" color="#8d887e" vAlign="middle" autoSize="none" singleLine="true" text="当前数据源 · 作者 42"/>
+    <text id="n42_g8bt7" name="modSection" xy="16,251" size="268,22" group="n211_g8bt7" fontSize="12" color="#b7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="当前数据源"/>
+    <list id="n43_g8bt7" name="attrs" xy="0,277" size="300,48" group="n211_g8bt7" overflow="scroll" scrollBar="hidden" defaultItem="ui://m5lrgzhjg8bt9" autoClearItems="true">
+      <item title="符文强度" controllers="button,1">
+        <property target="type" propertyId="0" value="数值"/>
+        <property target="meta" propertyId="0" value="属性 ID 1 · 符文模组"/>
+      </item>
+    </list>
+    <text id="n48_g8bt7" name="otherSection" xy="16,337" size="268,22" group="n212_g8bt7" fontSize="12" color="#b7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="其他数据源 · 只读"/>
+    <list id="n49_g8bt7" name="others" xy="0,365" size="300,384" group="n212_g8bt7" overflow="scroll" scrollBar="auto" defaultItem="ui://m5lrgzhjg8bt9" autoClearItems="true">
+      <item title="生命" controllers="cTone,1">
+        <property target="type" propertyId="0" value="资源"/>
+        <property target="meta" propertyId="0" value="属性 ID 1 · 游戏数据"/>
+      </item>
+      <item title="魔法" controllers="cTone,1">
+        <property target="type" propertyId="0" value="资源"/>
+        <property target="meta" propertyId="0" value="属性 ID 2 · 游戏数据"/>
+      </item>
+      <item title="攻击" controllers="cTone,1">
+        <property target="type" propertyId="0" value="数值"/>
+        <property target="meta" propertyId="0" value="属性 ID 10 · 游戏数据"/>
+      </item>
+      <item title="移动速度" controllers="cTone,1">
+        <property target="type" propertyId="0" value="数值"/>
+        <property target="meta" propertyId="0" value="属性 ID 12 · 游戏数据"/>
+      </item>
+      <item title="眩晕" controllers="cTone,1">
+        <property target="type" propertyId="0" value="标记"/>
+        <property target="meta" propertyId="0" value="属性 ID 20 · 游戏数据"/>
+      </item>
+      <item title="暴击率" controllers="cTone,1">
+        <property target="type" propertyId="0" value="数值"/>
+        <property target="meta" propertyId="0" value="属性 ID 1 · 英雄扩展"/>
+      </item>
+      <item title="护甲" controllers="cTone,1">
+        <property target="type" propertyId="0" value="数值"/>
+        <property target="meta" propertyId="0" value="属性 ID 2 · 英雄扩展"/>
+      </item>
+      <item title="守护" controllers="cTone,1">
+        <property target="type" propertyId="0" value="标记"/>
+        <property target="meta" propertyId="0" value="属性 ID 3 · 英雄扩展"/>
+      </item>
+    </list>
+    <graph id="n60_g8bt7" name="split" xy="300,48" size="1,852" group="n200_g8bt7" type="rect" lineSize="0" fillColor="#ff3a3e48"/>
+    <text id="n100_g8bt7" name="mTitle" xy="332,65" size="240,28" group="n221_g8bt7" fontSize="18" color="#e8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="符文强度"/>
+    <text id="n101_g8bt7" name="mMeta" xy="560,69" size="360,22" group="n221_g8bt7" fontSize="13" color="#8d887e" vAlign="middle" autoSize="none" singleLine="true" text="符文模组    可编辑"/>
+    <component id="n102_g8bt7" name="mDelete" src="g8bt1" fileName="ButtonGhost.xml" xy="1460,61" size="108,32" group="n221_g8bt7">
+      <Button title="删除"/>
+    </component>
+    <text id="n103_g8bt7" name="mLoaded" xy="332,105" size="1100,22" group="n221_g8bt7" fontSize="13" color="#8d887e" autoSize="none" singleLine="true" text="已载入 符文模组、游戏数据、英雄扩展。只有符文模组里的属性可以改。"/>
+    <text id="n104_g8bt7" name="mNameLabel" xy="332,141" size="120,22" group="n221_g8bt7" fontSize="14" color="#e8e6e3" autoSize="none" bold="true" singleLine="true" text="名称"/>
+    <graph id="n105_g8bt7" name="mNameBg" xy="332,167" size="480,36" group="n221_g8bt7" type="rect" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
+    <text id="n106_g8bt7" name="mNameInput" xy="344,167" size="456,36" group="n221_g8bt7" fontSize="15" color="#e8e6e3" vAlign="middle" autoSize="none" text="符文强度" input="true"/>
+    <text id="n107_g8bt7" name="mIdLabel" xy="332,217" size="120,22" group="n221_g8bt7" fontSize="14" color="#e8e6e3" autoSize="none" bold="true" singleLine="true" text="属性 ID"/>
+    <graph id="n108_g8bt7" name="mIdBg" xy="332,243" size="200,36" group="n221_g8bt7" type="rect" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
+    <text id="n109_g8bt7" name="mIdInput" xy="344,243" size="176,36" group="n221_g8bt7" fontSize="15" color="#e8e6e3" vAlign="middle" autoSize="none" text="1" input="true"/>
+    <text id="n110_g8bt7" name="mIdHint" xy="332,287" size="980,22" group="n221_g8bt7" fontSize="13" color="#8d887e" autoSize="none" singleLine="true" text="完整标识是 42:1。作者身份在创建项目时确定，这里只改属性 ID。"/>
+    <text id="n111_g8bt7" name="mTypeLabel" xy="332,325" size="120,24" group="n221_g8bt7" fontSize="16" color="#e8e6e3" autoSize="none" bold="true" singleLine="true" text="类型"/>
+    <component id="n112_g8bt7" name="mTypeResource" src="g8bt4" fileName="ButtonRadio.xml" xy="332,357" size="860,28" group="n221_g8bt7">
+      <Button checked="true" title="资源" controller="cType" page="0"/>
+    </component>
+    <text id="n113_g8bt7" name="mTypeResourceDesc" xy="360,387" size="820,20" group="n221_g8bt7" fontSize="13" color="#b7b2a8" autoSize="height" text="会消耗、也会回复，并且有上限。例如生命、魔法。效果改变的是上限；剩下多少由伤害和治疗来改。"/>
+    <component id="n114_g8bt7" name="mTypeNumeric" src="g8bt4" fileName="ButtonRadio.xml" xy="332,431" size="860,28" group="n221_g8bt7">
+      <Button title="数值" controller="cType" page="1"/>
+    </component>
+    <text id="n115_g8bt7" name="mTypeNumericDesc" xy="360,461" size="820,22" group="n221_g8bt7" fontSize="13" color="#b7b2a8" autoSize="none" singleLine="true" text="一个直接算出来的数。例如攻击、移动速度。效果改的就是这个结果。"/>
+    <component id="n116_g8bt7" name="mTypeMarker" src="g8bt4" fileName="ButtonRadio.xml" xy="332,493" size="860,28" group="n221_g8bt7">
+      <Button title="标记" controller="cType" page="2"/>
+    </component>
+    <text id="n117_g8bt7" name="mTypeMarkerDesc" xy="360,523" size="820,20" group="n221_g8bt7" fontSize="13" color="#b7b2a8" autoSize="height" text="一个会被整段换掉的状态。例如眩晕、无敌。效果只能覆盖它，不能做加减或百分比。"/>
+    <text id="n118_g8bt7" name="mConstraint" xy="332,573" size="120,24" group="n252_g8bt7" fontSize="16" color="#e8e6e3" autoSize="none" bold="true" singleLine="true" text="约束"/>
+    <component id="n119_g8bt7" name="mScale" src="g8bt6" fileName="ButtonToggle.xml" xy="332,609" group="n252_g8bt7">
+      <Button checked="true"/>
+    </component>
+    <text id="n120_g8bt7" name="mScaleLabel" xy="384,605" size="280,22" group="n252_g8bt7" fontSize="14" color="#e8e6e3" autoSize="none" singleLine="true" text="当前值随上限缩放"/>
+    <text id="n121_g8bt7" name="mScaleDesc" xy="384,627" size="520,20" group="n252_g8bt7" fontSize="12" color="#8d887e" autoSize="none" singleLine="true" text="上限变化时，当前值按同样比例变化。"/>
+    <group id="n252_g8bt7" name="modScale" xy="332,573" size="572,74" group="n221_g8bt7" advanced="true">
+      <gearDisplay controller="cType" pages="0"/>
+    </group>
+    <text id="n122_g8bt7" name="mConstraint2" xy="332,573" size="120,24" group="n253_g8bt7" fontSize="16" color="#e8e6e3" autoSize="none" bold="true" singleLine="true" text="约束"/>
+    <component id="n123_g8bt7" name="mNonNeg" src="g8bt6" fileName="ButtonToggle.xml" xy="332,609" group="n253_g8bt7">
+      <Button checked="true"/>
+    </component>
+    <text id="n124_g8bt7" name="mNonNegLabel" xy="384,605" size="200,22" group="n253_g8bt7" fontSize="14" color="#e8e6e3" autoSize="none" singleLine="true" text="非负"/>
+    <text id="n125_g8bt7" name="mNonNegDesc" xy="384,627" size="400,20" group="n253_g8bt7" fontSize="12" color="#8d887e" autoSize="none" singleLine="true" text="结果不会小于 0。"/>
+    <group id="n253_g8bt7" name="modNonNeg" xy="332,573" size="452,74" group="n221_g8bt7" advanced="true">
+      <gearDisplay controller="cType" pages="1"/>
+    </group>
+    <group id="n212_g8bt7" name="otherSources" xy="16,337" size="268,344" group="n211_g8bt7" advanced="true">
+      <gearDisplay controller="cOthers" pages="0"/>
+    </group>
+    <group id="n211_g8bt7" name="listMod" xy="0,61" size="300,620" group="n200_g8bt7" advanced="true"/>
+    <group id="n221_g8bt7" name="inspectorMod" xy="332,61" size="1236,586" group="n200_g8bt7" advanced="true"/>
+    <group id="n200_g8bt7" name="catalog" xy="0,48" size="1568,852" advanced="true"/>
+    <component id="n303_glxo" name="btnBack" src="lpb03" fileName="ButtonGhost.xml" pkg="mskevjh6" xy="0,6" size="59,36">
+      <Button title="返回"/>
+    </component>
+  </displayList>
+</component>

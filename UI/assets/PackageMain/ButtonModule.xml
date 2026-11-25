@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="340,200" extention="Button">
+  <controller name="button" pages="0,up,1,down,2,over,3,selectedOver" selected="0"/>
+  <displayList>
+    <graph id="n0_mnb01" name="bg" xy="0,0" size="340,200" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff1e2128" corner="20">
+      <gearDisplay controller="button" pages="0"/>
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <graph id="n1_mnb01" name="bgOver" xy="0,0" size="340,200" type="rect" lineSize="1" lineColor="#ff4a4e58" fillColor="#ff2a2e38" corner="20">
+      <gearDisplay controller="button" pages="1,2,3"/>
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <text id="n2_mnb01" name="title" xy="0,0" size="340,200" fontSize="32" color="#ffe8e6e3" align="center" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="模块">
+      <relation target="" sidePair="width-width,height-height"/>
+    </text>
+  </displayList>
+  <Button/>
+</component>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<packageDescription id="mskevjh6">
+  <resources>
+    <component id="lpb01" name="ButtonPrimary.xml" path="/"/>
+    <component id="lpb02" name="ButtonSecondary.xml" path="/"/>
+    <component id="lpb03" name="ButtonGhost.xml" path="/" exported="true"/>
+    <component id="lpb04" name="ButtonRadio.xml" path="/"/>
+    <component id="lpb05" name="ButtonCheck.xml" path="/"/>
+    <component id="lpi01" name="ItemRecent.xml" path="/" exported="true"/>
+    <component id="lpi03" name="ItemRole.xml" path="/" exported="true"/>
+    <component id="lpi04" name="ItemSource.xml" path="/" exported="true"/>
+    <component id="lpw01" name="WindowLauncher.xml" path="/" exported="true"/>
+    <component id="lpw02" name="WindowNewProject.xml" path="/" exported="true"/>
+    <component id="lpw03" name="WindowOpenProject.xml" path="/" exported="true"/>
+  </resources>
+  <publish name="" genCode="true"/>
+</packageDescription>

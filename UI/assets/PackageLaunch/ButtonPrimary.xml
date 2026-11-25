@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="140,40" extention="Button">
+  <controller name="button" pages="0,up,1,down,2,over,3,selectedOver" selected="0"/>
+  <displayList>
+    <graph id="n0_lpb01" name="bg" xy="0,0" size="140,40" type="rect" lineSize="0" fillColor="#ff3d6fbf" corner="4">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <text id="n1_lpb01" name="title" xy="0,0" size="140,40" fontSize="15" color="#fff7f4ee" align="center" vAlign="middle" autoSize="none" singleLine="true" text="按钮">
+      <relation target="" sidePair="width-width,height-height"/>
+    </text>
+  </displayList>
+  <Button/>
+</component>

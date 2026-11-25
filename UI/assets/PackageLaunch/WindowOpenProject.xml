@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1600,900">
+  <displayList>
+    <graph id="n0_lpw03" name="bg" xy="0,0" size="1600,900" type="rect" lineSize="0" fillColor="#ff16181d">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <component id="n1_lpw03" name="btnBack" src="lpb03" fileName="ButtonGhost.xml" xy="48,24" size="88,36">
+      <Button title="返回"/>
+    </component>
+    <text id="n2_lpw03" name="title" xy="400,28" size="280,36" fontSize="22" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="打开项目"/>
+    <text id="n3_lpw03" name="lede" xy="400,80" size="800,48" fontSize="15" color="#ffb7b2a8" autoSize="height" text="打开系统文件选择，选定一个 .byte 项目存档。一次只有这一个文件，选定后直接进入主界面。"/>
+    <component id="n4_lpw03" name="btnPick" src="lpb01" fileName="ButtonPrimary.xml" xy="400,148" size="200,40">
+      <Button title="选择存档"/>
+    </component>
+  </displayList>
+</component>

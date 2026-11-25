@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="936,84">
+  <displayList>
+    <graph id="n0_lpi01" name="bg" xy="0,0" size="936,84" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff1e2128" corner="4">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <text id="n1_lpi01" name="title" xy="20,12" size="720,28" fontSize="16" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="项目">
+      <relation target="" sidePair="width-width"/>
+    </text>
+    <text id="n2_lpi01" name="meta" xy="20,42" size="720,24" fontSize="13" color="#ff8d887e" vAlign="middle" autoSize="none" singleLine="true" text="身份  ·  时间  ·  路径">
+      <relation target="" sidePair="width-width"/>
+    </text>
+    <component id="n3_lpi01" name="enter" src="lpb02" fileName="ButtonSecondary.xml" xy="776,22" size="136,40">
+      <relation target="" sidePair="right-right"/>
+      <Button title="进入"/>
+    </component>
+  </displayList>
+</component>

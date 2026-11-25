@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<packageDescription id="mov3ykkn">
+  <resources>
+    <component id="mnb01" name="ButtonModule.xml" path="/" exported="true"/>
+    <component id="mni01" name="ItemContent.xml" path="/" exported="true"/>
+    <component id="mni02" name="ItemDataSource.xml" path="/" exported="true"/>
+    <component id="mnw01" name="WindowMain.xml" path="/" exported="true"/>
+    <component id="mne01" name="PanelExport.xml" path="/" exported="true"/>
+  </resources>
+  <publish name="" genCode="true"/>
+</packageDescription>

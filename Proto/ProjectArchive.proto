@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+option csharp_namespace = "SpellEditor";
+
+// 编辑器项目存档，也就是打开项目时选定的那个 .byte 文件。
+// 运行时只认 module_data 里的 SpellModuleData。项目名、作者、载入列表和备注名留在编辑器里。
+message ProjectArchive {
+  // 本存档格式版本。当前是 1。用来读旧存档，不表示运行时版本。
+  uint32 format = 1;
+
+  // 项目名称。只在编辑器里显示。
+  string name = 2;
+
+  // 作者 ID。游戏开发者是 0。创建项目时写入，之后不改。
+  uint32 author_id = 3;
+
+  // 保存时所针对的 com.reborn.spell 版本，例如 "1.0.0"。
+  string runtime_version = 4;
+
+  // 直接载入的描述文件，相对本存档所在目录，用 / 分隔。
+  // 描述文件再指向旁边的 SpellModuleData。不要把数据二进制本身写进这个列表。
+  // 不包含本文件里的 module_data。顺序就是载入顺序。
+  repeated string loaded_sources = 5;
+
+  // 本项目属性的备注名。键是属性完整标识，作者 ID 在高 32 位。
+  // SpellModuleData 里没有备注名，所以只记在这里。
+  map<uint64, string> attribute_names = 6;
+
+  // 本项目正在编辑的模块，内容是序列化后的 RebornFrame.Spell.SpellModuleData。
+  bytes module_data = 7;
+}

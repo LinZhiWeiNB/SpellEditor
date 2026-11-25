@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1504,64">
+  <displayList>
+    <graph id="n0_mni01" name="bg" xy="0,0" size="1504,64" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff1e2128">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <text id="n1_mni01" name="title" xy="16,10" size="200,22" fontSize="15" color="#ffe8e6e3" autoSize="none" bold="true" singleLine="true" text="内容"/>
+    <text id="n2_mni01" name="count" xy="16,34" size="320,20" fontSize="13" color="#ff8d887e" autoSize="none" singleLine="true" text="0 条"/>
+    <text id="n3_mni01" name="desc" xy="372,20" size="900,24" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="说明">
+      <relation target="" sidePair="width-width"/>
+    </text>
+  </displayList>
+</component>

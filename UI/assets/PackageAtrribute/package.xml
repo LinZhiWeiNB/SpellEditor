@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<packageDescription id="m5lrgzhj">
+  <resources>
+    <component id="g8bt0" name="ButtonCheck.xml" path="/" exported="true"/>
+    <component id="g8bt1" name="ButtonGhost.xml" path="/" exported="true"/>
+    <component id="g8bt2" name="ButtonPill.xml" path="/" exported="true"/>
+    <component id="g8bt3" name="ButtonPrimary.xml" path="/" exported="true"/>
+    <component id="g8bt4" name="ButtonRadio.xml" path="/" exported="true"/>
+    <component id="g8bt5" name="ButtonSecondary.xml" path="/" exported="true"/>
+    <component id="g8bt6" name="ButtonToggle.xml" path="/" exported="true"/>
+    <component id="g8bt9" name="ItemAttr.xml" path="/" exported="true"/>
+    <component id="g8bta" name="ItemUnit.xml" path="/" exported="true"/>
+    <component id="g8btb" name="ItemInclude.xml" path="/" exported="true"/>
+    <component id="g8bt7" name="PanelAttribute.xml" path="/" exported="true"/>
+    <component id="g8btc" name="PanelUnit.xml" path="/" exported="true"/>
+  </resources>
+  <publish name="" genCode="true"/>
+</packageDescription>

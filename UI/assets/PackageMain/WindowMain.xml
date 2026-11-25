@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1600,900">
+  <controller name="cPage" pages="0,入口,1,属性,2,单位" selected="0"/>
+  <displayList>
+    <graph id="n0_mnw01" name="bg" xy="0,0" size="1600,900" type="rect" lineSize="0" fillColor="#ff16181d">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <component id="n10_mnw01" name="unit" src="mnb01" fileName="ButtonModule.xml" xy="444,234" size="340,200" group="n20_mnw01">
+      <Button title="单位" controller="cPage" page="2"/>
+    </component>
+    <component id="n11_mnw01" name="attribute" src="mnb01" fileName="ButtonModule.xml" xy="816,234" size="340,200" group="n20_mnw01">
+      <Button title="属性" controller="cPage" page="1"/>
+    </component>
+    <component id="n12_mnw01" name="tag" src="mnb01" fileName="ButtonModule.xml" xy="444,466" size="340,200" group="n20_mnw01">
+      <Button title="标签"/>
+    </component>
+    <component id="n13_mnw01" name="spell" src="mnb01" fileName="ButtonModule.xml" xy="816,466" size="340,200" group="n20_mnw01">
+      <Button title="技能"/>
+    </component>
+    <group id="n20_mnw01" name="entries" xy="444,234" size="712,432" advanced="true">
+      <gearDisplay controller="cPage" pages="0"/>
+      <relation target="" sidePair="center-center,middle-middle"/>
+    </group>
+    <component id="n50_mnw01" name="attributeEditor" src="g8bt7" fileName="PanelAttribute.xml" pkg="m5lrgzhj" xy="0,0" size="1600,900">
+      <gearDisplay controller="cPage" pages="1"/>
+      <relation target="" sidePair="width-width,height-height"/>
+    </component>
+    <component id="n51_mnw01" name="unitEditor" src="g8btc" fileName="PanelUnit.xml" pkg="m5lrgzhj" xy="0,0" size="1600,900">
+      <gearDisplay controller="cPage" pages="2"/>
+      <relation target="" sidePair="width-width,height-height"/>
+    </component>
+    <component id="n52_mnw01" name="btnBack" src="lpb03" fileName="ButtonGhost.xml" pkg="mskevjh6" xy="48,6" size="88,36">
+      <gearDisplay controller="cPage" pages="1,2"/>
+      <Button title="返回" controller="cPage" page="0"/>
+    </component>
+  </displayList>
+</component>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="300,56" extention="Button">
+  <controller name="button" pages="0,up,1,down,2,over,3,selectedOver" selected="0"/>
+  <displayList>
+    <graph id="n0_g8bta" name="bg" xy="0,0" size="300,56" type="rect" lineSize="0" fillColor="#ff243044">
+      <gearDisplay controller="button" pages="1,3"/>
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <graph id="n1_g8bta" name="bar" xy="0,0" size="2,56" type="rect" lineSize="0" fillColor="#ff6a9cff">
+      <gearDisplay controller="button" pages="1,3"/>
+      <relation target="" sidePair="height-height"/>
+    </graph>
+    <text id="n2_g8bta" name="title" xy="16,8" size="268,20" fontSize="14" color="#ffe8e6e3" autoSize="none" bold="true" singleLine="true" text="单位">
+      <relation target="" sidePair="width-width"/>
+    </text>
+    <text id="n3_g8bta" name="meta" xy="16,30" size="268,18" fontSize="12" color="#ff8d887e" autoSize="none" singleLine="true" text="数据源">
+      <relation target="" sidePair="width-width"/>
+    </text>
+  </displayList>
+  <Button mode="Radio"/>
+</component>
