@@ -9,6 +9,25 @@ namespace PackageAtrribute
     {
         public const string PackageName = "PackageAtrribute";
         public const string ResName = "PanelUnit";
+        public Controller m_cRole;
+
+        public enum EcRole
+        {
+            /// <summary>
+            /// null
+            /// <summary>
+            游戏开发者 = 0,
+            /// <summary>
+            /// null
+            /// <summary>
+            模组作者 = 1,
+        }
+
+        public EcRole GetSelectedIndexEcRole()
+        {
+            return (EcRole)m_cRole.selectedIndex;
+        }
+
         public GGraph m_bg;
         public GGraph m_pLeft;
         public GGraph m_pSplit;
@@ -36,6 +55,7 @@ namespace PackageAtrribute
         {
             base.ConstructFromXML(xml);
 
+            m_cRole = GetControllerAt(0);
             m_bg = (GGraph)GetChildAt(0);
             m_pLeft = (GGraph)GetChildAt(1);
             m_pSplit = (GGraph)GetChildAt(2);

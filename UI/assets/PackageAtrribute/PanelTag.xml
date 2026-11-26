@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1600,900">
+  <controller name="cOthers" pages="0,显示,1,隐藏" selected="0"/>
+  <controller name="cFilter" pages="0,全部,1,根节点,2,子标签" selected="0"/>
+  <controller name="cInspect" pages="0,未选中,1,已选中" selected="1"/>
+  <controller name="cEdit" pages="0,可编辑,1,只读" selected="0"/>
+  <controller name="cMessage" pages="0,空,1,警告" selected="0"/>
+  <displayList>
+    <graph id="n0_g8btd" name="bg" xy="0,0" size="1600,900" type="rect" lineSize="0" fillColor="#ff16181d">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <component id="n1_g8btd" name="btnBack" src="lpb03" fileName="ButtonGhost.xml" pkg="mskevjh6" xy="48,6" size="88,36">
+      <Button title="返回"/>
+    </component>
+    <graph id="n4_g8btd" name="leftBg" xy="0,48" size="300,852" group="n200_g8btd" type="rect" lineSize="0" fillColor="#ff1e2128"/>
+    <text id="n40_g8btd" name="modSource" xy="16,61" size="268,26" group="n211_g8btd" fontSize="16" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="当前项目"/>
+    <text id="n41_g8btd" name="modSourceSub" xy="16,89" size="268,22" group="n211_g8btd" fontSize="12" color="#ff8d887e" vAlign="middle" autoSize="none" singleLine="true" text="当前数据源"/>
+    <graph id="n5_g8btd" name="searchBg" xy="16,129" size="268,32" group="n200_g8btd" type="rect" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
+    <text id="n6_g8btd" name="search" xy="28,129" size="244,32" group="n200_g8btd" fontSize="13" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" input="true" prompt="搜索名称或标签 ID"/>
+    <component id="n7_g8btd" name="filterAll" src="g8bt2" fileName="ButtonPill.xml" xy="16,173" size="60,28" group="n230_g8btd">
+      <Button checked="true" title="全部" controller="cFilter" page="0"/>
+    </component>
+    <component id="n8_g8btd" name="filterRoot" src="g8bt2" fileName="ButtonPill.xml" xy="82,173" size="72,28" group="n230_g8btd">
+      <Button title="根节点" controller="cFilter" page="1"/>
+    </component>
+    <component id="n9_g8btd" name="filterChild" src="g8bt2" fileName="ButtonPill.xml" xy="160,173" size="72,28" group="n230_g8btd">
+      <Button title="子标签" controller="cFilter" page="2"/>
+    </component>
+    <group id="n230_g8btd" name="filters" xy="16,173" size="216,28" group="n200_g8btd" advanced="true"/>
+    <component id="n11_g8btd" name="toggleOthers" src="g8bt0" fileName="ButtonCheck.xml" xy="16,213" size="268,28" group="n200_g8btd">
+      <Button checked="true" title="显示其他数据源" controller="cOthers" page="0"/>
+    </component>
+    <text id="n42_g8btd" name="modSection" xy="16,251" size="268,22" group="n211_g8btd" fontSize="12" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="当前数据源"/>
+    <list id="n43_g8btd" name="tags" xy="0,277" size="300,250" group="n211_g8btd" overflow="scroll" scrollBar="hidden" defaultItem="ui://m5lrgzhjg8bte" autoClearItems="true">
+      <item title="控制" controllers="button,1">
+        <property target="type" propertyId="0" value="根"/>
+        <property target="meta" propertyId="0" value="标签 ID 100 · 当前项目"/>
+      </item>
+      <item title="眩晕">
+        <property target="type" propertyId="0" value="子"/>
+        <property target="meta" propertyId="0" value="标签 ID 101 · 父 控制"/>
+      </item>
+    </list>
+    <text id="n48_g8btd" name="otherSection" xy="16,539" size="268,22" group="n212_g8btd" fontSize="12" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="其他数据源 · 只读"/>
+    <list id="n49_g8btd" name="others" xy="0,565" size="300,250" group="n212_g8btd" overflow="scroll" scrollBar="auto" defaultItem="ui://m5lrgzhjg8bte" autoClearItems="true">
+      <item title="重算" controllers="cTone,1">
+        <property target="type" propertyId="0" value="根"/>
+        <property target="meta" propertyId="0" value="标签 ID 1 · 游戏数据"/>
+      </item>
+    </list>
+    <group id="n212_g8btd" name="otherSources" xy="16,539" size="284,276" group="n211_g8btd" advanced="true">
+      <gearDisplay controller="cOthers" pages="0"/>
+    </group>
+    <component id="n50_g8btd" name="btnAdd" src="g8bt3" fileName="ButtonPrimary.xml" xy="16,848" size="268,36" group="n200_g8btd">
+      <Button title="新建"/>
+    </component>
+    <group id="n211_g8btd" name="listMod" xy="0,61" size="300,754" group="n200_g8btd" advanced="true"/>
+    <graph id="n60_g8btd" name="split" xy="300,48" size="1,852" group="n200_g8btd" type="rect" lineSize="0" fillColor="#ff3a3e48"/>
+    <text id="n90_g8btd" name="emptyHint" xy="332,80" size="1056,28" group="n200_g8btd" fontSize="14" color="#ff8d887e" vAlign="middle" autoSize="none" singleLine="true" text="从左侧选择一个标签。">
+      <gearDisplay controller="cInspect" pages="0"/>
+    </text>
+    <text id="n100_g8btd" name="mTitle" xy="332,65" size="240,28" group="n221_g8btd" fontSize="18" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="眩晕"/>
+    <text id="n101_g8btd" name="mMeta" xy="560,69" size="360,22" group="n221_g8btd" fontSize="13" color="#ff8d887e" vAlign="middle" autoSize="none" singleLine="true" text="当前项目    可编辑"/>
+    <component id="n102_g8btd" name="mDelete" src="g8bt1" fileName="ButtonGhost.xml" xy="1460,61" size="108,32" group="n221_g8btd">
+      <gearDisplay controller="cEdit" pages="0"/>
+      <Button title="删除"/>
+    </component>
+    <text id="n103_g8btd" name="mLoaded" xy="332,105" size="1100,22" group="n221_g8btd" fontSize="13" color="#ff8d887e" autoSize="none" singleLine="true" text="已载入当前项目。只有当前项目里的标签可以改。"/>
+    <text id="n104_g8btd" name="mNameLabel" xy="332,141" size="120,22" group="n221_g8btd" fontSize="14" color="#ffe8e6e3" autoSize="none" bold="true" singleLine="true" text="名称"/>
+    <graph id="n105_g8btd" name="mNameBg" xy="332,167" size="480,36" group="n221_g8btd" type="rect" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
+    <text id="n106_g8btd" name="mNameInput" xy="344,167" size="456,36" group="n221_g8btd" fontSize="15" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="眩晕" input="true">
+      <gearLook controller="cEdit" pages="1" values="1,0,1,0" default="1,0,0,1"/>
+    </text>
+    <text id="n107_g8btd" name="mIdLabel" xy="332,217" size="120,22" group="n221_g8btd" fontSize="14" color="#ffe8e6e3" autoSize="none" bold="true" singleLine="true" text="标签 ID"/>
+    <graph id="n108_g8btd" name="mIdBg" xy="332,243" size="200,36" group="n221_g8btd" type="rect" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
+    <text id="n109_g8btd" name="mIdInput" xy="344,243" size="176,36" group="n221_g8btd" fontSize="15" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="101" input="true" restrict="[0-9]">
+      <gearLook controller="cEdit" pages="1" values="1,0,1,0" default="1,0,0,1"/>
+    </text>
+    <text id="n110_g8btd" name="mIdHint" xy="332,287" size="1100,22" group="n221_g8btd" fontSize="13" color="#ff8d887e" autoSize="none" singleLine="true" text="完整标识会带上作者。作者在创建项目时已经确定，这里只改标签 ID。"/>
+    <text id="n111_g8btd" name="mWarn" xy="332,313" size="1100,22" group="n221_g8btd" fontSize="13" color="#ffe06a6a" autoSize="none" singleLine="true" text="">
+      <gearDisplay controller="cMessage" pages="1"/>
+      <gearColor controller="cMessage" pages="1" values="#ffe06a6a" default="#ffe06a6a"/>
+    </text>
+    <text id="n112_g8btd" name="mParentLabel" xy="332,349" size="160,24" group="n221_g8btd" fontSize="16" color="#ffe8e6e3" autoSize="none" bold="true" singleLine="true" text="父标签"/>
+    <text id="n113_g8btd" name="mPath" xy="500,351" size="700,22" group="n221_g8btd" fontSize="13" color="#ff8d887e" vAlign="middle" autoSize="none" singleLine="true" text="根 / 控制"/>
+    <list id="n114_g8btd" name="parents" xy="332,385" size="900,430" group="n221_g8btd" overflow="scroll" scrollBar="hidden" defaultItem="ui://m5lrgzhjg8bt4" autoClearItems="true" selectionMode="none">
+      <gearLook controller="cEdit" pages="1" values="1,0,1,0" default="1,0,0,1"/>
+      <item title="根节点"/>
+      <item title="控制  0:100"/>
+    </list>
+    <group id="n221_g8btd" name="inspector" xy="332,65" size="1236,750" group="n200_g8btd" advanced="true">
+      <gearDisplay controller="cInspect" pages="1"/>
+    </group>
+    <group id="n200_g8btd" name="catalog" xy="0,48" size="1568,852" advanced="true"/>
+  </displayList>
+</component>

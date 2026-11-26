@@ -20,6 +20,8 @@ namespace PackageAtrribute
             UIObjectFactory.SetPackageItemExtension(UI_ItemUnit.URL, typeof(UI_ItemUnit));
             UIObjectFactory.SetPackageItemExtension(UI_ItemInclude.URL, typeof(UI_ItemInclude));
             UIObjectFactory.SetPackageItemExtension(UI_PanelUnit.URL, typeof(UI_PanelUnit));
+            UIObjectFactory.SetPackageItemExtension(UI_PanelTag.URL, typeof(UI_PanelTag));
+            UIObjectFactory.SetPackageItemExtension(UI_ItemTag.URL, typeof(UI_ItemTag));
         }
     }
 }

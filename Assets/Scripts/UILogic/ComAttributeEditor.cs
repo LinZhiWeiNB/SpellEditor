@@ -36,7 +36,6 @@ namespace UILogic
             view.m_cType.onChanged.Add(OnTypeChanged);
             view.m_mNameInput.onFocusOut.Add(CommitName);
             view.m_mIdInput.onFocusOut.Add(CommitId);
-            view.m_mIdInput.restrict = "[0-9]";
             view.m_mScale.onChanged.Add(OnScaleChanged);
             view.m_mNonNeg.onChanged.Add(OnNonNegativeChanged);
             view.m_mDelete.onClick.Add(DeleteSelected);
@@ -288,7 +287,7 @@ namespace UILogic
         {
             _selected = null;
             _selectedOwned = false;
-            view.m_inspectorMod.visible = false;
+            view.m_cInspect.selectedIndex = (int)UI_PanelAttribute.EcInspect.未选中;
         }
 
         void BindInspector()
@@ -296,7 +295,7 @@ namespace UILogic
             var definition = _selected;
             var id = new AttributeId(definition.Id);
             var sourceName = _selectedOwned ? ProjectSession.Archive.Name : SourceTitle(definition.Id);
-            view.m_inspectorMod.visible = true;
+            view.m_cInspect.selectedIndex = (int)UI_PanelAttribute.EcInspect.已选中;
             view.m_mTitle.text = ProjectSession.AttributeName(definition.Id, id.LocalId);
             view.m_mMeta.text = sourceName + "    " + (_selectedOwned ? "可编辑" : "只读");
             _suppress = true;
@@ -310,7 +309,9 @@ namespace UILogic
             view.m_cType.selectedIndex = page;
             view.m_mScale.selected = definition.ScaleCurrentWithMax;
             view.m_mNonNeg.selected = definition.NonNegative;
-            SetEditable(_selectedOwned);
+            view.m_cEdit.selectedIndex = _selectedOwned
+                ? (int)UI_PanelAttribute.EcEdit.可编辑
+                : (int)UI_PanelAttribute.EcEdit.只读;
             _suppress = false;
         }
 
@@ -325,23 +326,6 @@ namespace UILogic
             }
 
             return "";
-        }
-
-        void SetEditable(bool editable)
-        {
-            view.m_mNameInput.touchable = editable;
-            view.m_mIdInput.touchable = editable;
-            view.m_mNameInput.grayed = !editable;
-            view.m_mIdInput.grayed = !editable;
-            view.m_mTypeResource.touchable = editable;
-            view.m_mTypeNumeric.touchable = editable;
-            view.m_mTypeMarker.touchable = editable;
-            view.m_mTypeResource.grayed = !editable;
-            view.m_mTypeNumeric.grayed = !editable;
-            view.m_mTypeMarker.grayed = !editable;
-            view.m_mScale.touchable = editable;
-            view.m_mNonNeg.touchable = editable;
-            view.m_mDelete.visible = editable;
         }
 
         void CommitName(EventContext context)

@@ -11,19 +11,13 @@ namespace UILogic
     {
         public ComUnitEditor(UI_PanelUnit view)
         {
-            var mod = ProjectSession.AuthorId != 0;
+            view.m_cRole.selectedIndex = ProjectSession.AuthorId == 0
+                ? (int)UI_PanelUnit.EcRole.游戏开发者
+                : (int)UI_PanelUnit.EcRole.模组作者;
             view.m_units.numItems = 0;
             view.m_included.numItems = 0;
             view.m_pgName.text = "";
             view.m_pgOwn.text = "";
-            view.m_pgCreate.visible = !mod;
-            view.m_pgName.touchable = !mod;
-            if (mod)
-            {
-                view.m_pgTitle.text = "游戏单位";
-                view.m_pgDesc.text = "模组使用游戏里已经定义的单位，不能新建单位。";
-                view.m_pgHint.text = "勾选只对当前模组里的属性生效。游戏和其他数据源里的属性保持原样。";
-            }
         }
     }
 }

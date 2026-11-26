@@ -78,6 +78,44 @@ namespace PackageAtrribute
             return (EcType)m_cType.selectedIndex;
         }
 
+        public Controller m_cInspect;
+
+        public enum EcInspect
+        {
+            /// <summary>
+            /// null
+            /// <summary>
+            未选中 = 0,
+            /// <summary>
+            /// null
+            /// <summary>
+            已选中 = 1,
+        }
+
+        public EcInspect GetSelectedIndexEcInspect()
+        {
+            return (EcInspect)m_cInspect.selectedIndex;
+        }
+
+        public Controller m_cEdit;
+
+        public enum EcEdit
+        {
+            /// <summary>
+            /// null
+            /// <summary>
+            可编辑 = 0,
+            /// <summary>
+            /// null
+            /// <summary>
+            只读 = 1,
+        }
+
+        public EcEdit GetSelectedIndexEcEdit()
+        {
+            return (EcEdit)m_cEdit.selectedIndex;
+        }
+
         public GGraph m_bg;
         public GGraph m_leftBg;
         public GGraph m_searchBg;
@@ -141,6 +179,8 @@ namespace PackageAtrribute
             m_cOthers = GetControllerAt(0);
             m_cFilter = GetControllerAt(1);
             m_cType = GetControllerAt(2);
+            m_cInspect = GetControllerAt(3);
+            m_cEdit = GetControllerAt(4);
             m_bg = (GGraph)GetChildAt(0);
             m_leftBg = (GGraph)GetChildAt(1);
             m_searchBg = (GGraph)GetChildAt(2);
