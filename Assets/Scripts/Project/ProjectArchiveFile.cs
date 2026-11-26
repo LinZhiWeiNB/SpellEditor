@@ -19,6 +19,14 @@ namespace SpellEditor
         public readonly List<string> LoadedSources = new List<string>();
         public readonly Dictionary<ulong, string> AttributeNames = new Dictionary<ulong, string>();
         public SpellModuleData Module = new SpellModuleData();
+        public string ExportLocation = "";
+        public string ExportModDirectory = "";
+        public string ExportName = "";
+        public string ExportDescription = "";
+        public string ExportDirectoryName = "";
+        public uint RenderPlugins;
+        public readonly List<EditorUnit> Units = new List<EditorUnit>();
+        public readonly Dictionary<ulong, string> TagNames = new Dictionary<ulong, string>();
 
         public byte[] Write()
         {
@@ -46,6 +54,25 @@ namespace SpellEditor
 
             output.WriteTag(7, WireFormat.WireType.LengthDelimited);
             output.WriteBytes(Module == null ? ByteString.Empty : Module.ToByteString());
+            WriteText(output, 8, ExportLocation);
+            WriteText(output, 9, ExportModDirectory);
+            WriteText(output, 10, ExportName);
+            WriteText(output, 11, ExportDescription);
+            WriteText(output, 12, ExportDirectoryName);
+            output.WriteTag(13, WireFormat.WireType.Varint);
+            output.WriteUInt32(RenderPlugins);
+            for (int i = 0; i < Units.Count; i++)
+            {
+                output.WriteTag(14, WireFormat.WireType.LengthDelimited);
+                output.WriteBytes(Units[i].Write());
+            }
+
+            foreach (var pair in TagNames)
+            {
+                output.WriteTag(15, WireFormat.WireType.LengthDelimited);
+                output.WriteBytes(EncodeName(pair.Key, pair.Value));
+            }
+
             output.Flush();
             return stream.ToArray();
         }
@@ -80,6 +107,30 @@ namespace SpellEditor
                     case 7:
                         archive.Module = SpellModuleData.Parser.ParseFrom(input.ReadBytes());
                         break;
+                    case 8:
+                        archive.ExportLocation = input.ReadString();
+                        break;
+                    case 9:
+                        archive.ExportModDirectory = input.ReadString();
+                        break;
+                    case 10:
+                        archive.ExportName = input.ReadString();
+                        break;
+                    case 11:
+                        archive.ExportDescription = input.ReadString();
+                        break;
+                    case 12:
+                        archive.ExportDirectoryName = input.ReadString();
+                        break;
+                    case 13:
+                        archive.RenderPlugins = input.ReadUInt32();
+                        break;
+                    case 14:
+                        archive.Units.Add(EditorUnit.Read(input.ReadBytes()));
+                        break;
+                    case 15:
+                        ReadName(input.ReadBytes(), archive.TagNames);
+                        break;
                     default:
                         input.SkipLastField();
                         break;
@@ -92,6 +143,12 @@ namespace SpellEditor
             }
 
             return archive;
+        }
+
+        static void WriteText(CodedOutputStream output, int field, string value)
+        {
+            output.WriteTag(field, WireFormat.WireType.LengthDelimited);
+            output.WriteString(value ?? "");
         }
 
         static ByteString EncodeName(ulong id, string name)

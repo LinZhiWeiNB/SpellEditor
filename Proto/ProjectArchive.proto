@@ -17,8 +17,8 @@ message ProjectArchive {
   // 保存时所针对的 com.reborn.spell 版本，例如 "1.0.0"。
   string runtime_version = 4;
 
-  // 直接载入的描述文件，相对本存档所在目录，用 / 分隔。
-  // 描述文件再指向旁边的 SpellModuleData。不要把数据二进制本身写进这个列表。
+  // 直接载入的数据包，相对本存档所在目录，用 / 分隔。
+  // 每个文件都是一份完整的游戏数据包，里面已经包含技能模块。不要把散落的资源写进这个列表。
   // 不包含本文件里的 module_data。顺序就是载入顺序。
   repeated string loaded_sources = 5;
 
@@ -28,4 +28,42 @@ message ProjectArchive {
 
   // 本项目正在编辑的模块，内容是序列化后的 RebornFrame.Spell.SpellModuleData。
   bytes module_data = 7;
+
+  // 导出设置。游戏开发者使用前两项，模组作者使用后三项。空着表示还没设置。
+  string export_location = 8;
+  string export_mod_directory = 9;
+  string export_name = 10;
+  string export_description = 11;
+  string export_directory_name = 12;
+
+  // 游戏开发者启用的渲染插件。位与数据包头的 render_plugins 相同。模组存档不使用。
+  uint32 render_plugins = 13;
+
+  // 本项目新建的单位。任何作者身份都可以新建。
+  // 改其他数据源的单位不写在这里，写在存档旁边的 .unit-diffs.byte。
+  repeated EditorUnit units = 14;
+
+  // 本项目标签的备注名。键是标签完整标识。SpellModuleData 里没有备注名。
+  map<uint64, string> tag_names = 15;
+}
+
+// 一条单位。属性预设是纳入的属性，属性值是这些属性的数值。
+message EditorUnit {
+  uint64 id = 1;
+  repeated uint64 preset_attributes = 2;
+  repeated EditorUnitValue values = 3;
+  repeated uint64 active_spells = 4;
+  repeated uint64 passive_spells = 5;
+  string spine_key = 6;
+}
+
+message EditorUnitValue {
+  uint64 attribute_id = 1;
+  int64 raw = 2;
+}
+
+// 对其他数据源单位的本地覆盖。和项目存档分开存放。
+// 导出留空：游戏按玩家的模组载入顺序决定哪一份生效。
+message UnitDiffFile {
+  repeated EditorUnit units = 1;
 }

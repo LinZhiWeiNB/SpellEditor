@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Google.Protobuf.Collections;
+using RebornFrame.GameData;
 using RebornFrame.Spell;
 
 namespace SpellEditor
@@ -20,6 +21,7 @@ namespace SpellEditor
         public string ParseWarning;
         public string ExportLocation;
         public string ModDirectory;
+        public uint RenderPlugins;
     }
 
     /// <summary>
@@ -85,6 +87,7 @@ namespace SpellEditor
                 AuthorId = authorId,
                 RuntimeVersion = RuntimeVersion,
                 Module = new SpellModuleData(),
+                RenderPlugins = authorId == 0 ? GameDataRenderPlugins.All : 0,
             };
             for (int i = 0; i < sourcePaths.Count; i++)
             {
@@ -102,6 +105,7 @@ namespace SpellEditor
             ArchivePath = null;
             OwnModule = null;
             Sources.Clear();
+            ResourceReferences.Forget();
             if (string.IsNullOrEmpty(path) || !File.Exists(path))
             {
                 error = "找不到这个存档。";
@@ -157,6 +161,239 @@ namespace SpellEditor
             File.WriteAllBytes(ArchivePath, Archive.Write());
         }
 
+        public static uint GameRenderPlugins()
+        {
+            for (int i = 0; i < Sources.Count; i++)
+            {
+                if (Sources[i].IsGame)
+                {
+                    return Sources[i].RenderPlugins;
+                }
+            }
+
+            return 0;
+        }
+
+        public static bool UpdateSettings(string name, string folder, uint renderPlugins, out string error)
+        {
+            error = null;
+            if (!IsOpen)
+            {
+                error = "还没有打开项目。";
+                return false;
+            }
+
+            name = (name ?? "").Trim();
+            if (name.Length == 0)
+            {
+                error = "先填写项目名称。";
+                return false;
+            }
+
+            if (string.IsNullOrEmpty(folder) || !Directory.Exists(folder))
+            {
+                error = "先选择一个存在的文件夹。";
+                return false;
+            }
+
+            var fileName = SanitizeFileName(name);
+            if (fileName.Length == 0)
+            {
+                error = "项目名称不能作为文件名。";
+                return false;
+            }
+
+            string newPath;
+            try
+            {
+                newPath = Path.GetFullPath(Path.Combine(folder, fileName + ".byte"));
+                folder = Path.GetFullPath(folder);
+            }
+            catch (Exception)
+            {
+                error = "先选择一个存在的文件夹。";
+                return false;
+            }
+
+            var oldPath = ArchivePath;
+            if (!SamePath(newPath, oldPath) && File.Exists(newPath))
+            {
+                error = "这个文件夹里已经有同名的 .byte 存档。";
+                return false;
+            }
+
+            var oldDir = Path.GetDirectoryName(oldPath);
+            var previousSources = new List<string>(Archive.LoadedSources);
+            var previousName = Archive.Name;
+            var previousPlugins = Archive.RenderPlugins;
+            if (!SamePath(oldDir, folder))
+            {
+                for (int i = 0; i < Archive.LoadedSources.Count; i++)
+                {
+                    var absolute = Resolve(oldDir, Archive.LoadedSources[i]);
+                    Archive.LoadedSources[i] = ToRelative(folder, absolute);
+                }
+            }
+
+            Archive.Name = name;
+            if (AuthorId == 0)
+            {
+                Archive.RenderPlugins = renderPlugins;
+            }
+
+            try
+            {
+                Archive.Module = OwnModule;
+                File.WriteAllBytes(newPath, Archive.Write());
+            }
+            catch (Exception)
+            {
+                Archive.Name = previousName;
+                Archive.RenderPlugins = previousPlugins;
+                Archive.LoadedSources.Clear();
+                Archive.LoadedSources.AddRange(previousSources);
+                error = "存档没有写出去。";
+                return false;
+            }
+
+            ArchivePath = newPath;
+            for (int i = 0; i < Sources.Count; i++)
+            {
+                Sources[i].RelativePath = ToRelative(folder, Sources[i].AbsolutePath);
+            }
+
+            if (!SamePath(oldDir, folder) && !ResourceLibrary.MoveStorage(oldDir, folder, out error))
+            {
+                RecentProjects.Touch(newPath, name, AuthorId);
+                return false;
+            }
+
+            if (!SamePath(oldPath, newPath))
+            {
+                RecentProjects.Forget(oldPath);
+                try
+                {
+                    File.Delete(oldPath);
+                }
+                catch (Exception)
+                {
+                    RecentProjects.Touch(newPath, name, AuthorId);
+                    error = "新存档已经写好，原来的文件还在。";
+                    return false;
+                }
+            }
+
+            RecentProjects.Touch(newPath, name, AuthorId);
+            return true;
+        }
+
+        public static bool TryAddSource(string absolutePath, out string error)
+        {
+            error = null;
+            if (!IsOpen || AuthorId == 0)
+            {
+                error = "还没有打开项目。";
+                return false;
+            }
+
+            if (!TryLoadSource(absolutePath, absolutePath, out var source))
+            {
+                error = "请选择数据包。";
+                return false;
+            }
+
+            var directory = Path.GetDirectoryName(ArchivePath);
+            var relative = ToRelative(directory, absolutePath);
+            for (int i = 0; i < Sources.Count; i++)
+            {
+                if (SamePath(Sources[i].AbsolutePath, absolutePath))
+                {
+                    return true;
+                }
+            }
+
+            source.RelativePath = relative;
+            Archive.LoadedSources.Add(relative);
+            Sources.Add(source);
+            Save();
+            return true;
+        }
+
+        public static bool TryRemoveSource(string absolutePath, out string error)
+        {
+            error = null;
+            if (!IsOpen)
+            {
+                error = "还没有打开项目。";
+                return false;
+            }
+
+            var index = -1;
+            for (int i = 0; i < Sources.Count; i++)
+            {
+                if (SamePath(Sources[i].AbsolutePath, absolutePath))
+                {
+                    index = i;
+                    break;
+                }
+            }
+
+            if (index < 0)
+            {
+                return true;
+            }
+
+            if (AuthorId != 0 && Sources[index].IsGame && Sources[index].Module != null && GameSourceCount() == 1)
+            {
+                error = "模组需要一份游戏数据源。";
+                return false;
+            }
+
+            var relative = Sources[index].RelativePath;
+            Sources.RemoveAt(index);
+            for (int i = Archive.LoadedSources.Count - 1; i >= 0; i--)
+            {
+                if (Archive.LoadedSources[i] == relative)
+                {
+                    Archive.LoadedSources.RemoveAt(i);
+                }
+            }
+
+            Save();
+            return true;
+        }
+
+        static int GameSourceCount()
+        {
+            var count = 0;
+            for (int i = 0; i < Sources.Count; i++)
+            {
+                if (Sources[i].IsGame && Sources[i].Module != null)
+                {
+                    count++;
+                }
+            }
+
+            return count;
+        }
+
+        static bool SamePath(string left, string right)
+        {
+            if (string.IsNullOrEmpty(left) || string.IsNullOrEmpty(right))
+            {
+                return false;
+            }
+
+            try
+            {
+                return string.Equals(Path.GetFullPath(left), Path.GetFullPath(right), StringComparison.OrdinalIgnoreCase);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
         public static string AttributeName(ulong id, uint localId)
         {
             if (Archive != null && Archive.AttributeNames.TryGetValue(id, out var name) && !string.IsNullOrEmpty(name))
@@ -198,6 +435,50 @@ namespace SpellEditor
             {
                 Archive.AttributeNames.Remove(fromId);
                 Archive.AttributeNames[toId] = name;
+            }
+        }
+
+        public static string TagName(ulong id, uint localId)
+        {
+            if (Archive != null && Archive.TagNames.TryGetValue(id, out var name) && !string.IsNullOrEmpty(name))
+            {
+                return name;
+            }
+
+            return "标签 " + localId;
+        }
+
+        public static void SetTagName(ulong id, string name)
+        {
+            if (!IsOpen)
+            {
+                return;
+            }
+
+            name = (name ?? "").Trim();
+            if (name.Length == 0)
+            {
+                Archive.TagNames.Remove(id);
+            }
+            else
+            {
+                Archive.TagNames[id] = name;
+            }
+
+            Save();
+        }
+
+        public static void MoveTagName(ulong fromId, ulong toId)
+        {
+            if (Archive == null || fromId == toId)
+            {
+                return;
+            }
+
+            if (Archive.TagNames.TryGetValue(fromId, out var name))
+            {
+                Archive.TagNames.Remove(fromId);
+                Archive.TagNames[toId] = name;
             }
         }
 
@@ -256,42 +537,37 @@ namespace SpellEditor
                 return false;
             }
 
-            if (!ModuleDescriptorFile.TryRead(absolutePath, out var descriptor, out _))
+            if (!GameDataFile.TryReadInfo(absolutePath, out var info, out _))
             {
                 return false;
             }
 
-            var directory = Path.GetDirectoryName(absolutePath);
-            var modulePath = Resolve(directory, descriptor.module_data);
             SpellModuleData module = null;
             string parseWarning = null;
-            if (!File.Exists(modulePath))
+            if (!GameDataFile.TryReadSpellModule(absolutePath, out module, out var spellError))
             {
-                parseWarning = "找不到描述文件指向的数据，可能无法正常解析。";
-            }
-            else if (!TryReadModule(modulePath, out module, out _))
-            {
-                parseWarning = "描述文件指向的数据没能解析，可能无法正常使用。";
+                parseWarning = spellError + "可能无法正常使用。";
             }
 
             var authorKnown = TryAuthorId(module, out var authorId);
-            var isGame = (authorKnown && authorId == 0) || (!authorKnown && descriptor.role == "game");
+            var isGame = (authorKnown && authorId == 0) || (!authorKnown && info.IsGame);
             source = new LoadedSource
             {
                 AbsolutePath = absolutePath,
                 RelativePath = string.IsNullOrEmpty(relativePath) ? absolutePath : relativePath,
-                Title = SourceTitle(descriptor, absolutePath),
+                Title = SourceTitle(info, absolutePath),
                 AuthorId = authorId,
                 AuthorKnown = authorKnown,
                 IsGame = isGame,
                 Module = module,
-                EditorVersion = descriptor.editor_version ?? "",
-                VersionMismatch = !EditorVersion.Matches(descriptor.editor_version),
+                EditorVersion = info.EditorVersion ?? "",
+                VersionMismatch = !EditorVersion.Matches(info.EditorVersion),
                 ParseWarning = parseWarning,
-                ExportLocation = descriptor.export_location ?? "",
-                ModDirectory = !string.IsNullOrEmpty(descriptor.mod_directory)
-                    ? descriptor.mod_directory
-                    : descriptor.directory_name ?? "",
+                ExportLocation = info.ExportLocation ?? "",
+                ModDirectory = !string.IsNullOrEmpty(info.ModDirectory)
+                    ? info.ModDirectory
+                    : info.DirectoryName ?? "",
+                RenderPlugins = info.RenderPlugins,
             };
             return true;
         }
@@ -355,21 +631,14 @@ namespace SpellEditor
             return false;
         }
 
-        static string SourceTitle(ModuleDescriptor descriptor, string path)
+        static string SourceTitle(GameDataInfo info, string path)
         {
-            if (!string.IsNullOrEmpty(descriptor.name))
+            if (!string.IsNullOrEmpty(info.Name))
             {
-                return descriptor.name;
+                return info.Name;
             }
 
-            var file = Path.GetFileNameWithoutExtension(path);
-            const string suffix = ".module";
-            if (file.EndsWith(suffix))
-            {
-                file = file.Substring(0, file.Length - suffix.Length);
-            }
-
-            return file;
+            return Path.GetFileNameWithoutExtension(path);
         }
 
         static bool TryAuthorId(SpellModuleData module, out uint authorId)

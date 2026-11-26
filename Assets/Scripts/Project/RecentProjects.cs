@@ -78,6 +78,35 @@ namespace SpellEditor
                 items.RemoveRange(Limit, items.Count - Limit);
             }
 
+            Write(items);
+        }
+
+        public static void Forget(string path)
+        {
+            if (string.IsNullOrEmpty(path))
+            {
+                return;
+            }
+
+            var items = Load();
+            var changed = false;
+            for (int i = items.Count - 1; i >= 0; i--)
+            {
+                if (string.Equals(items[i].Path, path, StringComparison.OrdinalIgnoreCase))
+                {
+                    items.RemoveAt(i);
+                    changed = true;
+                }
+            }
+
+            if (changed)
+            {
+                Write(items);
+            }
+        }
+
+        static void Write(List<RecentProject> items)
+        {
             var lines = new string[items.Count];
             for (int i = 0; i < items.Count; i++)
             {

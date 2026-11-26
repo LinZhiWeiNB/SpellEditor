@@ -1,10 +1,45 @@
 using System.IO;
 using Google.Protobuf;
+using RebornFrame.GameData;
 
 namespace SpellEditor
 {
     public static class ProjectExport
     {
+        public static bool HasSettings()
+        {
+            var archive = ProjectSession.Archive;
+            if (archive == null)
+            {
+                return false;
+            }
+
+            if (ProjectSession.AuthorId != 0)
+            {
+                return (archive.ExportName ?? "").Trim().Length > 0
+                       && IsEnglishDirectory((archive.ExportDirectoryName ?? "").Trim());
+            }
+
+            return (archive.ExportLocation ?? "").Trim().Length > 0
+                   && (archive.ExportModDirectory ?? "").Trim().Length > 0;
+        }
+
+        public static string ExportStored()
+        {
+            var archive = ProjectSession.Archive;
+            if (archive == null)
+            {
+                return "还没有打开项目。";
+            }
+
+            if (ProjectSession.AuthorId != 0)
+            {
+                return ExportMod(archive.ExportName, archive.ExportDescription, archive.ExportDirectoryName);
+            }
+
+            return ExportGame(archive.ExportLocation, archive.ExportModDirectory);
+        }
+
         public static string ExportGame(string exportLocation, string modDirectory)
         {
             exportLocation = (exportLocation ?? "").Trim();
@@ -21,17 +56,15 @@ namespace SpellEditor
 
             Directory.CreateDirectory(exportLocation);
             var stem = FileStem(ProjectSession.Archive.Name);
-            WritePackage(exportLocation, stem, new ModuleDescriptor
+            return WritePackage(exportLocation, stem, new GameDataContent
             {
-                format = ModuleDescriptor.CurrentFormat,
-                editor_version = EditorVersion.Current,
-                role = "game",
-                export_location = Path.GetFullPath(exportLocation),
-                mod_directory = modDirectory,
-                name = ProjectSession.Archive.Name,
-                module_data = stem + ".byte",
+                EditorVersion = EditorVersion.Current,
+                Role = GameDataRole.Game,
+                ExportLocation = Path.GetFullPath(exportLocation),
+                ModDirectory = modDirectory,
+                Name = ProjectSession.Archive.Name,
+                RenderPlugins = ProjectSession.Archive.RenderPlugins,
             });
-            return null;
         }
 
         public static string ExportMod(string modName, string intro, string directoryName)
@@ -56,17 +89,14 @@ namespace SpellEditor
 
             var folder = Path.Combine(root, directoryName);
             Directory.CreateDirectory(folder);
-            WritePackage(folder, directoryName, new ModuleDescriptor
+            return WritePackage(folder, directoryName, new GameDataContent
             {
-                format = ModuleDescriptor.CurrentFormat,
-                editor_version = EditorVersion.Current,
-                role = "mod",
-                name = modName,
-                description = intro.Trim(),
-                directory_name = directoryName,
-                module_data = directoryName + ".byte",
+                EditorVersion = EditorVersion.Current,
+                Role = GameDataRole.Mod,
+                Name = modName,
+                Description = intro.Trim(),
+                DirectoryName = directoryName,
             });
-            return null;
         }
 
         public static bool IsEnglishDirectory(string name)
@@ -88,13 +118,29 @@ namespace SpellEditor
             return true;
         }
 
-        static void WritePackage(string folder, string stem, ModuleDescriptor descriptor)
+        static string WritePackage(string folder, string stem, GameDataContent content)
         {
             ProjectSession.Save();
-            var bytePath = Path.Combine(folder, stem + ".byte");
-            var descPath = Path.Combine(folder, stem + ModuleDescriptor.Extension);
-            File.WriteAllBytes(bytePath, ProjectSession.OwnModule.ToByteArray());
-            ModuleDescriptorFile.Write(descPath, descriptor);
+            content.Entries.Add(new GameDataEntry(
+                GameDataKinds.SpellModuleKey,
+                GameDataKinds.SpellModule,
+                ProjectSession.OwnModule.ToByteArray()));
+            if (!ResourceLibrary.TryExportEntries(content.Entries, out var resourceError))
+            {
+                return resourceError;
+            }
+
+            UnitDiffs.Export();
+            try
+            {
+                GameDataFile.Write(Path.Combine(folder, stem + GameDataFile.Extension), content);
+            }
+            catch (IOException)
+            {
+                return "数据包没有写出去。";
+            }
+
+            return null;
         }
 
         static bool TryModRoot(out string root, out string error)
@@ -121,7 +167,7 @@ namespace SpellEditor
                 return true;
             }
 
-            error = "需要一份写有模组目录的游戏描述文件。";
+            error = "需要一份写有模组目录的游戏数据包。";
             return false;
         }
 
