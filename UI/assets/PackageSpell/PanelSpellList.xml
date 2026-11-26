@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1600,900">
+  <controller name="cDetail" pages="0,未选中,1,已选中" selected="1"/>
+  <controller name="cOwn" pages="0,本源,1,只读" selected="0"/>
+  <displayList>
+    <graph id="n0_mns02" name="bg" xy="0,0" size="1600,900" type="rect" lineSize="0" fillColor="#ff16181d">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <graph id="n1_mns02" name="listPane" xy="0,0" size="480,900" type="rect" lineSize="0" fillColor="#ff1e2128">
+      <relation target="" sidePair="height-height"/>
+    </graph>
+    <graph id="n2_mns02" name="split" xy="480,0" size="1,900" type="rect" lineSize="0" fillColor="#ff3a3e48">
+      <relation target="" sidePair="height-height"/>
+    </graph>
+    <component id="n3_mns02" name="btnBack" src="lpb03" fileName="ButtonGhost.xml" pkg="mskevjh6" xy="16,16" size="88,36">
+      <Button title="返回"/>
+    </component>
+    <text id="n4_mns02" name="title" xy="112,20" size="200,28" fontSize="18" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="技能"/>
+    <graph id="n5_mns02" name="bgSearch" xy="16,68" size="448,36" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
+    <text id="n6_mns02" name="search" xy="28,68" size="424,36" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" input="true" prompt="搜索技能"/>
+    <list id="n7_mns02" name="spells" xy="0,116" size="480,716" overflow="scroll" scrollBar="hidden" defaultItem="ui://skl4p8n2mni06" autoClearItems="true">
+      <item title="0:1" controllers="button,1">
+        <property target="meta" propertyId="0" value="主动  ·  持续 0 帧"/>
+      </item>
+      <item title="42:3" controllers="cTone,1">
+        <property target="meta" propertyId="0" value="被动  ·  只读"/>
+      </item>
+    </list>
+    <component id="n8_mns02" name="btnAdd" src="g8bt3" fileName="ButtonPrimary.xml" pkg="m5lrgzhj" xy="16,848" size="144,36">
+      <Button title="新增"/>
+    </component>
+    <component id="n9_mns02" name="btnDelete" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="168,848" size="144,36">
+      <gearLook controller="cOwn" pages="1" values="1,0,1,0" default="1,0,0,1"/>
+      <Button title="删除"/>
+    </component>
+    <component id="n10_mns02" name="btnCopy" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="320,848" size="144,36">
+      <gearLook controller="cDetail" pages="0" values="1,0,1,0" default="1,0,0,1"/>
+      <Button title="复制"/>
+    </component>
+    <text id="n11_mns02" name="emptyHint" xy="512,80" size="1056,28" fontSize="14" color="#ff8d887e" vAlign="middle" autoSize="none" singleLine="true" text="从左侧选择一个技能。">
+      <gearDisplay controller="cDetail" pages="0"/>
+    </text>
+    <text id="n12_mns02" name="basicTitle" xy="512,28" size="140,32" group="n40_mns02" fontSize="18" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="基础信息"/>
+    <component id="n13_mns02" name="btnEdit" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="660,26" size="120,36" group="n40_mns02">
+      <gearLook controller="cOwn" pages="1" values="1,0,1,0" default="1,0,0,1"/>
+      <Button title="编辑"/>
+    </component>
+    <text id="n14_mns02" name="labelId" xy="512,84" size="140,28" group="n40_mns02" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="标识"/>
+    <text id="n15_mns02" name="valueId" xy="668,84" size="400,28" group="n40_mns02" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" singleLine="true" text="0:1"/>
+    <text id="n16_mns02" name="labelActivation" xy="512,124" size="140,28" group="n40_mns02" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="激活"/>
+    <text id="n17_mns02" name="valueActivation" xy="668,124" size="400,28" group="n40_mns02" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" singleLine="true" text="主动"/>
+    <text id="n18_mns02" name="labelDuration" xy="512,164" size="140,28" group="n40_mns02" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="持续帧"/>
+    <text id="n19_mns02" name="valueDuration" xy="668,164" size="400,28" group="n40_mns02" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" singleLine="true" text="0"/>
+    <text id="n20_mns02" name="labelCooldown" xy="512,204" size="140,28" group="n40_mns02" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="冷却帧"/>
+    <text id="n21_mns02" name="valueCooldown" xy="668,204" size="400,28" group="n40_mns02" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" singleLine="true" text="0"/>
+    <text id="n22_mns02" name="labelAdmission" xy="512,244" size="140,28" group="n40_mns02" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="准入"/>
+    <text id="n23_mns02" name="valueAdmission" xy="668,244" size="400,28" group="n40_mns02" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" singleLine="true" text="无"/>
+    <text id="n24_mns02" name="deriveTitle" xy="512,312" size="400,28" group="n40_mns02" fontSize="16" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="技能派生"/>
+    <graph id="n25_mns02" name="deriveBlank" xy="512,352" size="1056,180" group="n40_mns02" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff1e2128" corner="4"/>
+    <text id="n26_mns02" name="unitTitle" xy="512,556" size="400,28" group="n40_mns02" fontSize="16" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="引用单位"/>
+    <graph id="n27_mns02" name="unitBlank" xy="512,596" size="1056,260" group="n40_mns02" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff1e2128" corner="4"/>
+    <group id="n40_mns02" name="detail" xy="512,26" size="1056,830" advanced="true">
+      <gearDisplay controller="cDetail" pages="1"/>
+    </group>
+  </displayList>
+</component>

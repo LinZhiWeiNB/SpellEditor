@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1600,900">
+  <controller name="cInspect" pages="0,空,1,技能关键帧,2,Spine关键帧" selected="1"/>
+  <controller name="cSpine" pages="0,关,1,开" selected="1"/>
+  <controller name="cSpineEnd" pages="0,暂停,1,无限循环" selected="0"/>
+  <controller name="cUnits" pages="0,关,1,开" selected="0"/>
+  <displayList>
+    <graph id="n0_mns01" name="funcPane" xy="0,0" size="320,630" type="rect" lineSize="0" fillColor="#ff1e2128"/>
+    <graph id="n1_mns01" name="preview" xy="320,0" size="960,630" type="rect" lineSize="0" fillColor="#ff14161b"/>
+    <graph id="n2_mns01" name="inspectPane" xy="1280,0" size="320,630" type="rect" lineSize="0" fillColor="#ff1e2128"/>
+    <graph id="n3_mns01" name="timePane" xy="0,630" size="1600,270" type="rect" lineSize="0" fillColor="#ff1e2128"/>
+    <graph id="n4_mns01" name="vSplitL" xy="320,0" size="1,630" type="rect" lineSize="0" fillColor="#ff3a3e48"/>
+    <graph id="n5_mns01" name="vSplitR" xy="1279,0" size="1,630" type="rect" lineSize="0" fillColor="#ff3a3e48"/>
+    <graph id="n6_mns01" name="hSplit" xy="0,630" size="1600,1" type="rect" lineSize="0" fillColor="#ff3a3e48"/>
+    <component id="n7_mns01" name="btnBack" src="lpb03" fileName="ButtonGhost.xml" pkg="mskevjh6" xy="16,12" size="88,36">
+      <Button title="返回"/>
+    </component>
+    <text id="n8_mns01" name="title" xy="112,16" size="188,28" fontSize="18" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="技能"/>
+    <text id="n9_mns01" name="funcUnit" xy="16,60" size="288,20" fontSize="13" color="#ff8d887e" vAlign="middle" autoSize="none" singleLine="true" text="预览单位"/>
+    <graph id="n10_mns01" name="bgUnit" xy="16,84" size="288,32" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
+    <text id="n11_mns01" name="unitName" xy="28,84" size="264,32" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" singleLine="true" text="未选择"/>
+    <component id="n12_mns01" name="btnSwitchUnit" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="16,124" size="288,36">
+      <Button title="切换预览单位"/>
+    </component>
+    <text id="n13_mns01" name="funcSkill" xy="16,176" size="288,20" fontSize="13" color="#ff8d887e" vAlign="middle" autoSize="none" singleLine="true" text="技能"/>
+    <component id="n14_mns01" name="btnAddTrack" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="16,204" size="288,36">
+      <Button title="增加技能轨道"/>
+    </component>
+    <component id="n15_mns01" name="btnAddKey" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="16,248" size="288,36">
+      <Button title="增加关键帧"/>
+    </component>
+    <text id="n16_mns01" name="funcSpine" xy="16,300" size="288,20" group="n18_mns01" fontSize="13" color="#ff8d887e" vAlign="middle" autoSize="none" singleLine="true" text="Spine"/>
+    <component id="n17_mns01" name="btnAddClip" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="16,328" size="288,36" group="n18_mns01">
+      <Button title="创建动画片段"/>
+    </component>
+    <group id="n18_mns01" name="spineBlock" xy="16,300" size="288,64" advanced="true">
+      <gearDisplay controller="cSpine" pages="1"/>
+    </group>
+    <text id="n19_mns01" name="previewLabel" xy="336,16" size="120,22" fontSize="13" color="#ff8d887e" vAlign="middle" autoSize="none" singleLine="true" text="预览"/>
+    <graph id="n20_mns01" name="floor" xy="420,500" size="760,1" type="rect" lineSize="0" fillColor="#ff3a3e48"/>
+    <text id="n21_mns01" name="inspectTitle" xy="1296,16" size="288,28" fontSize="18" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="检视"/>
+    <text id="n22_mns01" name="inspectKind" xy="1296,48" size="288,20" fontSize="13" color="#ff8d887e" vAlign="middle" autoSize="none" singleLine="true" text="技能关键帧"/>
+    <text id="n23_mns01" name="inspectEmpty" xy="1296,88" size="288,48" fontSize="13" color="#ff8d887e" autoSize="none" text="选中技能或 Spine 的关键帧后在这里配置。">
+      <gearDisplay controller="cInspect" pages="0"/>
+    </text>
+    <text id="n24_mns01" name="labelPick" xy="1296,80" size="288,18" group="n40_mns01" fontSize="13" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="目标拾取"/>
+    <component id="n25_mns01" name="pickOwner" src="g8bt4" fileName="ButtonRadio.xml" pkg="m5lrgzhj" xy="1296,102" size="288,28" group="n70_mns01">
+      <Button title="持有者" checked="true"/>
+    </component>
+    <component id="n26_mns01" name="pickPrimary" src="g8bt4" fileName="ButtonRadio.xml" pkg="m5lrgzhj" xy="1296,130" size="288,28" group="n70_mns01">
+      <Button title="主目标"/>
+    </component>
+    <component id="n27_mns01" name="pickSubject" src="g8bt4" fileName="ButtonRadio.xml" pkg="m5lrgzhj" xy="1296,158" size="288,28" group="n70_mns01">
+      <Button title="信号主体"/>
+    </component>
+    <component id="n28_mns01" name="pickSource" src="g8bt4" fileName="ButtonRadio.xml" pkg="m5lrgzhj" xy="1296,186" size="288,28" group="n70_mns01">
+      <Button title="信号来源"/>
+    </component>
+    <component id="n29_mns01" name="pickExplicit" src="g8bt4" fileName="ButtonRadio.xml" pkg="m5lrgzhj" xy="1296,214" size="288,28" group="n70_mns01">
+      <Button title="显式目标"/>
+    </component>
+    <group id="n70_mns01" name="pickGroup" xy="1296,102" size="288,140" group="n40_mns01" advanced="true"/>
+    <text id="n30_mns01" name="labelCondition" xy="1296,254" size="288,18" group="n40_mns01" fontSize="13" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="判断条件"/>
+    <component id="n31_mns01" name="condAll" src="g8bt4" fileName="ButtonRadio.xml" pkg="m5lrgzhj" xy="1296,276" size="288,28" group="n71_mns01">
+      <Button title="全部满足" checked="true"/>
+    </component>
+    <component id="n32_mns01" name="condAny" src="g8bt4" fileName="ButtonRadio.xml" pkg="m5lrgzhj" xy="1296,304" size="288,28" group="n71_mns01">
+      <Button title="满足任意"/>
+    </component>
+    <component id="n33_mns01" name="condNotAny" src="g8bt4" fileName="ButtonRadio.xml" pkg="m5lrgzhj" xy="1296,332" size="288,28" group="n71_mns01">
+      <Button title="全部不满足"/>
+    </component>
+    <group id="n71_mns01" name="condGroup" xy="1296,276" size="288,84" group="n40_mns01" advanced="true"/>
+    <text id="n34_mns01" name="labelTags" xy="1296,372" size="288,18" group="n40_mns01" fontSize="13" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="拾取标签"/>
+    <list id="n35_mns01" name="tags" xy="1296,394" size="288,72" group="n40_mns01" overflow="scroll" scrollBar="hidden" defaultItem="ui://m5lrgzhjg8bt0" autoClearItems="true" selectionMode="none"/>
+    <text id="n36_mns01" name="tagHint" xy="1296,468" size="288,18" group="n40_mns01" fontSize="12" color="#ff8d887e" vAlign="middle" autoSize="none" singleLine="true" text=""/>
+    <text id="n37_mns01" name="labelBuffs" xy="1296,492" size="288,18" group="n40_mns01" fontSize="13" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="触发 Buff"/>
+    <list id="n38_mns01" name="buffs" xy="1296,514" size="288,72" group="n40_mns01" overflow="scroll" scrollBar="hidden" defaultItem="ui://m5lrgzhjg8bt0" autoClearItems="true" selectionMode="none"/>
+    <text id="n39_mns01" name="buffHint" xy="1296,588" size="288,18" group="n40_mns01" fontSize="12" color="#ff8d887e" vAlign="middle" autoSize="none" singleLine="true" text=""/>
+    <group id="n40_mns01" name="skillInspect" xy="1296,80" size="288,526" advanced="true">
+      <gearDisplay controller="cInspect" pages="1"/>
+    </group>
+    <text id="n41_mns01" name="labelAnim" xy="1296,80" size="288,18" group="n60_mns01" fontSize="13" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="动画名"/>
+    <graph id="n42_mns01" name="bgAnim" xy="1296,102" size="288,32" group="n60_mns01" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
+    <text id="n43_mns01" name="inputAnim" xy="1308,102" size="264,32" group="n60_mns01" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" input="true" prompt="要播放的动画"/>
+    <text id="n44_mns01" name="labelSpeed" xy="1296,146" size="288,18" group="n60_mns01" fontSize="13" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="播放速度"/>
+    <graph id="n45_mns01" name="bgSpeed" xy="1296,168" size="288,32" group="n60_mns01" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
+    <text id="n46_mns01" name="inputSpeed" xy="1308,168" size="264,32" group="n60_mns01" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="1" input="true" restrict="[0-9.]"/>
+    <text id="n47_mns01" name="labelEnd" xy="1296,212" size="288,18" group="n60_mns01" fontSize="13" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="片段结束后"/>
+    <component id="n48_mns01" name="endPause" src="g8bt4" fileName="ButtonRadio.xml" pkg="m5lrgzhj" xy="1296,234" size="288,28" group="n72_mns01">
+      <Button title="暂停" checked="true" controller="cSpineEnd" page="0"/>
+    </component>
+    <component id="n49_mns01" name="endLoop" src="g8bt4" fileName="ButtonRadio.xml" pkg="m5lrgzhj" xy="1296,262" size="288,28" group="n72_mns01">
+      <Button title="无限循环" controller="cSpineEnd" page="1"/>
+    </component>
+    <group id="n72_mns01" name="endGroup" xy="1296,234" size="288,56" group="n60_mns01" advanced="true"/>
+    <component id="n50_mns01" name="pauseFirst" src="g8bt4" fileName="ButtonRadio.xml" pkg="m5lrgzhj" xy="1320,302" size="264,28" group="n52_mns01">
+      <Button title="停到首帧"/>
+    </component>
+    <component id="n51_mns01" name="pauseLast" src="g8bt4" fileName="ButtonRadio.xml" pkg="m5lrgzhj" xy="1320,330" size="264,28" group="n52_mns01">
+      <Button title="停到最后一帧" checked="true"/>
+    </component>
+    <group id="n52_mns01" name="pauseAt" xy="1320,302" size="264,56" group="n60_mns01" advanced="true">
+      <gearDisplay controller="cSpineEnd" pages="0"/>
+    </group>
+    <component id="n53_mns01" name="pingpong" src="g8bt0" fileName="ButtonCheck.xml" pkg="m5lrgzhj" xy="1320,302" size="264,28" group="n60_mns01">
+      <gearDisplay controller="cSpineEnd" pages="1"/>
+      <Button title="来回播放"/>
+    </component>
+    <group id="n60_mns01" name="spineInspect" xy="1296,80" size="288,306" advanced="true">
+      <gearDisplay controller="cInspect" pages="2"/>
+    </group>
+    <text id="n61_mns01" name="mark0" xy="166,638" size="36,18" fontSize="12" color="#ff8d887e" align="center" vAlign="middle" autoSize="none" singleLine="true" text="0"/>
+    <text id="n62_mns01" name="mark12" xy="442,638" size="36,18" fontSize="12" color="#ff8d887e" align="center" vAlign="middle" autoSize="none" singleLine="true" text="12"/>
+    <text id="n63_mns01" name="mark24" xy="718,638" size="36,18" fontSize="12" color="#ff8d887e" align="center" vAlign="middle" autoSize="none" singleLine="true" text="24"/>
+    <text id="n64_mns01" name="mark36" xy="994,638" size="36,18" fontSize="12" color="#ff8d887e" align="center" vAlign="middle" autoSize="none" singleLine="true" text="36"/>
+    <text id="n65_mns01" name="mark48" xy="1270,638" size="36,18" fontSize="12" color="#ff8d887e" align="center" vAlign="middle" autoSize="none" singleLine="true" text="48"/>
+    <text id="n66_mns01" name="mark60" xy="1546,638" size="36,18" fontSize="12" color="#ff8d887e" align="center" vAlign="middle" autoSize="none" singleLine="true" text="60"/>
+    <graph id="n67_mns01" name="ruler" xy="176,666" size="1380,1" type="rect" lineSize="0" fillColor="#ff3a3e48"/>
+    <list id="n68_mns01" name="tracks" xy="0,674" size="1600,214" overflow="scroll" scrollBar="hidden" lineGap="4" defaultItem="ui://skl4p8n2mni05" autoClearItems="true">
+      <item title="技能"/>
+      <item title="粒子"/>
+      <item title="Spine"/>
+    </list>
+    <list id="n73_mns01" name="units" xy="16,164" size="288,180" overflow="scroll" scrollBar="hidden" lineGap="4" defaultItem="ui://m5lrgzhjg8bt5" autoClearItems="true">
+      <gearDisplay controller="cUnits" pages="1"/>
+    </list>
+    <text id="n74_mns01" name="previewCast" xy="420,456" size="760,22" fontSize="13" color="#ffe8e6e3" align="center" vAlign="middle" autoSize="none" singleLine="true" text=""/>
+    <list id="n75_mns01" name="dummies" xy="420,520" size="760,44" layout="row" overflow="scroll" scroll="horizontal" scrollBar="hidden" colGap="8" defaultItem="ui://m5lrgzhjg8bt5" autoClearItems="true"/>
+  </displayList>
+</component>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="480,56" extention="Button">
+  <controller name="button" pages="0,up,1,down,2,over,3,selectedOver" selected="0"/>
+  <controller name="cTone" pages="0,本源,1,只读" selected="0"/>
+  <displayList>
+    <graph id="n0_mni06" name="bg" xy="8,4" size="464,48" type="rect" lineSize="0" fillColor="#ff243044" corner="4">
+      <gearDisplay controller="button" pages="1,2,3"/>
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <text id="n1_mni06" name="title" xy="20,8" size="300,22" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="0:1">
+      <gearColor controller="cTone" pages="1" values="#ffb7b2a8"/>
+    </text>
+    <text id="n2_mni06" name="meta" xy="20,30" size="440,18" fontSize="12" color="#ff8d887e" vAlign="middle" autoSize="none" singleLine="true" text="主动  ·  持续 0 帧">
+      <relation target="" sidePair="width-width"/>
+    </text>
+  </displayList>
+  <Button mode="Radio"/>
+</component>
