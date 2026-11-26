@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="10,204">
+  <displayList>
+    <graph id="n0_s0uw" name="bar" xy="2,0" size="6,204" type="rect" lineSize="0" fillColor="#ff2a2e38" corner="3">
+      <relation target="" sidePair="height-height"/>
+    </graph>
+    <graph id="n1_s0uw" name="grip" xy="0,0" size="10,48" type="rect" lineSize="0" fillColor="#ff8d887e" corner="2"/>
+  </displayList>
+</component>

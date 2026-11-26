@@ -10,7 +10,6 @@ namespace PackageSpell
         public const string PackageName = "PackageSpell";
         public const string ResName = "ItemTrack";
         public GTextField m_title;
-        public GList m_keys;
         public const string URL = "ui://skl4p8n2mni05";
 
         public static UI_ItemTrack CreateInstance()
@@ -22,8 +21,7 @@ namespace PackageSpell
         {
             base.ConstructFromXML(xml);
 
-            m_title = (GTextField)GetChildAt(0);
-            m_keys = (GList)GetChildAt(1);
+            m_title = (GTextField)GetChildAt(2);
         }
     }
 }

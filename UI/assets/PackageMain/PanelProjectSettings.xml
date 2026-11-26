@@ -23,33 +23,37 @@
       <Button title="迁移目录"/>
     </component>
     <text id="n11_mnp01" name="folderHint" xy="400,260" size="800,22" fontSize="13" color="#ff8d887e" autoSize="none" singleLine="true" text="存档会移到所选文件夹，并按新位置重写数据包的相对路径。"/>
-    <text id="n12_mnp01" name="pluginTitle" xy="400,296" size="240,28" fontSize="16" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="渲染插件"/>
-    <text id="n13_mnp01" name="pluginHint" xy="400,328" size="800,22" fontSize="13" color="#ff8d887e" autoSize="none" singleLine="true" text="导出时会把这些开关写成位掩码，放进游戏数据包。">
+    <text id="n23_mnp01" name="labelLogic" xy="400,296" size="240,24" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="逻辑帧率"/>
+    <graph id="n24_mnp01" name="bgLogic" xy="400,324" size="800,36" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
+    <text id="n25_mnp01" name="inputLogicFps" xy="412,324" size="776,36" fontSize="15" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="30" input="true" prompt="30" restrict="[0-9]" maxLength="3"/>
+    <text id="n26_mnp01" name="logicHint" xy="400,368" size="800,22" fontSize="13" color="#ff8d887e" autoSize="none" singleLine="true" text="时间轴和动画片段按这个帧率把秒换算成逻辑帧。"/>
+    <text id="n12_mnp01" name="pluginTitle" xy="400,404" size="240,28" fontSize="16" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="渲染插件"/>
+    <text id="n13_mnp01" name="pluginHint" xy="400,436" size="800,22" fontSize="13" color="#ff8d887e" autoSize="none" singleLine="true" text="导出时会把这些开关写成位掩码，放进游戏数据包。">
       <gearText controller="cRole" pages="1" values="这些开关来自已载入的游戏数据包，不能在模组里修改。"/>
     </text>
-    <component id="n14_mnp01" name="checkParticles" src="g8bt0" fileName="ButtonCheck.xml" pkg="m5lrgzhj" xy="400,360" size="360,28">
+    <component id="n14_mnp01" name="checkParticles" src="g8bt0" fileName="ButtonCheck.xml" pkg="m5lrgzhj" xy="400,468" size="360,28">
       <gearLook controller="cRole" pages="1" values="1,0,0,0" default="1,0,0,1"/>
       <Button title="粒子"/>
     </component>
-    <component id="n15_mnp01" name="checkVfx" src="g8bt0" fileName="ButtonCheck.xml" pkg="m5lrgzhj" xy="800,360" size="360,28">
+    <component id="n15_mnp01" name="checkVfx" src="g8bt0" fileName="ButtonCheck.xml" pkg="m5lrgzhj" xy="800,468" size="360,28">
       <gearLook controller="cRole" pages="1" values="1,0,0,0" default="1,0,0,1"/>
       <Button title="新版粒子"/>
     </component>
-    <component id="n16_mnp01" name="checkSpine" src="g8bt0" fileName="ButtonCheck.xml" pkg="m5lrgzhj" xy="400,396" size="360,28">
+    <component id="n16_mnp01" name="checkSpine" src="g8bt0" fileName="ButtonCheck.xml" pkg="m5lrgzhj" xy="400,504" size="360,28">
       <gearLook controller="cRole" pages="1" values="1,0,0,0" default="1,0,0,1"/>
       <Button title="Spine"/>
     </component>
-    <component id="n17_mnp01" name="checkAnimation" src="g8bt0" fileName="ButtonCheck.xml" pkg="m5lrgzhj" xy="800,396" size="360,28">
+    <component id="n17_mnp01" name="checkAnimation" src="g8bt0" fileName="ButtonCheck.xml" pkg="m5lrgzhj" xy="800,504" size="360,28">
       <gearLook controller="cRole" pages="1" values="1,0,0,0" default="1,0,0,1"/>
       <Button title="动画"/>
     </component>
-    <text id="n18_mnp01" name="labelSources" xy="400,448" size="240,28" group="n40_mnp01" fontSize="16" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="载入的数据源"/>
-    <component id="n19_mnp01" name="btnAddSource" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="1052,444" size="148,36" group="n40_mnp01">
+    <text id="n18_mnp01" name="labelSources" xy="400,556" size="240,28" group="n40_mnp01" fontSize="16" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="载入的数据源"/>
+    <component id="n19_mnp01" name="btnAddSource" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="1052,552" size="148,36" group="n40_mnp01">
       <Button title="添加数据源"/>
     </component>
-    <text id="n20_mnp01" name="sourceHint" xy="400,484" size="800,22" group="n40_mnp01" fontSize="13" color="#ff8d887e" autoSize="none" singleLine="true" text="选择数据包来添加。属于游戏的显示为游戏数据源，其余显示为模组数据源。模组需要一份游戏数据源。"/>
-    <list id="n21_mnp01" name="sources" xy="400,516" size="800,340" group="n40_mnp01" selectionMode="none" overflow="scroll" scrollBar="hidden" lineGap="8" defaultItem="ui://mskevjh6lpi04" autoClearItems="true"/>
-    <group id="n40_mnp01" name="modFields" xy="400,448" size="800,408" advanced="true">
+    <text id="n20_mnp01" name="sourceHint" xy="400,592" size="800,22" group="n40_mnp01" fontSize="13" color="#ff8d887e" autoSize="none" singleLine="true" text="选择数据包来添加。属于游戏的显示为游戏数据源，其余显示为模组数据源。模组需要一份游戏数据源。"/>
+    <list id="n21_mnp01" name="sources" xy="400,624" size="800,232" group="n40_mnp01" selectionMode="none" overflow="scroll" scrollBar="hidden" lineGap="8" defaultItem="ui://mskevjh6lpi04" autoClearItems="true"/>
+    <group id="n40_mnp01" name="modFields" xy="400,552" size="800,304" advanced="true">
       <gearDisplay controller="cRole" pages="1"/>
     </group>
     <component id="n22_mnp01" name="btnSave" src="g8bt3" fileName="ButtonPrimary.xml" pkg="m5lrgzhj" xy="1040,26" size="160,40">

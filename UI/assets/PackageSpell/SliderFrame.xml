@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1380,20" extention="Slider">
+  <displayList>
+    <graph id="n0_mns04" name="n0" xy="0,8" size="1380,2" type="rect" lineSize="0" fillColor="#ff3a3e48">
+      <relation target="" sidePair="width-width"/>
+    </graph>
+    <graph id="n1_mns04" name="bar" xy="0,8" size="1381,2" type="rect" lineSize="0" fillColor="#fff0c76b"/>
+    <graph id="n3_s0uw" name="n3" xy="1380,14" size="2,400" touchable="false" type="rect" lineSize="0" lineColor="#fff0c76b" fillColor="#fff0c76b">
+      <relation target="n1_mns04" sidePair="right-right"/>
+    </graph>
+    <component id="n2_mns04" name="grip" src="mns03" fileName="GripPlayhead.xml" xy="1372,4">
+      <relation target="n1_mns04" sidePair="right-right"/>
+    </component>
+  </displayList>
+  <Slider wholeNumbers="true"/>
+</component>

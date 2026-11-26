@@ -109,9 +109,7 @@ namespace UILogic
             var item = (UI_ItemSpell)obj;
             item.title = row.Title;
             item.m_meta.text = row.Meta;
-            item.m_cTone.selectedIndex = row.Owned
-                ? (int)UI_ItemSpell.EcTone.本源
-                : (int)UI_ItemSpell.EcTone.只读;
+            item.m_cTone.selectedIndex = (int)UI_ItemSpell.EcTone.本源;
             item.selected = _selected != null && row.Spell.Id == _selected.Id && row.Owned == _selectedOwned;
         }
 
@@ -130,9 +128,8 @@ namespace UILogic
         {
             var spell = _selected;
             view.m_cDetail.selectedIndex = (int)UI_PanelSpellList.EcDetail.已选中;
-            view.m_cOwn.selectedIndex = _selectedOwned
-                ? (int)UI_PanelSpellList.EcOwn.本源
-                : (int)UI_PanelSpellList.EcOwn.只读;
+            view.m_btnEdit.grayed = false;
+            view.m_btnEdit.touchable = true;
             view.m_valueId.text = new SpellId(spell.Id).ToString();
             view.m_valueActivation.text = ActivationLabel(spell.Activation);
             view.m_valueDuration.text = spell.DurationFrames.ToString();
@@ -145,7 +142,6 @@ namespace UILogic
             _selected = null;
             _selectedOwned = false;
             view.m_cDetail.selectedIndex = (int)UI_PanelSpellList.EcDetail.未选中;
-            view.m_cOwn.selectedIndex = (int)UI_PanelSpellList.EcOwn.只读;
         }
 
         void AddSpell()
@@ -165,8 +161,20 @@ namespace UILogic
 
         void DeleteSpell()
         {
-            if (!_selectedOwned || _selected == null || ProjectSession.OwnModule == null) return;
-            ProjectSession.OwnModule.Spells.Remove(_selected);
+            if (_selected == null || ProjectSession.OwnModule == null) return;
+            var spells = ProjectSession.OwnModule.Spells;
+            SpellData own = null;
+            for (var i = 0; i < spells.Count; i++)
+            {
+                if (spells[i] != null && spells[i].Id == _selected.Id)
+                {
+                    own = spells[i];
+                    break;
+                }
+            }
+
+            if (own == null) return;
+            spells.Remove(own);
             ProjectSession.Save();
             _selected = null;
             Reload();
@@ -187,11 +195,16 @@ namespace UILogic
 
         void EditSpell()
         {
-            if (_selected == null || !_selectedOwned) return;
+            if (_selected == null || !ProjectSession.IsOpen || ProjectSession.OwnModule == null) return;
+            var spell = ProjectSession.EnsureOwnSpell(_selected);
+            if (spell == null) return;
+            _selected = spell;
+            _selectedOwned = true;
+            Reload();
             FGUIPanelManager.Instance.ShowPanel<PanelSpell>(
                 UI_PanelSpell.PackageName,
                 UI_PanelSpell.ResName,
-                new object[] { _selected.Id },
+                new object[] { spell.Id },
                 ShowTypeEnum.HideCurrent);
         }
 

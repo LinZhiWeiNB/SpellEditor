@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component size="1600,40">
   <displayList>
-    <text id="n0_mni05" name="title" xy="16,0" size="148,40" fontSize="13" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="技能"/>
-    <list id="n1_mni05" name="keys" xy="176,6" size="1380,28" layout="row" overflow="scroll" scroll="horizontal" scrollBar="hidden" colGap="8" defaultItem="ui://skl4p8n2mni04" autoClearItems="true" selectionMode="none"/>
+    <graph id="n2_s0uw" name="n2" xy="0,0" size="1600,40" type="rect" lineSize="2" lineColor="#ff2a2e38" fillColor="#00ffffff">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <graph id="n3_s0uw" name="n3" xy="0,0" size="176,40" type="rect" lineSize="2" lineColor="#ff2a2e38" fillColor="#00ffffff">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <text id="n0_mni05" name="title" xy="16,0" size="148,40" fontSize="13" color="#b7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="技能"/>
   </displayList>
 </component>

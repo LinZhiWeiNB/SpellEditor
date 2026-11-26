@@ -6,6 +6,16 @@
     <component id="mni06" name="ItemSpell.xml" path="/" exported="true"/>
     <component id="mns01" name="PanelSpell.xml" path="/" exported="true"/>
     <component id="mns02" name="PanelSpellList.xml" path="/" exported="true"/>
+    <component id="mns03" name="GripPlayhead.xml" path="/" exported="true"/>
+    <component id="mns04" name="SliderFrame.xml" path="/" exported="true"/>
+    <component id="mns05" name="ItemClip.xml" path="/" exported="true"/>
+    <component id="s0uwb" name="ItemMark.xml" path="/" exported="true"/>
+    <component id="s0uwc" name="ComMarks.xml" path="/" exported="true"/>
+    <component id="s0uwd" name="ComProgress.xml" path="/" exported="true"/>
+    <component id="s0uwe" name="ComTracks.xml" path="/" exported="true"/>
+    <component id="s0uwf" name="ComKeys.xml" path="/" exported="true"/>
+    <component id="s0uwg" name="ScrollBarH.xml" path="/" exported="true"/>
+    <component id="s0uwh" name="ScrollBarV.xml" path="/" exported="true"/>
   </resources>
   <publish name="" genCode="true"/>
 </packageDescription>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component size="1600,900">
   <controller name="cDetail" pages="0,未选中,1,已选中" selected="1"/>
-  <controller name="cOwn" pages="0,本源,1,只读" selected="0"/>
+  <controller name="cOwn" pages="0,显示,1,隐藏" selected="0"/>
   <displayList>
     <graph id="n0_mns02" name="bg" xy="0,0" size="1600,900" type="rect" lineSize="0" fillColor="#ff16181d">
       <relation target="" sidePair="width-width,height-height"/>
@@ -18,19 +18,28 @@
     <text id="n4_mns02" name="title" xy="112,20" size="200,28" fontSize="18" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="技能"/>
     <graph id="n5_mns02" name="bgSearch" xy="16,68" size="448,36" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
     <text id="n6_mns02" name="search" xy="28,68" size="424,36" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" input="true" prompt="搜索技能"/>
-    <list id="n7_mns02" name="spells" xy="0,116" size="480,716" overflow="scroll" scrollBar="hidden" defaultItem="ui://skl4p8n2mni06" autoClearItems="true">
+    <component id="n41_mns02" name="toggleOthers" src="g8bt0" fileName="ButtonCheck.xml" pkg="m5lrgzhj" xy="16,112" size="448,28">
+      <Button checked="true" title="显示其他数据源" controller="cOwn" page="0"/>
+    </component>
+    <text id="n42_mns02" name="ownSection" xy="16,148" size="448,22" fontSize="12" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="当前数据源"/>
+    <list id="n7_mns02" name="spells" xy="0,174" size="480,280" overflow="scroll" scrollBar="hidden" defaultItem="ui://skl4p8n2mni06" autoClearItems="true">
       <item title="0:1" controllers="button,1">
-        <property target="meta" propertyId="0" value="主动  ·  持续 0 帧"/>
-      </item>
-      <item title="42:3" controllers="cTone,1">
-        <property target="meta" propertyId="0" value="被动  ·  只读"/>
+        <property target="meta" propertyId="0" value="主动  ·  持续 48 帧"/>
       </item>
     </list>
+    <text id="n43_mns02" name="otherSection" xy="16,466" size="448,22" group="n45_mns02" fontSize="12" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="其他数据源"/>
+    <list id="n44_mns02" name="others" xy="0,492" size="480,340" group="n45_mns02" overflow="scroll" scrollBar="hidden" defaultItem="ui://skl4p8n2mni06" autoClearItems="true">
+      <item title="42:3">
+        <property target="meta" propertyId="0" value="被动  ·  游戏数据源"/>
+      </item>
+    </list>
+    <group id="n45_mns02" name="otherSources" xy="0,466" size="480,366" advanced="true">
+      <gearDisplay controller="cOwn" pages="0"/>
+    </group>
     <component id="n8_mns02" name="btnAdd" src="g8bt3" fileName="ButtonPrimary.xml" pkg="m5lrgzhj" xy="16,848" size="144,36">
       <Button title="新增"/>
     </component>
     <component id="n9_mns02" name="btnDelete" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="168,848" size="144,36">
-      <gearLook controller="cOwn" pages="1" values="1,0,1,0" default="1,0,0,1"/>
       <Button title="删除"/>
     </component>
     <component id="n10_mns02" name="btnCopy" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="320,848" size="144,36">
@@ -42,7 +51,6 @@
     </text>
     <text id="n12_mns02" name="basicTitle" xy="512,28" size="140,32" group="n40_mns02" fontSize="18" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="基础信息"/>
     <component id="n13_mns02" name="btnEdit" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="660,26" size="120,36" group="n40_mns02">
-      <gearLook controller="cOwn" pages="1" values="1,0,1,0" default="1,0,0,1"/>
       <Button title="编辑"/>
     </component>
     <text id="n14_mns02" name="labelId" xy="512,84" size="140,28" group="n40_mns02" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="标识"/>

@@ -30,6 +30,16 @@ namespace SpellEditor
     public static class ProjectSession
     {
         public const string RuntimeVersion = "1.1.0";
+        public const uint DefaultLogicFrameRate = 30;
+
+        public static uint LogicFrameRate
+        {
+            get
+            {
+                var rate = Archive == null ? 0u : Archive.LogicFrameRate;
+                return rate == 0 ? DefaultLogicFrameRate : rate;
+            }
+        }
 
         public static ProjectArchiveFile Archive { get; private set; }
         public static string ArchivePath { get; private set; }
@@ -88,6 +98,7 @@ namespace SpellEditor
                 RuntimeVersion = RuntimeVersion,
                 Module = new SpellModuleData(),
                 RenderPlugins = authorId == 0 ? GameDataRenderPlugins.All : 0,
+                LogicFrameRate = DefaultLogicFrameRate,
             };
             for (int i = 0; i < sourcePaths.Count; i++)
             {
@@ -174,7 +185,7 @@ namespace SpellEditor
             return 0;
         }
 
-        public static bool UpdateSettings(string name, string folder, uint renderPlugins, out string error)
+        public static bool UpdateSettings(string name, string folder, uint renderPlugins, uint logicFrameRate, out string error)
         {
             error = null;
             if (!IsOpen)
@@ -203,6 +214,12 @@ namespace SpellEditor
                 return false;
             }
 
+            if (logicFrameRate < 1 || logicFrameRate > 240)
+            {
+                error = "逻辑帧率要填 1 到 240 的整数。";
+                return false;
+            }
+
             string newPath;
             try
             {
@@ -226,6 +243,7 @@ namespace SpellEditor
             var previousSources = new List<string>(Archive.LoadedSources);
             var previousName = Archive.Name;
             var previousPlugins = Archive.RenderPlugins;
+            var previousRate = Archive.LogicFrameRate;
             if (!SamePath(oldDir, folder))
             {
                 for (int i = 0; i < Archive.LoadedSources.Count; i++)
@@ -236,6 +254,7 @@ namespace SpellEditor
             }
 
             Archive.Name = name;
+            Archive.LogicFrameRate = logicFrameRate;
             if (AuthorId == 0)
             {
                 Archive.RenderPlugins = renderPlugins;
@@ -250,6 +269,7 @@ namespace SpellEditor
             {
                 Archive.Name = previousName;
                 Archive.RenderPlugins = previousPlugins;
+                Archive.LogicFrameRate = previousRate;
                 Archive.LoadedSources.Clear();
                 Archive.LoadedSources.AddRange(previousSources);
                 error = "存档没有写出去。";
@@ -517,6 +537,75 @@ namespace SpellEditor
             OwnModule.Attributes.Remove(definition);
             Archive.AttributeNames.Remove(definition.Id);
             Save();
+        }
+
+        /// <summary>
+        /// 编辑其他数据源里的技能时，在本项目放一份相同标识的备份。
+        /// 游戏实际采用哪一份，取决于载入数据源的顺序。
+        /// </summary>
+        public static SpellData EnsureOwnSpell(ulong id)
+        {
+            if (!IsOpen || OwnModule == null)
+            {
+                return null;
+            }
+
+            var own = FindSpell(OwnModule, id);
+            if (own != null)
+            {
+                return own;
+            }
+
+            for (var i = 0; i < Sources.Count; i++)
+            {
+                var source = FindSpell(Sources[i].Module, id);
+                if (source == null)
+                {
+                    continue;
+                }
+
+                return EnsureOwnSpell(source);
+            }
+
+            return null;
+        }
+
+        public static SpellData EnsureOwnSpell(SpellData source)
+        {
+            if (source == null || !IsOpen || OwnModule == null)
+            {
+                return null;
+            }
+
+            var existing = FindSpell(OwnModule, source.Id);
+            if (existing != null)
+            {
+                return existing;
+            }
+
+            var copy = source.Clone();
+            OwnModule.Spells.Add(copy);
+            Save();
+            return copy;
+        }
+
+        static SpellData FindSpell(SpellModuleData module, ulong id)
+        {
+            if (module == null)
+            {
+                return null;
+            }
+
+            for (var i = 0; i < module.Spells.Count; i++)
+            {
+                var spell = module.Spells[i];
+                if (spell != null && spell.Id == id)
+                {
+                    return spell;
+                }
+            }
+
+            return null;
         }
 
         public static bool TryLoadSource(string absolutePath, string relativePath, out LoadedSource source)

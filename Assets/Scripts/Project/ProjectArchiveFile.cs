@@ -28,6 +28,7 @@ namespace SpellEditor
         public readonly List<EditorUnit> Units = new List<EditorUnit>();
         public readonly Dictionary<ulong, string> TagNames = new Dictionary<ulong, string>();
         public readonly List<UnitPreset> UnitPresets = new List<UnitPreset>();
+        public uint LogicFrameRate;
 
         public byte[] Write()
         {
@@ -79,6 +80,9 @@ namespace SpellEditor
                 output.WriteTag(16, WireFormat.WireType.LengthDelimited);
                 output.WriteBytes(UnitPresets[i].Write());
             }
+
+            output.WriteTag(17, WireFormat.WireType.Varint);
+            output.WriteUInt32(LogicFrameRate);
 
             output.Flush();
             return stream.ToArray();
@@ -140,6 +144,9 @@ namespace SpellEditor
                         break;
                     case 16:
                         archive.UnitPresets.Add(UnitPreset.Read(input.ReadBytes()));
+                        break;
+                    case 17:
+                        archive.LogicFrameRate = input.ReadUInt32();
                         break;
                     default:
                         input.SkipLastField();

@@ -67,6 +67,10 @@ namespace PackageMain
         public GTextField m_folder;
         public PackageAtrribute.UI_ButtonSecondary m_btnMigrate;
         public GTextField m_folderHint;
+        public GTextField m_labelLogic;
+        public GGraph m_bgLogic;
+        public GTextInput m_inputLogicFps;
+        public GTextField m_logicHint;
         public GTextField m_pluginTitle;
         public GTextField m_pluginHint;
         public PackageAtrribute.UI_ButtonCheck m_checkParticles;
@@ -104,18 +108,22 @@ namespace PackageMain
             m_folder = (GTextField)GetChildAt(9);
             m_btnMigrate = (PackageAtrribute.UI_ButtonSecondary)GetChildAt(10);
             m_folderHint = (GTextField)GetChildAt(11);
-            m_pluginTitle = (GTextField)GetChildAt(12);
-            m_pluginHint = (GTextField)GetChildAt(13);
-            m_checkParticles = (PackageAtrribute.UI_ButtonCheck)GetChildAt(14);
-            m_checkVfx = (PackageAtrribute.UI_ButtonCheck)GetChildAt(15);
-            m_checkSpine = (PackageAtrribute.UI_ButtonCheck)GetChildAt(16);
-            m_checkAnimation = (PackageAtrribute.UI_ButtonCheck)GetChildAt(17);
-            m_labelSources = (GTextField)GetChildAt(18);
-            m_btnAddSource = (PackageAtrribute.UI_ButtonSecondary)GetChildAt(19);
-            m_sourceHint = (GTextField)GetChildAt(20);
-            m_sources = (GList)GetChildAt(21);
-            m_modFields = (GGroup)GetChildAt(22);
-            m_btnSave = (PackageAtrribute.UI_ButtonPrimary)GetChildAt(23);
+            m_labelLogic = (GTextField)GetChildAt(12);
+            m_bgLogic = (GGraph)GetChildAt(13);
+            m_inputLogicFps = (GTextInput)GetChildAt(14);
+            m_logicHint = (GTextField)GetChildAt(15);
+            m_pluginTitle = (GTextField)GetChildAt(16);
+            m_pluginHint = (GTextField)GetChildAt(17);
+            m_checkParticles = (PackageAtrribute.UI_ButtonCheck)GetChildAt(18);
+            m_checkVfx = (PackageAtrribute.UI_ButtonCheck)GetChildAt(19);
+            m_checkSpine = (PackageAtrribute.UI_ButtonCheck)GetChildAt(20);
+            m_checkAnimation = (PackageAtrribute.UI_ButtonCheck)GetChildAt(21);
+            m_labelSources = (GTextField)GetChildAt(22);
+            m_btnAddSource = (PackageAtrribute.UI_ButtonSecondary)GetChildAt(23);
+            m_sourceHint = (GTextField)GetChildAt(24);
+            m_sources = (GList)GetChildAt(25);
+            m_modFields = (GGroup)GetChildAt(26);
+            m_btnSave = (PackageAtrribute.UI_ButtonPrimary)GetChildAt(27);
         }
     }
 }

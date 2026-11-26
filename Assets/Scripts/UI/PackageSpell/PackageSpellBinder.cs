@@ -13,6 +13,16 @@ namespace PackageSpell
             UIObjectFactory.SetPackageItemExtension(UI_ItemSpell.URL, typeof(UI_ItemSpell));
             UIObjectFactory.SetPackageItemExtension(UI_PanelSpell.URL, typeof(UI_PanelSpell));
             UIObjectFactory.SetPackageItemExtension(UI_PanelSpellList.URL, typeof(UI_PanelSpellList));
+            UIObjectFactory.SetPackageItemExtension(UI_GripPlayhead.URL, typeof(UI_GripPlayhead));
+            UIObjectFactory.SetPackageItemExtension(UI_SliderFrame.URL, typeof(UI_SliderFrame));
+            UIObjectFactory.SetPackageItemExtension(UI_ItemClip.URL, typeof(UI_ItemClip));
+            UIObjectFactory.SetPackageItemExtension(UI_ItemMark.URL, typeof(UI_ItemMark));
+            UIObjectFactory.SetPackageItemExtension(UI_ComMarks.URL, typeof(UI_ComMarks));
+            UIObjectFactory.SetPackageItemExtension(UI_ComProgress.URL, typeof(UI_ComProgress));
+            UIObjectFactory.SetPackageItemExtension(UI_ComTracks.URL, typeof(UI_ComTracks));
+            UIObjectFactory.SetPackageItemExtension(UI_ComKeys.URL, typeof(UI_ComKeys));
+            UIObjectFactory.SetPackageItemExtension(UI_ScrollBarH.URL, typeof(UI_ScrollBarH));
+            UIObjectFactory.SetPackageItemExtension(UI_ScrollBarV.URL, typeof(UI_ScrollBarV));
         }
     }
 }

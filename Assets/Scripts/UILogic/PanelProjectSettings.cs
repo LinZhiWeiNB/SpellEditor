@@ -26,6 +26,11 @@ namespace UILogic
                 : (int)UI_PanelProjectSettings.EcRole.游戏开发者;
             view.m_inputName.text = ProjectSession.Archive.Name ?? "";
             view.m_folder.text = _pendingFolder;
+            var fps = view.GetChild("inputLogicFps") as GTextInput;
+            if (fps != null)
+            {
+                fps.text = ProjectSession.LogicFrameRate.ToString();
+            }
             view.m_cMessage.selectedIndex = (int)UI_PanelProjectSettings.EcMessage.空;
             view.m_message.text = "";
             BindCheck(view.m_checkParticles, GameDataRenderPlugins.Particles);
@@ -103,7 +108,15 @@ namespace UILogic
 
         bool Apply(out string error)
         {
-            var ok = ProjectSession.UpdateSettings(view.m_inputName.text, _pendingFolder, _plugins, out error);
+            var rate = ProjectSession.LogicFrameRate;
+            var fps = view.GetChild("inputLogicFps") as GTextInput;
+            if (fps != null && (!uint.TryParse((fps.text ?? "").Trim(), out rate) || rate < 1 || rate > 240))
+            {
+                error = "逻辑帧率要填 1 到 240 的整数。";
+                return false;
+            }
+
+            var ok = ProjectSession.UpdateSettings(view.m_inputName.text, _pendingFolder, _plugins, rate, out error);
             if (ok || error == "新存档已经写好，原来的文件还在。")
             {
                 _pendingFolder = Path.GetDirectoryName(ProjectSession.ArchivePath) ?? _pendingFolder;

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1600,214" overflow="scroll" scroll="vertical">
+  <displayList>
+    <list id="n68_mns01" name="tracks" xy="0,0" size="1600,394" lineGap="4" defaultItem="ui://skl4p8n2mni05" autoClearItems="true">
+      <item title="技能"/>
+      <item title="粒子"/>
+      <item title="Spine"/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+    </list>
+    <component id="n69_s0uw" name="keys" src="s0uwf" fileName="ComKeys.xml" xy="176,0" size="1422,214"/>
+  </displayList>
+</component>

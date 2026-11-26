@@ -48,6 +48,9 @@ message ProjectArchive {
 
   // 本项目的单位预设。标识相同的预设，游戏按模组载入顺序覆盖，后载入的生效。
   repeated UnitPreset unit_presets = 16;
+
+  // 逻辑帧目标帧率。时间轴和动画片段按它把秒换算成逻辑帧。0 表示还没写过，编辑器按 30 使用。
+  uint32 logic_frame_rate = 17;
 }
 
 // 一条单位预设。纳入的属性按属性标识记录。

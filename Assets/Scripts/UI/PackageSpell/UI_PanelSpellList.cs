@@ -35,11 +35,11 @@ namespace PackageSpell
             /// <summary>
             /// null
             /// <summary>
-            本源 = 0,
+            显示 = 0,
             /// <summary>
             /// null
             /// <summary>
-            只读 = 1,
+            隐藏 = 1,
         }
 
         public EcOwn GetSelectedIndexEcOwn()
@@ -54,7 +54,12 @@ namespace PackageSpell
         public GTextField m_title;
         public GGraph m_bgSearch;
         public GTextInput m_search;
+        public PackageAtrribute.UI_ButtonCheck m_toggleOthers;
+        public GTextField m_ownSection;
         public GList m_spells;
+        public GTextField m_otherSection;
+        public GList m_others;
+        public GGroup m_otherSources;
         public PackageAtrribute.UI_ButtonPrimary m_btnAdd;
         public PackageAtrribute.UI_ButtonSecondary m_btnDelete;
         public PackageAtrribute.UI_ButtonSecondary m_btnCopy;
@@ -96,28 +101,33 @@ namespace PackageSpell
             m_title = (GTextField)GetChildAt(4);
             m_bgSearch = (GGraph)GetChildAt(5);
             m_search = (GTextInput)GetChildAt(6);
-            m_spells = (GList)GetChildAt(7);
-            m_btnAdd = (PackageAtrribute.UI_ButtonPrimary)GetChildAt(8);
-            m_btnDelete = (PackageAtrribute.UI_ButtonSecondary)GetChildAt(9);
-            m_btnCopy = (PackageAtrribute.UI_ButtonSecondary)GetChildAt(10);
-            m_emptyHint = (GTextField)GetChildAt(11);
-            m_basicTitle = (GTextField)GetChildAt(12);
-            m_btnEdit = (PackageAtrribute.UI_ButtonSecondary)GetChildAt(13);
-            m_labelId = (GTextField)GetChildAt(14);
-            m_valueId = (GTextField)GetChildAt(15);
-            m_labelActivation = (GTextField)GetChildAt(16);
-            m_valueActivation = (GTextField)GetChildAt(17);
-            m_labelDuration = (GTextField)GetChildAt(18);
-            m_valueDuration = (GTextField)GetChildAt(19);
-            m_labelCooldown = (GTextField)GetChildAt(20);
-            m_valueCooldown = (GTextField)GetChildAt(21);
-            m_labelAdmission = (GTextField)GetChildAt(22);
-            m_valueAdmission = (GTextField)GetChildAt(23);
-            m_deriveTitle = (GTextField)GetChildAt(24);
-            m_deriveBlank = (GGraph)GetChildAt(25);
-            m_unitTitle = (GTextField)GetChildAt(26);
-            m_unitBlank = (GGraph)GetChildAt(27);
-            m_detail = (GGroup)GetChildAt(28);
+            m_toggleOthers = (PackageAtrribute.UI_ButtonCheck)GetChildAt(7);
+            m_ownSection = (GTextField)GetChildAt(8);
+            m_spells = (GList)GetChildAt(9);
+            m_otherSection = (GTextField)GetChildAt(10);
+            m_others = (GList)GetChildAt(11);
+            m_otherSources = (GGroup)GetChildAt(12);
+            m_btnAdd = (PackageAtrribute.UI_ButtonPrimary)GetChildAt(13);
+            m_btnDelete = (PackageAtrribute.UI_ButtonSecondary)GetChildAt(14);
+            m_btnCopy = (PackageAtrribute.UI_ButtonSecondary)GetChildAt(15);
+            m_emptyHint = (GTextField)GetChildAt(16);
+            m_basicTitle = (GTextField)GetChildAt(17);
+            m_btnEdit = (PackageAtrribute.UI_ButtonSecondary)GetChildAt(18);
+            m_labelId = (GTextField)GetChildAt(19);
+            m_valueId = (GTextField)GetChildAt(20);
+            m_labelActivation = (GTextField)GetChildAt(21);
+            m_valueActivation = (GTextField)GetChildAt(22);
+            m_labelDuration = (GTextField)GetChildAt(23);
+            m_valueDuration = (GTextField)GetChildAt(24);
+            m_labelCooldown = (GTextField)GetChildAt(25);
+            m_valueCooldown = (GTextField)GetChildAt(26);
+            m_labelAdmission = (GTextField)GetChildAt(27);
+            m_valueAdmission = (GTextField)GetChildAt(28);
+            m_deriveTitle = (GTextField)GetChildAt(29);
+            m_deriveBlank = (GGraph)GetChildAt(30);
+            m_unitTitle = (GTextField)GetChildAt(31);
+            m_unitBlank = (GGraph)GetChildAt(32);
+            m_detail = (GGroup)GetChildAt(33);
         }
     }
 }

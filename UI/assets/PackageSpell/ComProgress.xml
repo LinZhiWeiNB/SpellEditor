@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1380,20" overflow="scroll" scroll="horizontal">
+  <displayList>
+    <component id="n87_mns01" name="progress" src="mns04" fileName="SliderFrame.xml" xy="10,0" size="1360,20">
+      <Slider max="60"/>
+    </component>
+  </displayList>
+</component>

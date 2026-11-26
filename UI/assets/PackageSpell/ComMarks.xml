@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1416,18" overflow="scroll" scroll="horizontal">
+  <displayList>
+    <list id="n61_mns01" name="marks" xy="0,0" size="1416,18" layout="row" selectionMode="none" colGap="240" defaultItem="ui://skl4p8n2s0uwb" autoClearItems="true">
+      <item>
+        <property target="mark0" propertyId="0" value="0"/>
+      </item>
+      <item>
+        <property target="mark0" propertyId="0" value="12"/>
+      </item>
+      <item>
+        <property target="mark0" propertyId="0" value="24"/>
+      </item>
+      <item>
+        <property target="mark0" propertyId="0" value="36"/>
+      </item>
+      <item>
+        <property target="mark0" propertyId="0" value="48"/>
+      </item>
+      <item>
+        <property target="mark0" propertyId="0" value="60"/>
+      </item>
+    </list>
+  </displayList>
+</component>

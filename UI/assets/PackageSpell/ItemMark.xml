@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="36,18">
+  <displayList>
+    <text id="n61_mns01" name="mark0" xy="0,0" size="36,18" fontSize="12" color="#8d887e" vAlign="middle" autoSize="none" singleLine="true" text="0"/>
+    <graph id="n62_s0uw" name="n62" xy="0,38" size="2,400" touchable="false" type="rect" lineSize="0" lineColor="#fff0c76b" fillColor="#ff69655d"/>
+  </displayList>
+</component>
