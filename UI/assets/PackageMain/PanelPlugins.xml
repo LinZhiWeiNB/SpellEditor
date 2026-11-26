@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1600,900">
+  <displayList>
+    <graph id="n0_plg01" name="bg" xy="0,0" size="1600,900" type="rect" lineSize="0" fillColor="#ff16181d">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <component id="n1_plg01" name="btnBack" src="lpb03" fileName="ButtonGhost.xml" pkg="mskevjh6" xy="48,24" size="88,36">
+      <Button title="返回"/>
+    </component>
+    <text id="n2_plg01" name="title" xy="400,28" size="280,36" fontSize="22" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="插件"/>
+    <text id="n3_plg01" name="message" xy="400,72" size="800,22" fontSize="13" color="#ff8d887e" autoSize="none" singleLine="true" text=""/>
+    <list id="n4_plg01" name="list" xy="400,112" size="800,560" overflow="scroll" scrollBar="hidden" lineGap="8" defaultItem="ui://mov3ykknplg02" autoClearItems="true"/>
+    <text id="n5_plg01" name="hint" xy="400,684" size="800,44" fontSize="13" color="#ff8d887e" autoSize="none" text="每个插件是一个目录，里面有 plugin.txt 和 lua。导入后放在项目的 plugins 文件夹里。"/>
+    <component id="n6_plg01" name="btnImport" src="g8bt3" fileName="ButtonPrimary.xml" pkg="m5lrgzhj" xy="880,26" size="148,40">
+      <Button title="导入插件"/>
+    </component>
+    <component id="n7_plg01" name="btnDelete" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="1036,26" size="148,40">
+      <Button title="删除"/>
+    </component>
+  </displayList>
+</component>

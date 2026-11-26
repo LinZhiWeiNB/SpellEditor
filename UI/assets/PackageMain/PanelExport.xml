@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component size="1600,900">
   <controller name="cRole" pages="0,游戏开发者,1,模组作者" selected="0"/>
+  <controller name="cResult" pages="0,空,1,成功,2,警告" selected="0"/>
   <displayList>
     <graph id="n0_mne01" name="bg" xy="0,0" size="1600,900" type="rect" lineSize="0" fillColor="#ff16181d">
       <relation target="" sidePair="width-width,height-height"/>
@@ -8,12 +9,14 @@
     <component id="n1_mne01" name="btnBack" src="lpb03" fileName="ButtonGhost.xml" pkg="mskevjh6" xy="48,24" size="88,36">
       <Button title="返回"/>
     </component>
-    <text id="n2_mne01" name="title" xy="400,28" size="280,36" fontSize="22" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="导出项目"/>
-    <text id="n3_mne01" name="version" xy="400,72" size="800,22" fontSize="13" color="#ff8d887e" autoSize="none" singleLine="true" text="描述文件会自动写入当前编辑器版本。"/>
-    <text id="n4_mne01" name="error" xy="400,100" size="800,22" fontSize="13" color="#ffe0b060" autoSize="none" singleLine="true" text=""/>
+    <text id="n2_mne01" name="title" xy="400,28" size="280,36" fontSize="22" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="导出设置"/>
+    <text id="n3_mne01" name="version" xy="400,72" size="800,22" fontSize="13" color="#ff8d887e" autoSize="none" singleLine="true" text="数据包会自动写入当前编辑器版本。"/>
+    <text id="n4_mne01" name="error" xy="400,100" size="800,22" fontSize="13" color="#ffe0b060" autoSize="none" singleLine="true" text="">
+      <gearColor controller="cResult" pages="1" values="#ffb7d4a8"/>
+    </text>
     <text id="n10_mne01" name="labelLocation" xy="400,140" size="200,24" group="n30_mne01" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="导出位置"/>
     <graph id="n11_mne01" name="bgLocation" xy="400,168" size="640,36" group="n30_mne01" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
-    <text id="n12_mne01" name="inputLocation" xy="412,168" size="616,36" group="n30_mne01" fontSize="15" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" input="true" prompt="选择要写出描述文件和数据的文件夹"/>
+    <text id="n12_mne01" name="inputLocation" xy="412,168" size="616,36" group="n30_mne01" fontSize="15" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" input="true" prompt="选择要写出数据包的文件夹"/>
     <component id="n13_mne01" name="btnLocation" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="1052,166" size="148,40" group="n30_mne01">
       <Button title="选择文件夹"/>
     </component>
@@ -31,7 +34,7 @@
     <text id="n25_mne01" name="inputIntro" xy="412,256" size="776,80" group="n31_mne01" fontSize="15" color="#ffe8e6e3" autoSize="none" text="" input="true"/>
     <text id="n26_mne01" name="labelDir" xy="400,360" size="240,24" group="n31_mne01" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="模组目录名"/>
     <graph id="n27_mne01" name="bgDir" xy="400,388" size="800,36" group="n31_mne01" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
-    <text id="n28_mne01" name="inputDir" xy="412,388" size="776,36" group="n31_mne01" fontSize="15" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" input="true" prompt="仅英语，例如 RunePack"/>
+    <text id="n28_mne01" name="inputDir" xy="412,388" size="776,36" group="n31_mne01" fontSize="15" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" input="true" prompt="仅英语，例如 RunePack" restrict="[a-zA-Z0-9_\-]"/>
     <group id="n31_mne01" name="modFields" xy="400,140" size="800,284" advanced="true">
       <gearDisplay controller="cRole" pages="1"/>
     </group>

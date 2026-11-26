@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1600,900">
+  <controller name="cRole" pages="0,游戏开发者,1,模组作者" selected="0"/>
+  <controller name="cMessage" pages="0,空,1,错误,2,警告,3,成功" selected="0"/>
+  <displayList>
+    <graph id="n0_mnp01" name="bg" xy="0,0" size="1600,900" type="rect" lineSize="0" fillColor="#ff16181d">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <component id="n1_mnp01" name="btnBack" src="lpb03" fileName="ButtonGhost.xml" pkg="mskevjh6" xy="48,24" size="88,36">
+      <Button title="返回"/>
+    </component>
+    <text id="n2_mnp01" name="title" xy="400,28" size="280,36" fontSize="22" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="项目设置"/>
+    <text id="n3_mnp01" name="message" xy="400,72" size="800,22" fontSize="13" color="#ff8d887e" autoSize="none" singleLine="true" text="">
+      <gearColor controller="cMessage" pages="1,2,3" values="#ffe06a6a|#ffe0b060|#ffb7d4a8"/>
+    </text>
+    <text id="n4_mnp01" name="labelName" xy="400,108" size="240,24" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="项目名称"/>
+    <graph id="n5_mnp01" name="bgName" xy="400,136" size="800,36" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
+    <text id="n6_mnp01" name="inputName" xy="412,136" size="776,36" fontSize="15" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" input="true" prompt="例如 符文模组" maxLength="32"/>
+    <text id="n7_mnp01" name="labelFolder" xy="400,188" size="240,24" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="项目文件夹"/>
+    <graph id="n8_mnp01" name="bgFolder" xy="400,216" size="640,36" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
+    <text id="n9_mnp01" name="folder" xy="412,216" size="616,36" fontSize="15" color="#ffe8e6e3" vAlign="middle" autoSize="none" singleLine="true" text=""/>
+    <component id="n10_mnp01" name="btnMigrate" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="1052,214" size="148,40">
+      <Button title="迁移目录"/>
+    </component>
+    <text id="n11_mnp01" name="folderHint" xy="400,260" size="800,22" fontSize="13" color="#ff8d887e" autoSize="none" singleLine="true" text="存档会移到所选文件夹，并按新位置重写数据包的相对路径。"/>
+    <text id="n12_mnp01" name="pluginTitle" xy="400,296" size="240,28" fontSize="16" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="渲染插件"/>
+    <text id="n13_mnp01" name="pluginHint" xy="400,328" size="800,22" fontSize="13" color="#ff8d887e" autoSize="none" singleLine="true" text="导出时会把这些开关写成位掩码，放进游戏数据包。">
+      <gearText controller="cRole" pages="1" values="这些开关来自已载入的游戏数据包，不能在模组里修改。"/>
+    </text>
+    <component id="n14_mnp01" name="checkParticles" src="g8bt0" fileName="ButtonCheck.xml" pkg="m5lrgzhj" xy="400,360" size="360,28">
+      <gearLook controller="cRole" pages="1" values="1,0,0,0" default="1,0,0,1"/>
+      <Button title="粒子"/>
+    </component>
+    <component id="n15_mnp01" name="checkVfx" src="g8bt0" fileName="ButtonCheck.xml" pkg="m5lrgzhj" xy="800,360" size="360,28">
+      <gearLook controller="cRole" pages="1" values="1,0,0,0" default="1,0,0,1"/>
+      <Button title="新版粒子"/>
+    </component>
+    <component id="n16_mnp01" name="checkSpine" src="g8bt0" fileName="ButtonCheck.xml" pkg="m5lrgzhj" xy="400,396" size="360,28">
+      <gearLook controller="cRole" pages="1" values="1,0,0,0" default="1,0,0,1"/>
+      <Button title="Spine"/>
+    </component>
+    <component id="n17_mnp01" name="checkAnimation" src="g8bt0" fileName="ButtonCheck.xml" pkg="m5lrgzhj" xy="800,396" size="360,28">
+      <gearLook controller="cRole" pages="1" values="1,0,0,0" default="1,0,0,1"/>
+      <Button title="动画"/>
+    </component>
+    <text id="n18_mnp01" name="labelSources" xy="400,448" size="240,28" group="n40_mnp01" fontSize="16" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="载入的数据源"/>
+    <component id="n19_mnp01" name="btnAddSource" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="1052,444" size="148,36" group="n40_mnp01">
+      <Button title="添加数据源"/>
+    </component>
+    <text id="n20_mnp01" name="sourceHint" xy="400,484" size="800,22" group="n40_mnp01" fontSize="13" color="#ff8d887e" autoSize="none" singleLine="true" text="选择数据包来添加。属于游戏的显示为游戏数据源，其余显示为模组数据源。模组需要一份游戏数据源。"/>
+    <list id="n21_mnp01" name="sources" xy="400,516" size="800,340" group="n40_mnp01" selectionMode="none" overflow="scroll" scrollBar="hidden" lineGap="8" defaultItem="ui://mskevjh6lpi04" autoClearItems="true"/>
+    <group id="n40_mnp01" name="modFields" xy="400,448" size="800,408" advanced="true">
+      <gearDisplay controller="cRole" pages="1"/>
+    </group>
+    <component id="n22_mnp01" name="btnSave" src="g8bt3" fileName="ButtonPrimary.xml" pkg="m5lrgzhj" xy="1040,26" size="160,40">
+      <Button title="保存"/>
+    </component>
+  </displayList>
+</component>

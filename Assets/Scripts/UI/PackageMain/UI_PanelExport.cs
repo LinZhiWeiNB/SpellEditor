@@ -10,6 +10,47 @@ namespace PackageMain
         public const string PackageName = "PackageMain";
         public const string ResName = "PanelExport";
         public Controller m_cRole;
+
+        public enum EcRole
+        {
+            /// <summary>
+            /// null
+            /// <summary>
+            游戏开发者 = 0,
+            /// <summary>
+            /// null
+            /// <summary>
+            模组作者 = 1,
+        }
+
+        public EcRole GetSelectedIndexEcRole()
+        {
+            return (EcRole)m_cRole.selectedIndex;
+        }
+
+        public Controller m_cResult;
+
+        public enum EcResult
+        {
+            /// <summary>
+            /// null
+            /// <summary>
+            空 = 0,
+            /// <summary>
+            /// null
+            /// <summary>
+            成功 = 1,
+            /// <summary>
+            /// null
+            /// <summary>
+            警告 = 2,
+        }
+
+        public EcResult GetSelectedIndexEcResult()
+        {
+            return (EcResult)m_cResult.selectedIndex;
+        }
+
         public GGraph m_bg;
         public PackageLaunch.UI_ButtonGhost m_btnBack;
         public GTextField m_title;
@@ -46,6 +87,7 @@ namespace PackageMain
             base.ConstructFromXML(xml);
 
             m_cRole = GetControllerAt(0);
+            m_cResult = GetControllerAt(1);
             m_bg = (GGraph)GetChildAt(0);
             m_btnBack = (PackageLaunch.UI_ButtonGhost)GetChildAt(1);
             m_title = (GTextField)GetChildAt(2);

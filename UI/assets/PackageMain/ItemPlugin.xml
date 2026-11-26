@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="800,52" extention="Button">
+  <controller name="button" pages="0,up,1,down,2,over,3,selectedOver" selected="0"/>
+  <displayList>
+    <graph id="n0_plg02" name="bg" xy="0,0" size="800,52" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4">
+      <gearDisplay controller="button" pages="1,3"/>
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <graph id="n1_plg02" name="line" xy="0,0" size="800,52" type="rect" lineSize="1" lineColor="#ff2a2d34" fillColor="#00000000" corner="4">
+      <gearDisplay controller="button" pages="0,2"/>
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <text id="n2_plg02" name="title" xy="16,4" size="768,24" fontSize="15" color="#ffe8e6e3" vAlign="middle" autoSize="none" singleLine="true" text="插件">
+      <relation target="" sidePair="width-width"/>
+    </text>
+    <text id="n3_plg02" name="meta" xy="16,26" size="768,20" fontSize="12" color="#ff8d887e" vAlign="middle" autoSize="none" singleLine="true" text="id">
+      <relation target="" sidePair="width-width"/>
+    </text>
+  </displayList>
+  <Button mode="Radio"/>
+</component>

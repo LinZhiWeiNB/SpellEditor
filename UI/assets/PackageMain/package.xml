@@ -6,6 +6,9 @@
     <component id="mni02" name="ItemDataSource.xml" path="/" exported="true"/>
     <component id="mnw01" name="WindowMain.xml" path="/" exported="true"/>
     <component id="mne01" name="PanelExport.xml" path="/" exported="true"/>
+    <component id="mnp01" name="PanelProjectSettings.xml" path="/" exported="true"/>
+    <component id="plg01" name="PanelPlugins.xml" path="/" exported="true"/>
+    <component id="plg02" name="ItemPlugin.xml" path="/" exported="true"/>
   </resources>
   <publish name="" genCode="true"/>
 </packageDescription>

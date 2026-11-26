@@ -1,37 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component size="1600,900">
-  <controller name="cPage" pages="0,入口,1,属性,2,单位" selected="0"/>
+  <controller name="cExport" pages="0,空,1,成功,2,警告" selected="0"/>
   <displayList>
     <graph id="n0_mnw01" name="bg" xy="0,0" size="1600,900" type="rect" lineSize="0" fillColor="#ff16181d">
       <relation target="" sidePair="width-width,height-height"/>
     </graph>
-    <component id="n10_mnw01" name="unit" src="mnb01" fileName="ButtonModule.xml" xy="444,234" size="340,200" group="n20_mnw01">
-      <Button title="单位" controller="cPage" page="2"/>
+    <graph id="n1_mnw01" name="header" xy="0,0" size="1600,72" group="n60_mnw01" type="rect" lineSize="0" fillColor="#ff1e2128">
+      <relation target="" sidePair="width-width"/>
+    </graph>
+    <text id="n61_mnw01" name="brand" xy="48,18" size="640,36" group="n60_mnw01" fontSize="22" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="游戏内容编辑器"/>
+    <text id="n62_mnw01" name="projectName" xy="900,18" size="652,36" group="n60_mnw01" fontSize="14" color="#ff8d887e" align="right" vAlign="middle" autoSize="none" singleLine="true" text="当前项目">
+      <relation target="" sidePair="right-right"/>
+    </text>
+    <graph id="n6_mnw01" name="divUnit" xy="0,72" size="1600,1" group="n60_mnw01" type="rect" lineSize="0" fillColor="#ff3a3e48">
+      <relation target="" sidePair="width-width"/>
+    </graph>
+    <text id="n2_mnw01" name="unitTitle" xy="48,104" size="200,36" group="n60_mnw01" fontSize="16" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="单位管理"/>
+    <component id="n3_mnw01" name="btnUnit" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="268,104" size="120,36" group="n60_mnw01">
+      <Button title="单位"/>
     </component>
-    <component id="n11_mnw01" name="attribute" src="mnb01" fileName="ButtonModule.xml" xy="816,234" size="340,200" group="n20_mnw01">
-      <Button title="属性" controller="cPage" page="1"/>
+    <component id="n4_mnw01" name="btnUnitPreset" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="396,104" size="120,36" group="n60_mnw01">
+      <Button title="单位预设"/>
     </component>
-    <component id="n12_mnw01" name="tag" src="mnb01" fileName="ButtonModule.xml" xy="444,466" size="340,200" group="n20_mnw01">
+    <component id="n5_mnw01" name="btnAttribute" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="524,104" size="120,36" group="n60_mnw01">
+      <Button title="属性"/>
+    </component>
+    <graph id="n11_mnw01" name="divSkill" xy="48,168" size="1504,1" group="n60_mnw01" type="rect" lineSize="0" fillColor="#ff3a3e48">
+      <relation target="" sidePair="width-width"/>
+    </graph>
+    <text id="n7_mnw01" name="skillTitle" xy="48,192" size="200,36" group="n60_mnw01" fontSize="16" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="技能管理"/>
+    <component id="n8_mnw01" name="btnTag" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="268,192" size="120,36" group="n60_mnw01">
       <Button title="标签"/>
     </component>
-    <component id="n13_mnw01" name="spell" src="mnb01" fileName="ButtonModule.xml" xy="816,466" size="340,200" group="n20_mnw01">
+    <component id="n9_mnw01" name="btnSpell" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="396,192" size="120,36" group="n60_mnw01">
       <Button title="技能"/>
     </component>
-    <group id="n20_mnw01" name="entries" xy="444,234" size="712,432" advanced="true">
-      <gearDisplay controller="cPage" pages="0"/>
-      <relation target="" sidePair="center-center,middle-middle"/>
-    </group>
-    <component id="n50_mnw01" name="attributeEditor" src="g8bt7" fileName="PanelAttribute.xml" pkg="m5lrgzhj" xy="0,0" size="1600,900">
-      <gearDisplay controller="cPage" pages="1"/>
-      <relation target="" sidePair="width-width,height-height"/>
+    <component id="n10_mnw01" name="btnBuff" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="524,192" size="120,36" group="n60_mnw01">
+      <Button title="Buff"/>
     </component>
-    <component id="n51_mnw01" name="unitEditor" src="g8btc" fileName="PanelUnit.xml" pkg="m5lrgzhj" xy="0,0" size="1600,900">
-      <gearDisplay controller="cPage" pages="2"/>
-      <relation target="" sidePair="width-width,height-height"/>
+    <graph id="n14_mnw01" name="divResource" xy="48,256" size="1504,1" group="n60_mnw01" type="rect" lineSize="0" fillColor="#ff3a3e48">
+      <relation target="" sidePair="width-width"/>
+    </graph>
+    <text id="n12_mnw01" name="resourceTitle" xy="48,280" size="200,36" group="n60_mnw01" fontSize="16" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="资源管理"/>
+    <component id="n13_mnw01" name="btnResources" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="268,280" size="120,36" group="n60_mnw01">
+      <Button title="资源列表"/>
     </component>
-    <component id="n52_mnw01" name="btnBack" src="lpb03" fileName="ButtonGhost.xml" pkg="mskevjh6" xy="48,6" size="88,36">
-      <gearDisplay controller="cPage" pages="1,2"/>
-      <Button title="返回" controller="cPage" page="0"/>
+    <component id="n65_mnw01" name="btnPlugins" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="396,280" size="120,36" group="n60_mnw01">
+      <Button title="插件"/>
     </component>
+    <graph id="n63_mnw01" name="divProject" xy="48,344" size="1504,1" group="n60_mnw01" type="rect" lineSize="0" fillColor="#ff3a3e48">
+      <relation target="" sidePair="width-width"/>
+    </graph>
+    <text id="n15_mnw01" name="projectTitle" xy="48,368" size="200,36" group="n60_mnw01" fontSize="16" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="项目管理"/>
+    <component id="n16_mnw01" name="btnProject" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="268,368" size="120,36" group="n60_mnw01">
+      <Button title="项目设置"/>
+    </component>
+    <component id="n17_mnw01" name="btnExportSettings" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="396,368" size="120,36" group="n60_mnw01">
+      <Button title="导出设置"/>
+    </component>
+    <component id="n18_mnw01" name="btnExportAll" src="g8bt3" fileName="ButtonPrimary.xml" pkg="m5lrgzhj" xy="524,368" size="120,36" group="n60_mnw01">
+      <Button title="全部导出"/>
+    </component>
+    <text id="n19_mnw01" name="exportStatus" xy="268,412" size="900,20" group="n60_mnw01" fontSize="13" color="#ff8d887e" vAlign="middle" autoSize="none" singleLine="true" text="">
+      <gearColor controller="cExport" pages="1,2" values="#ffb7d4a8|#ffe0b060"/>
+    </text>
+    <graph id="n64_mnw01" name="divEnd" xy="48,444" size="1504,1" group="n60_mnw01" type="rect" lineSize="0" fillColor="#ff3a3e48">
+      <relation target="" sidePair="width-width"/>
+    </graph>
+    <group id="n60_mnw01" name="hub" xy="0,0" size="1600,445" advanced="true"/>
   </displayList>
 </component>
