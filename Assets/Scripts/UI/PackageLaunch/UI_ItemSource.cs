@@ -9,6 +9,29 @@ namespace PackageLaunch
     {
         public const string PackageName = "PackageLaunch";
         public const string ResName = "ItemSource";
+        public Controller m_cState;
+
+        public enum EcState
+        {
+            /// <summary>
+            /// null
+            /// <summary>
+            正常 = 0,
+            /// <summary>
+            /// null
+            /// <summary>
+            警告 = 1,
+            /// <summary>
+            /// null
+            /// <summary>
+            版本不符 = 2,
+        }
+
+        public EcState GetSelectedIndexEcState()
+        {
+            return (EcState)m_cState.selectedIndex;
+        }
+
         public GGraph m_bg;
         public GTextField m_title;
         public GTextField m_kind;
@@ -25,6 +48,7 @@ namespace PackageLaunch
         {
             base.ConstructFromXML(xml);
 
+            m_cState = GetControllerAt(0);
             m_bg = (GGraph)GetChildAt(0);
             m_title = (GTextField)GetChildAt(1);
             m_kind = (GTextField)GetChildAt(2);

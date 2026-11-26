@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component size="800,52">
+  <controller name="cState" pages="0,正常,1,警告,2,版本不符" selected="0"/>
   <displayList>
     <graph id="n0_lpi04" name="bg" xy="0,0" size="800,52" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff1e2128" corner="4">
       <relation target="" sidePair="width-width,height-height"/>
     </graph>
     <text id="n1_lpi04" name="title" xy="12,4" size="200,22" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" singleLine="true" text="数据源"/>
-    <text id="n2_lpi04" name="kind" xy="220,4" size="360,22" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="模组数据源"/>
-    <text id="n3_lpi04" name="path" xy="12,28" size="560,18" fontSize="12" color="#ff8d887e" vAlign="middle" autoSize="none" singleLine="true" text="/SpellProjects">
+    <text id="n2_lpi04" name="kind" xy="220,4" size="360,22" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="模组数据源">
+      <gearColor controller="cState" pages="1,2" values="#ffe0b060|#ffe0b060"/>
+    </text>
+    <text id="n3_lpi04" name="path" xy="12,28" size="560,18" fontSize="12" color="#ff8d887e" vAlign="middle" autoSize="height" text="/SpellProjects">
+      <gearColor controller="cState" pages="1,2" values="#ffe0b060|#ffe0b060"/>
+      <gearLook controller="cState" pages="2" values="1,0,0,1" default="1,0,0,0"/>
       <relation target="" sidePair="width-width"/>
     </text>
     <component id="n4_lpi04" name="remove" src="lpb03" fileName="ButtonGhost.xml" xy="692,10" size="88,32">

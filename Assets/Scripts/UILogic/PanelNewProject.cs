@@ -8,13 +8,6 @@ namespace UILogic
 {
     public class PanelNewProject : FguiPanelBase
     {
-        static readonly string[] RoleTitles = { "游戏开发者", "模组作者" };
-        static readonly string[] RoleDescs =
-        {
-            "编写游戏本体。不用填写作者 ID，编辑器会为这份存档保存游戏开发者身份。",
-            "在游戏数据之上编写自己的内容。需要一个作者 ID，并选择要一起载入的数据源。",
-        };
-
         UI_WindowNewProject view;
         string _folderHint;
         string _sourceHint;
@@ -28,25 +21,13 @@ namespace UILogic
             view.m_inputName.text = "";
             view.m_inputFolder.text = "";
             view.m_inputAuthor.text = "";
-            view.m_inputAuthor.restrict = "[0-9]";
-            view.m_sourceHint.text = "选择描述文件来添加。属于游戏的显示为游戏数据源，其余显示为模组数据源。模组需要一份游戏数据源。";
-            _sourceHint = view.m_sourceHint.text;
             view.m_btnBack.onClick.Add(() => FGUIPanelManager.Instance.Back());
             view.m_btnFolder.onClick.Add(PickFolder);
             view.m_btnAddSource.onClick.Add(AddSource);
             view.m_btnCreate.onClick.Add(Create);
-            view.m_roles.itemRenderer = RenderRole;
-            view.m_roles.numItems = RoleTitles.Length;
             view.m_roles.selectedIndex = 0;
             view.m_sources.itemRenderer = RenderSource;
             view.m_sources.numItems = 0;
-        }
-
-        void RenderRole(int index, GObject item)
-        {
-            var row = (UI_ItemRole)item;
-            row.title = RoleTitles[index];
-            row.m_desc.text = RoleDescs[index];
         }
 
         void RenderSource(int index, GObject item)
@@ -55,35 +36,26 @@ namespace UILogic
             var row = (UI_ItemSource)item;
             row.m_title.text = source.Title;
             row.m_kind.text = ProjectSession.KindLabel(source);
-            row.m_kind.color = new Color32(0xb7, 0xb2, 0xa8, 0xff);
             row.m_path.onClick.Clear();
-            row.m_path.touchable = false;
-            row.m_path.singleLine = true;
-            row.m_path.autoSize = AutoSizeType.None;
-            row.m_path.color = new Color32(0x8d, 0x88, 0x7e, 0xff);
-            row.m_path.text = source.AbsolutePath;
-            row.height = 52;
-            if (source.VersionMismatch || !string.IsNullOrEmpty(source.ParseWarning))
+            var warned = source.VersionMismatch || !string.IsNullOrEmpty(source.ParseWarning);
+            row.m_cState.selectedIndex = source.VersionMismatch
+                ? (int)UI_ItemSource.EcState.版本不符
+                : warned
+                    ? (int)UI_ItemSource.EcState.警告
+                    : (int)UI_ItemSource.EcState.正常;
+            if (source.VersionMismatch)
             {
-                row.m_kind.color = new Color32(0xe0, 0xb0, 0x60, 0xff);
-                if (source.VersionMismatch)
-                {
-                    row.m_kind.text += " · 版本不符";
-                }
-
-                row.m_path.touchable = source.VersionMismatch;
-                row.m_path.singleLine = false;
-                row.m_path.autoSize = AutoSizeType.Height;
-                row.m_path.color = new Color32(0xe0, 0xb0, 0x60, 0xff);
-                row.m_path.text = WarningText(source);
-                if (source.VersionMismatch)
-                {
-                    var version = source.EditorVersion;
-                    row.m_path.onClick.Set(() => Application.OpenURL(EditorVersion.ReleasePage(version)));
-                }
-
-                row.height = Mathf.Max(52, row.m_path.y + row.m_path.height + 8);
+                row.m_kind.text += " · 版本不符";
             }
+
+            row.m_path.text = warned ? WarningText(source) : source.AbsolutePath;
+            if (source.VersionMismatch)
+            {
+                var version = source.EditorVersion;
+                row.m_path.onClick.Set(() => Application.OpenURL(EditorVersion.ReleasePage(version)));
+            }
+
+            row.height = Mathf.Max(52, row.m_path.y + row.m_path.height + 8);
 
             row.m_remove.data = source.AbsolutePath;
             row.m_remove.onClick.Set(RemoveSource);
@@ -98,12 +70,12 @@ namespace UILogic
             }
 
             view.m_inputFolder.text = folder;
-            view.m_folderHint.text = _folderHint;
+            ShowFolderHint(_folderHint, false);
         }
 
         void AddSource()
         {
-            var path = EditorDialog.OpenDescriptor("添加数据源");
+            var path = EditorDialog.OpenDataPackage("添加数据源");
             if (string.IsNullOrEmpty(path))
             {
                 return;
@@ -119,7 +91,7 @@ namespace UILogic
 
             if (!ProjectSession.TryLoadSource(path, path, out var source))
             {
-                view.m_sourceHint.text = "请选择描述文件，而不是数据二进制。";
+                view.m_sourceHint.text = "请选择数据包。";
                 return;
             }
 
@@ -165,6 +137,14 @@ namespace UILogic
             return text;
         }
 
+        void ShowFolderHint(string text, bool error)
+        {
+            view.m_folderHint.text = text;
+            view.m_cFolder.selectedIndex = error
+                ? (int)UI_WindowNewProject.EcFolder.错误
+                : (int)UI_WindowNewProject.EcFolder.说明;
+        }
+
         void Create()
         {
             var authorId = 0u;
@@ -197,7 +177,7 @@ namespace UILogic
                 }
                 else
                 {
-                    view.m_folderHint.text = error;
+                    ShowFolderHint(error, true);
                 }
 
                 return;

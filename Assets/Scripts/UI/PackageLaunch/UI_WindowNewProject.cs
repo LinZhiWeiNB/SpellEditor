@@ -28,6 +28,25 @@ namespace PackageLaunch
             return (EcRole)m_cRole.selectedIndex;
         }
 
+        public Controller m_cFolder;
+
+        public enum EcFolder
+        {
+            /// <summary>
+            /// null
+            /// <summary>
+            说明 = 0,
+            /// <summary>
+            /// null
+            /// <summary>
+            错误 = 1,
+        }
+
+        public EcFolder GetSelectedIndexEcFolder()
+        {
+            return (EcFolder)m_cFolder.selectedIndex;
+        }
+
         public GGraph m_bg;
         public UI_ButtonGhost m_btnBack;
         public GTextField m_title;
@@ -65,6 +84,7 @@ namespace PackageLaunch
             base.ConstructFromXML(xml);
 
             m_cRole = GetControllerAt(0);
+            m_cFolder = GetControllerAt(1);
             m_bg = (GGraph)GetChildAt(0);
             m_btnBack = (UI_ButtonGhost)GetChildAt(1);
             m_title = (GTextField)GetChildAt(2);

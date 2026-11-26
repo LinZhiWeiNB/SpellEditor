@@ -23,10 +23,36 @@ namespace SpellEditor
 #endif
         }
 
-        public static string OpenDescriptor(string title)
+        public static string OpenDataPackage(string title)
         {
 #if UNITY_EDITOR
-            return UnityEditor.EditorUtility.OpenFilePanel(title, "", "json");
+            return UnityEditor.EditorUtility.OpenFilePanel(title, "", "bin");
+#else
+            return "";
+#endif
+        }
+
+        public static string OpenAssetBundle(string title)
+        {
+#if UNITY_EDITOR
+            return UnityEditor.EditorUtility.OpenFilePanelWithFilters(title, "", new[]
+            {
+                "AssetBundle", "ab,bundle,unity3d",
+                "所有文件", "*",
+            });
+#else
+            return "";
+#endif
+        }
+
+        public static string OpenAudioFile(string title)
+        {
+#if UNITY_EDITOR
+            return UnityEditor.EditorUtility.OpenFilePanelWithFilters(title, "", new[]
+            {
+                "音频", "wav,mp3,ogg,aiff,aif",
+                "所有文件", "*",
+            });
 #else
             return "";
 #endif
