@@ -1,10 +1,17 @@
 {
   "dependencies": {
     "com.reborn.fgui": "git@github.com:LinZhiWeiNB/RebornFrameFGUI.git",
+    "com.reborn.gamedata": "git@github.com:LinZhiWeiNB/RebornFrameGameData.git",
     "com.reborn.protobuf": "git@github.com:LinZhiWeiNB/RebornFrameProtobuf.git",
     "com.reborn.reborncore": "git@github.com:LinZhiWeiNB/RebornFrameCore.git",
     "com.reborn.spell": "git@github.com:LinZhiWeiNB/RebornFrameSpellRuntime.git",
+    "com.reborn.spell.animation": "git@github.com:LinZhiWeiNB/RebornFrameSpellAnimation.git",
+    "com.reborn.spell.audio": "git@github.com:LinZhiWeiNB/RebornFrameSpellAudio.git",
+    "com.reborn.spell.particles": "git@github.com:LinZhiWeiNB/RebornFrameSpellParticles.git",
+    "com.reborn.spell.spine": "git@github.com:LinZhiWeiNB/RebornFrameSpellSpine.git",
+    "com.reborn.spell.vfxgraph": "git@github.com:LinZhiWeiNB/RebornFrameSpellVfxGraph.git",
     "com.reborn.utils": "git@github.com:LinZhiWeiNB/RebornFrameUtils.git",
+    "com.unity.visualeffectgraph": "17.6.0",
     "com.unity.entities": "6.6.0",
     "com.unity.ide.rider": "3.0.38",
     "com.unity.inputsystem": "1.20.0",

@@ -1,5 +1,17 @@
 {
   "dependencies": {
+    "com.esotericsoftware.spine.spine-unity": {
+      "version": "file:spine-unity",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.unity.ugui": "1.0.0",
+        "com.unity.modules.animation": "1.0.0",
+        "com.unity.modules.physics": "1.0.0",
+        "com.unity.modules.physics2d": "1.0.0",
+        "com.unity.2d.sprite": "1.0.0"
+      }
+    },
     "com.reborn.fgui": {
       "version": "git@github.com:LinZhiWeiNB/RebornFrameFGUI.git",
       "depth": 0,
@@ -10,6 +22,16 @@
         "com.unity.inputsystem": "0.0.0"
       },
       "hash": "56afac0489e8b45136f6765e661b943b4a29cd14"
+    },
+    "com.reborn.gamedata": {
+      "version": "git@github.com:LinZhiWeiNB/RebornFrameGameData.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.reborn.spell": "1.2.0",
+        "com.reborn.protobuf": "1.0.0"
+      },
+      "hash": "187031b0394f44d74e84bebe75a7fac592416194"
     },
     "com.reborn.protobuf": {
       "version": "git@github.com:LinZhiWeiNB/RebornFrameProtobuf.git",
@@ -37,6 +59,57 @@
       },
       "hash": "1d52ff3bb923130e5cf1b239f5b9bcf532e029f8"
     },
+    "com.reborn.spell.animation": {
+      "version": "git@github.com:LinZhiWeiNB/RebornFrameSpellAnimation.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.reborn.spell": "1.2.0",
+        "com.reborn.protobuf": "1.0.0"
+      },
+      "hash": "e7c43a1cb50e14785fadf0bf9f362e9ab85a7dd9"
+    },
+    "com.reborn.spell.audio": {
+      "version": "git@github.com:LinZhiWeiNB/RebornFrameSpellAudio.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.reborn.spell": "1.2.0",
+        "com.reborn.protobuf": "1.0.0"
+      },
+      "hash": "d4814c4b00cfa93b575d3527ab0dd3a27958563b"
+    },
+    "com.reborn.spell.particles": {
+      "version": "git@github.com:LinZhiWeiNB/RebornFrameSpellParticles.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.reborn.spell": "1.2.0",
+        "com.reborn.protobuf": "1.0.0"
+      },
+      "hash": "157c10c70931448b5b344367d29b9ecaa2077e18"
+    },
+    "com.reborn.spell.spine": {
+      "version": "git@github.com:LinZhiWeiNB/RebornFrameSpellSpine.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.reborn.spell": "1.2.0",
+        "com.reborn.protobuf": "1.0.0"
+      },
+      "hash": "3b88ee654bba8db21db428bd8b27160d6586acc9"
+    },
+    "com.reborn.spell.vfxgraph": {
+      "version": "git@github.com:LinZhiWeiNB/RebornFrameSpellVfxGraph.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.reborn.spell": "1.2.0",
+        "com.reborn.protobuf": "1.0.0",
+        "com.unity.visualeffectgraph": "17.6.0"
+      },
+      "hash": "976dcb17a7f93d1335b1843c0de4aedd011b5a05"
+    },
     "com.reborn.utils": {
       "version": "git@github.com:LinZhiWeiNB/RebornFrameUtils.git",
       "depth": 0,
@@ -45,6 +118,12 @@
         "com.unity.inputsystem": "0.0.0"
       },
       "hash": "ef347fa77cca5bb6c3db53be67227f5c96923865"
+    },
+    "com.unity.2d.sprite": {
+      "version": "1.0.0",
+      "depth": 1,
+      "source": "builtin",
+      "dependencies": {}
     },
     "com.unity.burst": {
       "version": "2.0.0",
@@ -89,6 +168,12 @@
       "source": "builtin",
       "dependencies": {}
     },
+    "com.unity.graph-authoring": {
+      "version": "1.0.0",
+      "depth": 2,
+      "source": "builtin",
+      "dependencies": {}
+    },
     "com.unity.ide.rider": {
       "version": "3.0.38",
       "depth": 0,
@@ -130,6 +215,17 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
+    "com.unity.render-pipelines.core": {
+      "version": "17.6.0",
+      "depth": 1,
+      "source": "builtin",
+      "dependencies": {
+        "com.unity.burst": "1.8.14",
+        "com.unity.collections": "2.4.3",
+        "com.unity.modules.jsonserialize": "1.0.0",
+        "com.unity.profiling.core": "1.0.3"
+      }
+    },
     "com.unity.scriptablebuildpipeline": {
       "version": "3.0.3",
       "depth": 1,
@@ -139,6 +235,23 @@
         "com.unity.modules.assetbundle": "1.0.0"
       },
       "url": "https://packages.unity.com"
+    },
+    "com.unity.searcher": {
+      "version": "4.9.5",
+      "depth": 2,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.shadergraph": {
+      "version": "17.6.0",
+      "depth": 1,
+      "source": "builtin",
+      "dependencies": {
+        "com.unity.render-pipelines.core": "17.6.0",
+        "com.unity.searcher": "4.9.5",
+        "com.unity.graph-authoring": "1.0.0"
+      }
     },
     "com.unity.test-framework": {
       "version": "1.8.0",
@@ -157,6 +270,27 @@
       "dependencies": {
         "com.unity.test-framework": "1.1.33",
         "com.unity.modules.jsonserialize": "1.0.0"
+      }
+    },
+    "com.unity.ugui": {
+      "version": "2.6.0",
+      "depth": 1,
+      "source": "builtin",
+      "dependencies": {
+        "com.unity.modules.ui": "1.0.0",
+        "com.unity.modules.imgui": "1.0.0",
+        "com.unity.modules.audio": "1.0.0",
+        "com.unity.modules.physics2d": "1.0.0",
+        "com.unity.modules.physics": "1.0.0"
+      }
+    },
+    "com.unity.visualeffectgraph": {
+      "version": "17.6.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {
+        "com.unity.shadergraph": "17.6.0",
+        "com.unity.render-pipelines.core": "17.6.0"
       }
     },
     "com.unity.modules.accessibility": {
