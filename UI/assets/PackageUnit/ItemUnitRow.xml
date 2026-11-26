@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="480,56" extention="Button">
+  <controller name="button" pages="0,up,1,down,2,over,3,selectedOver" selected="0"/>
+  <displayList>
+    <graph id="n0_mnu03" name="bg" xy="8,4" size="464,48" type="rect" lineSize="0" fillColor="#ff243044" corner="4">
+      <gearDisplay controller="button" pages="1,2,3"/>
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <text id="n1_mnu03" name="title" xy="20,8" size="300,22" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="0:1"/>
+    <text id="n2_mnu03" name="meta" xy="20,30" size="440,18" fontSize="12" color="#ff8d887e" vAlign="middle" autoSize="none" singleLine="true" text="属性 0  ·  技能 0">
+      <relation target="" sidePair="width-width"/>
+    </text>
+  </displayList>
+  <Button mode="Radio"/>
+</component>

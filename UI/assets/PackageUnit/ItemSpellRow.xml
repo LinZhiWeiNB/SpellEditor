@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="720,36">
+  <displayList>
+    <text id="n0_mnu08" name="title" xy="0,0" size="480,36" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" singleLine="true" text="技能"/>
+    <component id="n1_mnu08" name="btnEdit" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="488,0" size="108,36">
+      <relation target="" sidePair="right-right"/>
+      <Button title="编辑"/>
+    </component>
+    <component id="n2_mnu08" name="btnDelete" src="g8bt1" fileName="ButtonGhost.xml" pkg="m5lrgzhj" xy="604,0" size="108,36">
+      <relation target="" sidePair="right-right"/>
+      <Button title="删除"/>
+    </component>
+  </displayList>
+</component>

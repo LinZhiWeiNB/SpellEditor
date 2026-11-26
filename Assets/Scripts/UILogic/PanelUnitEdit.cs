@@ -1,0 +1,276 @@
+using System.Collections.Generic;
+using FairyGUI;
+using PackageAtrribute;
+using PackageSpell;
+using PackageUnit;
+using RebornFrame.Spell;
+using SpellEditor;
+
+namespace UILogic
+{
+    public class PanelUnitEdit : FguiPanelBase
+    {
+        UI_PanelUnitEdit view;
+        UnitRecord _record;
+        readonly List<ulong> _attributes = new List<ulong>();
+        readonly List<ulong> _active = new List<ulong>();
+        readonly List<ulong> _passive = new List<ulong>();
+        readonly UnitPickDialog _pick = new UnitPickDialog();
+        bool _applying;
+
+        public override void Start(object[] data)
+        {
+            view = (UI_PanelUnitEdit)FGUIComponent;
+            view.m_btnBack.onClick.Set(() =>
+            {
+                _pick.Close();
+                FGUIPanelManager.Instance.Back();
+            });
+            view.m_btnAddActive.onClick.Set(() => PickSpell(_active, Unit().ActiveSpells, view.m_activeSpells));
+            view.m_btnAddPassive.onClick.Set(() => PickSpell(_passive, Unit().PassiveSpells, view.m_passiveSpells));
+            view.m_btnSpine.onClick.Set(PickSpine);
+            var id = data != null && data.Length > 0 && data[0] is ulong value ? value : 0UL;
+            _record = UnitLibrary.Find(id);
+            view.m_cSpine.selectedIndex = UnitCatalogs.SpineEnabled()
+                ? (int)UI_PanelUnitEdit.EcSpine.开
+                : (int)UI_PanelUnitEdit.EcSpine.关;
+            RenderAll();
+        }
+
+        public override void OnShow()
+        {
+            if (view == null || _record == null)
+            {
+                return;
+            }
+
+            var again = UnitLibrary.Find(_record.Unit.Id);
+            if (again != null)
+            {
+                _record = again;
+            }
+
+            RenderAll();
+        }
+
+        public override void OnClose()
+        {
+            _pick.Close();
+        }
+
+        void RenderAll()
+        {
+            _attributes.Clear();
+            _active.Clear();
+            _passive.Clear();
+            if (_record == null || _record.Unit == null)
+            {
+                view.m_cOrigin.selectedIndex = (int)UI_PanelUnitEdit.EcOrigin.本项目;
+                view.m_valueId.text = "";
+                view.m_btnSpine.title = "选择 Spine 骨骼";
+                view.m_presets.numItems = 0;
+                view.m_values.numItems = 0;
+                view.m_activeSpells.numItems = 0;
+                view.m_passiveSpells.numItems = 0;
+                return;
+            }
+
+            view.m_cOrigin.selectedIndex = _record.Owned
+                ? (int)UI_PanelUnitEdit.EcOrigin.本项目
+                : (int)UI_PanelUnitEdit.EcOrigin.差异;
+            if (!_record.Owned)
+            {
+                view.m_overrideHint.text = "这是对「" + _record.Source
+                    + "」的本地差异。游戏按玩家设置的模组载入顺序覆盖，更晚载入的模组会盖过这里的修改。";
+            }
+
+            view.m_valueId.text = new SpellId(_record.Unit.Id).ToString();
+            _attributes.AddRange(UnitCatalogs.Attributes());
+            UnitCatalogs.Spells(_active, _passive);
+            view.m_spineHint.text = UnitCatalogs.SpineKeys().Count == 0
+                ? "资源列表里还没有 Spine 骨骼。"
+                : "点按钮，从资源列表里选择一个 Spine 骨骼。";
+            RenderSpineButton();
+            RenderPresets();
+            RenderValues();
+            RenderSpellRows(view.m_activeSpells, _record.Unit.ActiveSpells);
+            RenderSpellRows(view.m_passiveSpells, _record.Unit.PassiveSpells);
+        }
+
+        EditorUnit Unit()
+        {
+            return _record == null ? null : _record.Unit;
+        }
+
+        void Commit()
+        {
+            UnitLibrary.Commit(_record);
+        }
+
+        void RenderPresets()
+        {
+            var unit = Unit();
+            view.m_presets.itemRenderer = (index, obj) =>
+            {
+                var id = _attributes[index];
+                var button = (UI_ButtonCheck)obj;
+                button.title = UnitCatalogs.AttributeLabel(id);
+                button.SetSize(view.m_presets.width, button.height);
+                button.selected = unit.PresetAttributes.Contains(id);
+                button.onChanged.Set(() =>
+                {
+                    if (_applying)
+                    {
+                        return;
+                    }
+
+                    if (button.selected)
+                    {
+                        if (!unit.PresetAttributes.Contains(id))
+                        {
+                            unit.PresetAttributes.Add(id);
+                        }
+
+                        UnitCatalogs.SetRaw(unit, id, UnitCatalogs.Raw(unit, id));
+                    }
+                    else
+                    {
+                        unit.PresetAttributes.Remove(id);
+                        for (var i = unit.Values.Count - 1; i >= 0; i--)
+                        {
+                            if (unit.Values[i].AttributeId == id)
+                            {
+                                unit.Values.RemoveAt(i);
+                            }
+                        }
+                    }
+
+                    Commit();
+                    RenderValues();
+                });
+            };
+            _applying = true;
+            view.m_presets.numItems = _attributes.Count;
+            _applying = false;
+        }
+
+        void RenderValues()
+        {
+            var unit = Unit();
+            _applying = true;
+            view.m_values.itemRenderer = (index, obj) =>
+            {
+                var id = unit.PresetAttributes[index];
+                var row = (UI_ItemValue)obj;
+                row.m_title.text = UnitCatalogs.AttributeLabel(id);
+                row.m_input.text = UnitCatalogs.Raw(unit, id).ToString();
+                row.m_input.onChanged.Set(() =>
+                {
+                    if (_applying)
+                    {
+                        return;
+                    }
+
+                    long.TryParse(row.m_input.text, out var raw);
+                    UnitCatalogs.SetRaw(unit, id, raw);
+                    Commit();
+                });
+            };
+            view.m_values.numItems = unit.PresetAttributes.Count;
+            _applying = false;
+        }
+
+        void RenderSpellRows(GList list, List<ulong> chosen)
+        {
+            list.itemRenderer = (index, obj) =>
+            {
+                var id = chosen[index];
+                var row = (UI_ItemSpellRow)obj;
+                row.m_title.text = UnitCatalogs.SpellLabel(id);
+                row.SetSize(list.width, row.height);
+                row.m_btnEdit.onClick.Set(() => OpenSpell(id));
+                row.m_btnDelete.onClick.Set(() =>
+                {
+                    chosen.Remove(id);
+                    Commit();
+                    RenderSpellRows(list, chosen);
+                });
+            };
+            list.numItems = chosen.Count;
+        }
+
+        void PickSpell(List<ulong> catalog, List<ulong> chosen, GList list)
+        {
+            var unit = Unit();
+            if (unit == null || chosen == null)
+            {
+                return;
+            }
+
+            var keys = new List<string>();
+            var titles = new List<string>();
+            for (var i = 0; i < catalog.Count; i++)
+            {
+                if (chosen.Contains(catalog[i]))
+                {
+                    continue;
+                }
+
+                keys.Add(catalog[i].ToString());
+                titles.Add(UnitCatalogs.SpellLabel(catalog[i]));
+            }
+
+            _pick.Open("新增技能", keys, titles, key =>
+            {
+                if (!ulong.TryParse(key, out var id) || chosen.Contains(id))
+                {
+                    return;
+                }
+
+                chosen.Add(id);
+                Commit();
+                RenderSpellRows(list, chosen);
+            });
+        }
+
+        void OpenSpell(ulong spellId)
+        {
+            var unit = Unit();
+            if (unit == null)
+            {
+                return;
+            }
+
+            _pick.Close();
+            FGUIPanelManager.Instance.ShowPanel<PanelSpell>(
+                UI_PanelSpell.PackageName,
+                UI_PanelSpell.ResName,
+                new object[] { spellId, unit.Id },
+                ShowTypeEnum.HideCurrent);
+        }
+
+        void RenderSpineButton()
+        {
+            var key = Unit().SpineKey ?? "";
+            view.m_btnSpine.title = key.Length == 0 ? "选择 Spine 骨骼" : key;
+        }
+
+        void PickSpine()
+        {
+            var unit = Unit();
+            if (unit == null)
+            {
+                return;
+            }
+
+            var keys = UnitCatalogs.SpineKeys();
+            _pick.Open("选择 Spine 骨骼", keys, keys, key =>
+            {
+                unit.SpineKey = key ?? "";
+                ResourceReferences.BindUnitSpine(unit.Id, unit.SpineKey);
+                Commit();
+                RenderSpineButton();
+            });
+        }
+    }
+}

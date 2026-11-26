@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1600,900">
+  <controller name="cDetail" pages="0,未选中,1,已选中" selected="1"/>
+  <controller name="cSpine" pages="0,关,1,开" selected="1"/>
+  <displayList>
+    <graph id="n0_mnu01" name="bg" xy="0,0" size="1600,900" type="rect" lineSize="0" fillColor="#ff16181d">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <graph id="n1_mnu01" name="listPane" xy="0,0" size="480,900" type="rect" lineSize="0" fillColor="#ff1e2128">
+      <relation target="" sidePair="height-height"/>
+    </graph>
+    <graph id="n2_mnu01" name="split" xy="480,0" size="1,900" type="rect" lineSize="0" fillColor="#ff3a3e48">
+      <relation target="" sidePair="height-height"/>
+    </graph>
+    <component id="n3_mnu01" name="btnBack" src="lpb03" fileName="ButtonGhost.xml" pkg="mskevjh6" xy="16,16" size="88,36">
+      <Button title="返回"/>
+    </component>
+    <text id="n4_mnu01" name="title" xy="112,20" size="200,28" fontSize="18" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="单位"/>
+    <graph id="n5_mnu01" name="bgSearch" xy="16,68" size="448,36" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
+    <text id="n6_mnu01" name="search" xy="28,68" size="424,36" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" input="true" prompt="搜索单位"/>
+    <list id="n7_mnu01" name="units" xy="0,116" size="480,716" overflow="scroll" scrollBar="hidden" defaultItem="ui://unt4p8n2mnu03" autoClearItems="true">
+      <item title="0:1">
+        <property target="meta" propertyId="0" value="属性 2  ·  技能 1"/>
+      </item>
+    </list>
+    <component id="n8_mnu01" name="btnAdd" src="g8bt3" fileName="ButtonPrimary.xml" pkg="m5lrgzhj" xy="16,848" size="144,36">
+      <Button title="新增"/>
+    </component>
+    <component id="n9_mnu01" name="btnDelete" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="168,848" size="144,36">
+      <gearLook controller="cDetail" pages="0" values="1,0,1,0" default="1,0,0,1"/>
+      <Button title="删除"/>
+    </component>
+    <component id="n10_mnu01" name="btnCopy" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="320,848" size="144,36">
+      <gearLook controller="cDetail" pages="0" values="1,0,1,0" default="1,0,0,1"/>
+      <Button title="复制"/>
+    </component>
+    <text id="n11_mnu01" name="emptyHint" xy="512,80" size="1056,28" fontSize="14" color="#ff8d887e" vAlign="middle" autoSize="none" singleLine="true" text="从左侧选择一个单位。">
+      <gearDisplay controller="cDetail" pages="0"/>
+    </text>
+    <text id="n12_mnu01" name="basicTitle" xy="512,28" size="140,32" group="n40_mnu01" fontSize="18" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="基础信息"/>
+    <component id="n13_mnu01" name="btnEdit" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="660,26" size="120,36" group="n40_mnu01">
+      <Button title="编辑"/>
+    </component>
+    <text id="n14_mnu01" name="labelId" xy="512,76" size="140,28" group="n40_mnu01" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="标识"/>
+    <text id="n15_mnu01" name="valueId" xy="668,76" size="400,28" group="n40_mnu01" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" singleLine="true" text="0:1"/>
+    <text id="n41_mnu01" name="valueSource" xy="1080,76" size="480,28" group="n40_mnu01" fontSize="14" color="#ff8d887e" align="right" vAlign="middle" autoSize="none" singleLine="true" text="本项目"/>
+    <text id="n16_mnu01" name="labelPreset" xy="512,116" size="240,24" group="n40_mnu01" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="属性预设"/>
+    <list id="n17_mnu01" name="presets" xy="512,144" size="1056,88" group="n40_mnu01" overflow="scroll" scrollBar="hidden" defaultItem="ui://unt4p8n2mnu04" autoClearItems="true" selectionMode="none"/>
+    <text id="n18_mnu01" name="labelValues" xy="512,244" size="240,24" group="n40_mnu01" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="属性值"/>
+    <list id="n19_mnu01" name="values" xy="512,272" size="1056,88" group="n40_mnu01" overflow="scroll" scrollBar="hidden" defaultItem="ui://unt4p8n2mnu04" autoClearItems="true" selectionMode="none"/>
+    <text id="n20_mnu01" name="labelActive" xy="512,372" size="240,24" group="n40_mnu01" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="主动技能"/>
+    <list id="n21_mnu01" name="activeSpells" xy="512,400" size="1056,88" group="n40_mnu01" overflow="scroll" scrollBar="hidden" defaultItem="ui://unt4p8n2mnu04" autoClearItems="true" selectionMode="none"/>
+    <text id="n22_mnu01" name="labelPassive" xy="512,500" size="240,24" group="n40_mnu01" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="被动技能"/>
+    <list id="n23_mnu01" name="passiveSpells" xy="512,528" size="1056,88" group="n40_mnu01" overflow="scroll" scrollBar="hidden" defaultItem="ui://unt4p8n2mnu04" autoClearItems="true" selectionMode="none"/>
+    <text id="n24_mnu01" name="labelSpine" xy="512,628" size="240,24" group="n30_mnu01" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="Spine 骨骼"/>
+    <text id="n25_mnu01" name="valueSpine" xy="760,628" size="400,24" group="n30_mnu01" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" singleLine="true" text="未选择"/>
+    <text id="n26_mnu01" name="previewLabel" xy="512,660" size="120,22" group="n30_mnu01" fontSize="13" color="#ff8d887e" vAlign="middle" autoSize="none" singleLine="true" text="预览"/>
+    <graph id="n27_mnu01" name="preview" xy="512,688" size="1056,176" group="n30_mnu01" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
+    <component id="n42_mnu01" name="btnOpenResource" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="1432,700" size="120,32" group="n30_mnu01">
+      <Button title="打开资源"/>
+    </component>
+    <group id="n30_mnu01" name="spineInfo" xy="512,628" size="1056,236" group="n40_mnu01" advanced="true">
+      <gearDisplay controller="cSpine" pages="1"/>
+    </group>
+    <group id="n40_mnu01" name="detail" xy="512,26" size="1056,838" advanced="true">
+      <gearDisplay controller="cDetail" pages="1"/>
+    </group>
+  </displayList>
+</component>

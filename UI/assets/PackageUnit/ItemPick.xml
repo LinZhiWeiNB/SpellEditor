@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="640,36" extention="Button">
+  <controller name="button" pages="0,up,1,down,2,over,3,selectedOver" selected="0"/>
+  <displayList>
+    <graph id="n0_mnu07" name="bg" xy="0,0" size="640,36" type="rect" lineSize="0" fillColor="#ff243044" corner="4">
+      <gearDisplay controller="button" pages="1,2,3"/>
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <text id="n1_mnu07" name="title" xy="12,0" size="616,36" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" singleLine="true" text="条目">
+      <relation target="" sidePair="width-width,height-height"/>
+    </text>
+  </displayList>
+  <Button/>
+</component>

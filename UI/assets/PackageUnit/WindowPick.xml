@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1600,900">
+  <displayList>
+    <graph id="n0_mnu06" name="mask" xy="0,0" size="1600,900" type="rect" lineSize="0" fillColor="#8c000000">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <graph id="n1_mnu06" name="card" xy="440,170" size="720,560" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff1a1a1a" corner="8">
+      <relation target="" sidePair="center-center,middle-middle"/>
+    </graph>
+    <text id="n2_mnu06" name="title" xy="456,186" size="400,28" fontSize="18" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="选择">
+      <relation target="n1_mnu06" sidePair="left-left,top-top"/>
+    </text>
+    <graph id="n3_mnu06" name="bgSearch" xy="456,224" size="688,36" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4">
+      <relation target="n1_mnu06" sidePair="left-left,top-top"/>
+    </graph>
+    <text id="n4_mnu06" name="search" xy="468,224" size="664,36" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" input="true" prompt="搜索">
+      <relation target="n1_mnu06" sidePair="left-left,top-top"/>
+    </text>
+    <list id="n5_mnu06" name="choices" xy="456,272" size="688,380" overflow="scroll" scrollBar="hidden" lineGap="4" defaultItem="ui://unt4p8n2mnu07" autoClearItems="true" selectionMode="none">
+      <relation target="n1_mnu06" sidePair="left-left,top-top"/>
+    </list>
+    <text id="n6_mnu06" name="empty" xy="456,272" size="688,36" fontSize="14" color="#ff8d887e" vAlign="middle" autoSize="none" singleLine="true" text="没有匹配的条目。">
+      <relation target="n1_mnu06" sidePair="left-left,top-top"/>
+    </text>
+    <component id="n7_mnu06" name="btnCancel" src="g8bt1" fileName="ButtonGhost.xml" pkg="m5lrgzhj" xy="1056,682" size="88,32">
+      <relation target="n1_mnu06" sidePair="right-right,bottom-bottom"/>
+      <Button title="取消"/>
+    </component>
+  </displayList>
+</component>

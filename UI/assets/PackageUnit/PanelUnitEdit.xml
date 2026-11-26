@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1600,900">
+  <controller name="cSpine" pages="0,关,1,开" selected="1"/>
+  <controller name="cOrigin" pages="0,本项目,1,差异" selected="0"/>
+  <displayList>
+    <graph id="n0_mnu02" name="bg" xy="0,0" size="1600,900" type="rect" lineSize="0" fillColor="#ff16181d">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <component id="n1_mnu02" name="btnBack" src="lpb03" fileName="ButtonGhost.xml" pkg="mskevjh6" xy="16,16" size="88,36">
+      <Button title="返回"/>
+    </component>
+    <text id="n2_mnu02" name="title" xy="112,20" size="280,28" fontSize="18" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="编辑单位"/>
+    <text id="n21_mnu02" name="overrideHint" xy="48,52" size="1500,22" fontSize="13" color="#ffc4a574" vAlign="middle" autoSize="none" singleLine="true" text="这是对其他数据源的本地差异。游戏按玩家设置的模组载入顺序覆盖，更晚载入的模组会盖过这里的修改。">
+      <gearDisplay controller="cOrigin" pages="1"/>
+    </text>
+    <text id="n3_mnu02" name="labelId" xy="48,76" size="120,28" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="标识"/>
+    <text id="n4_mnu02" name="valueId" xy="176,76" size="320,28" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" singleLine="true" text="0:1"/>
+    <text id="n5_mnu02" name="labelPreset" xy="48,120" size="240,24" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="属性预设"/>
+    <list id="n6_mnu02" name="presets" xy="48,148" size="720,220" overflow="scroll" scrollBar="hidden" defaultItem="ui://m5lrgzhjg8bt0" autoClearItems="true" selectionMode="none"/>
+    <text id="n7_mnu02" name="labelValues" xy="48,384" size="240,24" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="属性值"/>
+    <list id="n8_mnu02" name="values" xy="48,412" size="720,440" overflow="scroll" scrollBar="hidden" defaultItem="ui://unt4p8n2mnu05" autoClearItems="true" selectionMode="none"/>
+    <text id="n9_mnu02" name="labelActive" xy="820,76" size="400,24" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="主动技能"/>
+    <component id="n22_mnu02" name="btnAddActive" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="1400,70" size="140,32">
+      <Button title="新增技能"/>
+    </component>
+    <list id="n10_mnu02" name="activeSpells" xy="820,112" size="720,180" overflow="scroll" scrollBar="hidden" lineGap="4" defaultItem="ui://unt4p8n2mnu08" autoClearItems="true" selectionMode="none"/>
+    <text id="n11_mnu02" name="labelPassive" xy="820,308" size="400,24" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="被动技能"/>
+    <component id="n23_mnu02" name="btnAddPassive" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="1400,302" size="140,32">
+      <Button title="新增技能"/>
+    </component>
+    <list id="n12_mnu02" name="passiveSpells" xy="820,340" size="720,160" overflow="scroll" scrollBar="hidden" lineGap="4" defaultItem="ui://unt4p8n2mnu08" autoClearItems="true" selectionMode="none"/>
+    <text id="n13_mnu02" name="labelSpine" xy="820,520" size="400,24" group="n20_mnu02" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="Spine 骨骼"/>
+    <text id="n14_mnu02" name="spineHint" xy="820,548" size="720,22" group="n20_mnu02" fontSize="12" color="#ff8d887e" vAlign="middle" autoSize="none" singleLine="true" text="从资源列表里选择一个 Spine 骨骼。"/>
+    <component id="n24_mnu02" name="btnSpine" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="820,578" size="720,36" group="n20_mnu02">
+      <Button title="选择 Spine 骨骼"/>
+    </component>
+    <group id="n20_mnu02" name="spineEdit" xy="820,520" size="720,94" advanced="true">
+      <gearDisplay controller="cSpine" pages="1"/>
+    </group>
+  </displayList>
+</component>

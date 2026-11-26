@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<packageDescription id="unt4p8n2">
+  <resources>
+    <component id="mnu03" name="ItemUnitRow.xml" path="/" exported="true"/>
+    <component id="mnu04" name="ItemLine.xml" path="/" exported="true"/>
+    <component id="mnu05" name="ItemValue.xml" path="/" exported="true"/>
+    <component id="mnu06" name="WindowPick.xml" path="/" exported="true"/>
+    <component id="mnu07" name="ItemPick.xml" path="/" exported="true"/>
+    <component id="mnu08" name="ItemSpellRow.xml" path="/" exported="true"/>
+    <component id="mnu01" name="PanelUnitList.xml" path="/" exported="true"/>
+    <component id="mnu02" name="PanelUnitEdit.xml" path="/" exported="true"/>
+  </resources>
+  <publish name="" genCode="true"/>
+</packageDescription>
