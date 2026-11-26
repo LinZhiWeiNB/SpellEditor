@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="168,28">
+  <controller name="cEdit" pages="0,可改,1,只读" selected="0"/>
+  <displayList>
+    <graph id="n0_spn14" name="inputBg" xy="0,0" size="100,28" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4">
+      <gearDisplay controller="cEdit" pages="0"/>
+    </graph>
+    <text id="n1_spn14" name="input" xy="8,0" size="84,28" fontSize="13" color="#ffe8e6e3" vAlign="middle" autoSize="none" singleLine="true" text="" input="true">
+      <gearDisplay controller="cEdit" pages="0"/>
+    </text>
+    <text id="n2_spn14" name="label" xy="0,0" size="100,28" fontSize="13" color="#ffe8e6e3" vAlign="middle" autoSize="none" singleLine="true" text="正面">
+      <gearDisplay controller="cEdit" pages="1"/>
+    </text>
+    <component id="n3_spn14" name="btnDelete" src="g8bt1" fileName="ButtonGhost.xml" pkg="m5lrgzhj" xy="108,0" size="60,28">
+      <Button title="删除"/>
+    </component>
+  </displayList>
+</component>

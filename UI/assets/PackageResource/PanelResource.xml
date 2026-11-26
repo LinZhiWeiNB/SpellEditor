@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1600,900">
+  <controller name="cDetail" pages="0,未选中,1,已选中" selected="1"/>
+  <controller name="cOwn" pages="0,本源,1,只读" selected="0"/>
+  <controller name="cMessage" pages="0,空,1,提示,2,警告" selected="0"/>
+  <controller name="cPreview" pages="0,无,1,有" selected="0"/>
+  <controller name="cPick" pages="0,关,1,类型,2,同名,3,目录,4,删除" selected="0"/>
+  <displayList>
+    <graph id="n0_mnr01" name="bg" xy="0,0" size="1600,900" type="rect" lineSize="0" fillColor="#ff16181d">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <graph id="n1_mnr01" name="listPane" xy="0,0" size="480,900" type="rect" lineSize="0" fillColor="#ff1e2128">
+      <relation target="" sidePair="height-height"/>
+    </graph>
+    <graph id="n2_mnr01" name="split" xy="480,0" size="1,900" type="rect" lineSize="0" fillColor="#ff3a3e48">
+      <relation target="" sidePair="height-height"/>
+    </graph>
+    <component id="n3_mnr01" name="btnBack" src="lpb03" fileName="ButtonGhost.xml" pkg="mskevjh6" xy="16,16" size="88,36">
+      <Button title="返回"/>
+    </component>
+    <text id="n4_mnr01" name="title" xy="112,20" size="200,28" fontSize="18" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="资源"/>
+    <graph id="n5_mnr01" name="bgSearch" xy="16,68" size="448,36" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
+    <text id="n6_mnr01" name="search" xy="28,68" size="424,36" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" input="true" prompt="搜索资源"/>
+    <list id="n7_mnr01" name="resources" xy="0,116" size="480,688" overflow="scroll" scrollBar="hidden" defaultItem="ui://res4p8n2mnr02" autoClearItems="true">
+      <item title="knight">
+        <property target="meta" propertyId="0" value="本项目  ·  heroes"/>
+      </item>
+      <item title="goblin" controllers="cTone,1">
+        <property target="meta" propertyId="0" value="游戏本体"/>
+      </item>
+    </list>
+    <text id="n8_mnr01" name="status" xy="16,812" size="448,32" fontSize="12" color="#ff8d887e" autoSize="none" text="">
+      <gearDisplay controller="cMessage" pages="1,2"/>
+      <gearColor controller="cMessage" pages="2" values="#ffe06a6a" default="#ff8d887e"/>
+    </text>
+    <component id="n9_mnr01" name="btnImport" src="g8bt3" fileName="ButtonPrimary.xml" pkg="m5lrgzhj" xy="16,852" size="220,36">
+      <Button title="导入"/>
+    </component>
+    <component id="n10_mnr01" name="btnDelete" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="244,852" size="220,36">
+      <gearLook controller="cOwn" pages="1" values="1,0,1,0" default="1,0,0,1"/>
+      <Button title="删除"/>
+    </component>
+    <text id="n11_mnr01" name="emptyHint" xy="512,80" size="1056,96" fontSize="14" color="#ff8d887e" autoSize="none" text="从左侧选择一个资源。Spine 选择导出目录，目录里每个骨架各成一条资源，二进制、JSON、atlas 和 atlas.txt 会自动识别。动画和粒子选择 AssetBundle，一个包里可以有多个预制体。音频选择 wav、mp3 或 ogg。">
+      <gearDisplay controller="cDetail" pages="0"/>
+    </text>
+    <text id="n12_mnr01" name="basicTitle" xy="512,28" size="240,32" group="n40_mnr01" fontSize="18" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="资源信息"/>
+    <text id="n13_mnr01" name="labelName" xy="512,76" size="140,28" group="n40_mnr01" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="名称"/>
+    <text id="n14_mnr01" name="valueName" xy="668,76" size="700,28" group="n40_mnr01" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" singleLine="true" text="knight"/>
+    <text id="n15_mnr01" name="labelKind" xy="512,112" size="140,28" group="n40_mnr01" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="类型"/>
+    <text id="n16_mnr01" name="valueKind" xy="668,112" size="700,28" group="n40_mnr01" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" singleLine="true" text="Spine"/>
+    <text id="n17_mnr01" name="labelSource" xy="512,148" size="140,28" group="n40_mnr01" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="数据源"/>
+    <text id="n18_mnr01" name="valueSource" xy="668,148" size="700,28" group="n40_mnr01" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" singleLine="true" text="本项目"/>
+    <text id="n19_mnr01" name="labelFolder" xy="512,196" size="140,28" group="n40_mnr01" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="目录"/>
+    <text id="n20_mnr01" name="valueFolder" xy="668,196" size="700,28" group="n40_mnr01" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" singleLine="true" text="heroes">
+      <gearDisplay controller="cOwn" pages="1"/>
+    </text>
+    <graph id="n51_mnr01" name="folderBg" xy="668,192" size="640,36" group="n30_mnr01" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
+    <text id="n21_mnr01" name="inputFolder" xy="680,192" size="616,36" group="n30_mnr01" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="heroes" input="true" prompt="heroes/player"/>
+    <component id="n22_mnr01" name="btnMove" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="1320,192" size="120,36" group="n30_mnr01">
+      <Button title="移动"/>
+    </component>
+    <text id="n23_mnr01" name="folderHint" xy="668,232" size="860,22" group="n30_mnr01" fontSize="12" color="#ff8d887e" vAlign="middle" autoSize="none" singleLine="true" text="用 / 分成多层，例如 heroes/player。留空就放在该类型的根目录下。"/>
+    <group id="n30_mnr01" name="ownFolder" xy="668,192" size="860,62" group="n40_mnr01" advanced="true">
+      <gearDisplay controller="cOwn" pages="0"/>
+    </group>
+    <text id="n24_mnr01" name="labelFiles" xy="512,308" size="240,24" group="n40_mnr01" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="文件"/>
+    <list id="n25_mnr01" name="files" xy="512,336" size="1056,140" group="n40_mnr01" overflow="scroll" scrollBar="hidden" defaultItem="ui://res4p8n2mnr04" autoClearItems="true" selectionMode="none"/>
+    <text id="n26_mnr01" name="labelRefs" xy="512,488" size="240,24" group="n40_mnr01" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="引用"/>
+    <list id="n27_mnr01" name="refs" xy="512,516" size="1056,88" group="n40_mnr01" overflow="scroll" scrollBar="hidden" defaultItem="ui://res4p8n2mnr04" autoClearItems="true" selectionMode="none"/>
+    <text id="n28_mnr01" name="labelPreview" xy="512,616" size="240,24" group="n40_mnr01" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="预览"/>
+    <graph id="n29_mnr01" name="previewFrame" xy="512,644" size="1056,180" group="n40_mnr01" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
+    <text id="n31_mnr01" name="previewHint" xy="532,700" size="1016,56" group="n40_mnr01" fontSize="14" color="#ff8d887e" align="center" vAlign="middle" autoSize="none" text="这个资源没有可显示的预览。">
+      <gearDisplay controller="cPreview" pages="0"/>
+    </text>
+    <loader id="n32_mnr01" name="preview" xy="528,656" size="1024,156" group="n40_mnr01" align="center" vAlign="middle" fill="scale">
+      <gearDisplay controller="cPreview" pages="1"/>
+    </loader>
+    <text id="n33_mnr01" name="previewNote" xy="512,832" size="1056,22" group="n40_mnr01" fontSize="12" color="#ff8d887e" vAlign="middle" autoSize="none" singleLine="true" text=""/>
+    <group id="n40_mnr01" name="detail" xy="512,28" size="1056,814" advanced="true">
+      <gearDisplay controller="cDetail" pages="1"/>
+    </group>
+    <graph id="n41_mnr01" name="pickMask" xy="0,0" size="1600,900" group="n50_mnr01" type="rect" lineSize="0" fillColor="#cc000000">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <graph id="n42_mnr01" name="pickCard" xy="590,270" size="420,360" group="n50_mnr01" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff1e2128" corner="8">
+      <gearSize controller="cPick" pages="2,3,4" values="420,448,1,1|420,240,1,1|420,220,1,1" default="420,360,1,1"/>
+    </graph>
+    <text id="n43_mnr01" name="pickTitle" xy="614,294" size="372,28" group="n50_mnr01" fontSize="18" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="导入资源"/>
+    <text id="n44_mnr01" name="pickHint" xy="614,330" size="372,22" group="n50_mnr01" fontSize="13" color="#ff8d887e" vAlign="middle" autoSize="none" singleLine="true" text="按当前项目设置列出。"/>
+    <list id="n45_mnr01" name="kinds" xy="614,366" size="372,200" group="n50_mnr01" overflow="scroll" scrollBar="hidden" lineGap="8" defaultItem="ui://res4p8n2mnr05" autoClearItems="true">
+      <gearDisplay controller="cPick" pages="1,2"/>
+      <item title="Spine"/>
+      <item title="动画"/>
+      <item title="粒子"/>
+      <item title="音频"/>
+    </list>
+    <component id="n46_mnr01" name="btnCancel" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="614,582" size="372,36" group="n50_mnr01">
+      <gearXY controller="cPick" pages="2,3,4" values="614,670|614,454|614,444" default="614,582"/>
+      <Button title="取消"/>
+    </component>
+    <graph id="n47_mnr01" name="pathBg" xy="614,582" size="372,36" group="n50_mnr01" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4">
+      <gearDisplay controller="cPick" pages="2,3"/>
+      <gearXY controller="cPick" pages="3" values="614,366" default="614,582"/>
+    </graph>
+    <text id="n48_mnr01" name="inputPath" xy="626,582" size="348,36" group="n50_mnr01" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" input="true" prompt="新路径，例如 heroes/player">
+      <gearDisplay controller="cPick" pages="2,3"/>
+      <gearXY controller="cPick" pages="3" values="626,366" default="626,582"/>
+    </text>
+    <component id="n49_mnr01" name="btnPlace" src="g8bt3" fileName="ButtonPrimary.xml" pkg="m5lrgzhj" xy="614,626" size="372,36" group="n50_mnr01">
+      <gearDisplay controller="cPick" pages="2,3,4"/>
+      <gearXY controller="cPick" pages="3,4" values="614,410|614,400" default="614,626"/>
+      <Button title="使用新路径"/>
+    </component>
+    <group id="n50_mnr01" name="pick" xy="0,0" size="1600,900" advanced="true">
+      <gearDisplay controller="cPick" pages="1,2,3,4"/>
+      <relation target="" sidePair="width-width,height-height"/>
+    </group>
+  </displayList>
+</component>

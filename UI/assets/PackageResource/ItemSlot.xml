@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="240,36">
+  <controller name="cOn" pages="0,否,1,是" selected="0"/>
+  <displayList>
+    <graph id="n0_spn15" name="bg" xy="0,0" size="240,36" type="rect" lineSize="0" fillColor="#14ffffff">
+      <gearDisplay controller="cOn" pages="1"/>
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <graph id="n1_spn15" name="mark" xy="0,0" size="2,36" type="rect" lineSize="0" fillColor="#ff1373d9">
+      <gearDisplay controller="cOn" pages="1"/>
+      <relation target="" sidePair="height-height"/>
+    </graph>
+    <text id="n2_spn15" name="label" xy="10,4" size="156,28" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" singleLine="true" text="衣服">
+      <gearDisplay controller="cOn" pages="0"/>
+      <relation target="n4_spn15" sidePair="rightext-left"/>
+    </text>
+    <graph id="n3_spn15" name="inputBg" xy="8,4" size="160,28" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4">
+      <gearDisplay controller="cOn" pages="1"/>
+      <relation target="n4_spn15" sidePair="rightext-left"/>
+    </graph>
+    <text id="n5_spn15" name="input" xy="16,4" size="144,28" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" singleLine="true" text="" input="true">
+      <gearDisplay controller="cOn" pages="1"/>
+      <relation target="n4_spn15" sidePair="rightext-left"/>
+    </text>
+    <component id="n4_spn15" name="btnDelete" src="g8bt1" fileName="ButtonGhost.xml" pkg="m5lrgzhj" xy="176,4" size="60,28">
+      <relation target="" sidePair="right-right"/>
+      <Button title="删除"/>
+    </component>
+  </displayList>
+</component>

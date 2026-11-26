@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="480,32">
+  <displayList>
+    <text id="n0_mnr03" name="title" xy="20,6" size="440,22" fontSize="13" color="#ff8d887e" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="Spine"/>
+  </displayList>
+</component>

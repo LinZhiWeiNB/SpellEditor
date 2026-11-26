@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="168,200">
+  <displayList>
+    <graph id="n0_spn10" name="n0" xy="0,0" size="168,200" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff1e2128" corner="4">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <list id="n1_spn10" name="list" xy="4,4" size="160,192" overflow="scroll" scrollBar="hidden" lineGap="4" defaultItem="ui://res4p8n2spn12" autoClearItems="true">
+      <relation target="" sidePair="width-width"/>
+    </list>
+  </displayList>
+  <relation target="n1_spn10" sidePair="height-height"/>
+</component>

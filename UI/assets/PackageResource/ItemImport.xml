@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="372,44" extention="Button">
+  <controller name="button" pages="0,up,1,down,2,over,3,selectedOver" selected="0"/>
+  <displayList>
+    <graph id="n0_mnr05" name="bg" xy="0,0" size="372,44" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff2a2e38" corner="4">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <text id="n1_mnr05" name="title" xy="16,0" size="340,44" fontSize="15" color="#ffe8e6e3" vAlign="middle" autoSize="none" singleLine="true" text="Spine">
+      <relation target="" sidePair="width-width,height-height"/>
+    </text>
+  </displayList>
+  <Button/>
+</component>

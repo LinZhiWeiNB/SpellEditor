@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="400,28">
+  <displayList>
+    <text id="n0_spn16" name="title" xy="0,0" size="112,28" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="群组"/>
+    <component id="n1_spn16" name="value" src="spn11" fileName="ComboValue.xml" xy="120,0" size="280,28">
+      <relation target="" sidePair="width-width,height-height"/>
+    </component>
+  </displayList>
+</component>

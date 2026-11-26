@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="828,36">
+  <displayList>
+    <graph id="n0_spn13" name="inputBg" xy="0,4" size="132,28" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
+    <text id="n1_spn13" name="input" xy="8,4" size="116,28" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" singleLine="true" text="" input="true"/>
+    <component id="n2_spn13" name="btnDelete" src="g8bt1" fileName="ButtonGhost.xml" pkg="m5lrgzhj" xy="140,4" size="60,28">
+      <Button title="删除"/>
+    </component>
+    <list id="n3_spn13" name="cells" xy="208,4" size="620,28" layout="row" overflow="scroll" scroll="horizontal" scrollBar="hidden" colGap="8" defaultItem="ui://res4p8n2spn11" autoClearItems="true" vAlign="middle">
+      <relation target="" sidePair="width-width"/>
+    </list>
+  </displayList>
+</component>

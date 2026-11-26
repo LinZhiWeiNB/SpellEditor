@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1000,280">
+  <displayList>
+    <graph id="n0_spn17" name="holder" xy="600,0" size="400,280" type="rect" lineSize="0" fillColor="#00000000" touchable="false">
+      <relation target="" sidePair="right-right,top-top,bottom-bottom"/>
+      <relation target="" sidePair="width-width" percent="true"/>
+    </graph>
+    <component id="n1_spn17" name="btnEdit" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="12,12" size="112,28">
+      <relation target="" sidePair="left-left,top-top"/>
+      <Button title="编辑详情"/>
+    </component>
+    <component id="n2_spn17" name="rowGroup" src="spn16" fileName="ItemChoiceRow.xml" xy="12,48" size="576,28">
+      <relation target="" sidePair="left-left,top-top"/>
+      <relation target="" sidePair="width-width" percent="true"/>
+    </component>
+    <component id="n3_spn17" name="rowTrigger" src="spn16" fileName="ItemChoiceRow.xml" xy="12,84" size="576,28">
+      <relation target="" sidePair="left-left,top-top"/>
+      <relation target="" sidePair="width-width" percent="true"/>
+      <property target="title" propertyId="0" value="动画触发器"/>
+    </component>
+    <list id="n4_spn17" name="slots" xy="12,120" size="576,148" overflow="scroll" scrollBar="hidden" lineGap="4" defaultItem="ui://res4p8n2spn16" autoClearItems="true">
+      <relation target="" sidePair="left-left,top-top,bottom-bottom"/>
+      <relation target="" sidePair="width-width" percent="true"/>
+    </list>
+  </displayList>
+</component>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="168,124">
+  <displayList>
+    <graph id="n0_mnr06" name="bg" xy="0,0" size="168,124" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff1e2128" corner="4">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <component id="n1_mnr06" name="btnRename" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="8,8" size="152,32">
+      <Button title="重命名"/>
+    </component>
+    <component id="n2_mnr06" name="btnNew" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="8,46" size="152,32">
+      <Button title="新建子目录"/>
+    </component>
+    <component id="n3_mnr06" name="btnRemove" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="8,84" size="152,32">
+      <Button title="删除"/>
+    </component>
+  </displayList>
+</component>

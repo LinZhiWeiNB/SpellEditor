@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="168,28" extention="ComboBox">
+  <controller name="button" pages="0,up,1,down,2,over,3,selectedOver" selected="0"/>
+  <displayList>
+    <graph id="n0_spn11" name="n0" xy="0,0" size="168,28" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <text id="n1_spn11" name="title" xy="8,0" size="152,28" fontSize="13" color="#ffe8e6e3" vAlign="middle" autoSize="none" singleLine="true" text="">
+      <relation target="" sidePair="width-width,height-height"/>
+    </text>
+  </displayList>
+  <ComboBox dropdown="ui://res4p8n2spn10" visibleItemCount="8"/>
+</component>

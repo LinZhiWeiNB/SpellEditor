@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1600,900">
+  <controller name="cPage" pages="0,动作,1,外观" selected="0"/>
+  <displayList>
+    <graph id="n0_spn18" name="mask" xy="0,0" size="1600,900" type="rect" lineSize="0" fillColor="#8c000000">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <graph id="n1_spn18" name="card" xy="370,180" size="860,540" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff1a1a1a" corner="8">
+      <relation target="" sidePair="center-center,middle-middle"/>
+    </graph>
+    <text id="n2_spn18" name="title" xy="386,194" size="240,28" fontSize="18" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="编辑详情">
+      <relation target="n1_spn18" sidePair="left-left,top-top"/>
+    </text>
+    <component id="n3_spn18" name="btnMotion" src="g8bt2" fileName="ButtonPill.xml" pkg="m5lrgzhj" xy="386,228" size="72,28">
+      <relation target="n1_spn18" sidePair="left-left,top-top"/>
+      <Button title="动作" checked="true" controller="cPage" page="0"/>
+    </component>
+    <component id="n4_spn18" name="btnLook" src="g8bt2" fileName="ButtonPill.xml" pkg="m5lrgzhj" xy="466,228" size="72,28">
+      <relation target="n1_spn18" sidePair="left-left,top-top"/>
+      <Button title="外观" controller="cPage" page="1"/>
+    </component>
+    <component id="n5_spn18" name="btnAddTrigger" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="994,228" size="120,28">
+      <gearDisplay controller="cPage" pages="0"/>
+      <relation target="n1_spn18" sidePair="right-right,top-top"/>
+      <Button title="添加触发器"/>
+    </component>
+    <component id="n6_spn18" name="btnAddGroup" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="1122,228" size="92,28">
+      <gearDisplay controller="cPage" pages="0"/>
+      <relation target="n1_spn18" sidePair="right-right,top-top"/>
+      <Button title="添加群组"/>
+    </component>
+    <component id="n7_spn18" name="btnAddSlot" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="1022,228" size="92,28">
+      <gearDisplay controller="cPage" pages="1"/>
+      <relation target="n1_spn18" sidePair="right-right,top-top"/>
+      <Button title="新增槽位"/>
+    </component>
+    <component id="n8_spn18" name="btnAddSkin" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="1122,228" size="92,28">
+      <gearDisplay controller="cPage" pages="1"/>
+      <relation target="n1_spn18" sidePair="right-right,top-top"/>
+      <Button title="添加皮肤"/>
+    </component>
+    <list id="n9_spn18" name="groupHeads" xy="594,268" size="620,28" layout="row" overflow="scroll" scroll="horizontal" scrollBar="hidden" colGap="8" defaultItem="ui://res4p8n2spn14" autoClearItems="true">
+      <gearDisplay controller="cPage" pages="0"/>
+      <relation target="n1_spn18" sidePair="left-left,top-top"/>
+    </list>
+    <list id="n10_spn18" name="triggers" xy="386,304" size="828,348" overflow="scroll" scrollBar="hidden" lineGap="4" defaultItem="ui://res4p8n2spn13" autoClearItems="true">
+      <gearDisplay controller="cPage" pages="0"/>
+      <relation target="n1_spn18" sidePair="left-left,top-top"/>
+    </list>
+    <list id="n11_spn18" name="slots" xy="386,268" size="240,392" overflow="scroll" scrollBar="hidden" lineGap="4" defaultItem="ui://res4p8n2spn15" autoClearItems="true">
+      <gearDisplay controller="cPage" pages="1"/>
+      <relation target="n1_spn18" sidePair="left-left,top-top"/>
+    </list>
+    <list id="n12_spn18" name="groupHeadsLook" xy="850,268" size="364,28" layout="row" overflow="scroll" scroll="horizontal" scrollBar="hidden" colGap="8" defaultItem="ui://res4p8n2spn14" autoClearItems="true">
+      <gearDisplay controller="cPage" pages="1"/>
+      <relation target="n1_spn18" sidePair="left-left,top-top"/>
+    </list>
+    <list id="n13_spn18" name="skins" xy="642,304" size="572,348" overflow="scroll" scrollBar="hidden" lineGap="4" defaultItem="ui://res4p8n2spn13" autoClearItems="true">
+      <gearDisplay controller="cPage" pages="1"/>
+      <relation target="n1_spn18" sidePair="left-left,top-top"/>
+    </list>
+    <component id="n14_spn18" name="btnCancel" src="g8bt1" fileName="ButtonGhost.xml" pkg="m5lrgzhj" xy="1038,676" size="72,28">
+      <relation target="n1_spn18" sidePair="right-right,bottom-bottom"/>
+      <Button title="取消"/>
+    </component>
+    <component id="n15_spn18" name="btnDone" src="g8bt3" fileName="ButtonPrimary.xml" pkg="m5lrgzhj" xy="1118,676" size="88,28">
+      <relation target="n1_spn18" sidePair="right-right,bottom-bottom"/>
+      <Button title="完成"/>
+    </component>
+  </displayList>
+</component>
