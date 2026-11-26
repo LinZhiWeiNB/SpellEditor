@@ -4,11 +4,28 @@ namespace UILogic
 {
     public class PanelUnit : FguiPanelBase
     {
+        ComUnitEditor _editor;
+
         public override void Start(object[] data)
         {
             var view = (UI_PanelUnit)FGUIComponent;
-            view.m_btnBack.onClick.Set(() => FGUIPanelManager.Instance.Back());
-            new ComUnitEditor(view);
+            _editor = new ComUnitEditor(view);
+        }
+
+        public override void OnShow()
+        {
+            if (_editor != null)
+            {
+                _editor.Refresh();
+            }
+        }
+
+        public override void OnClose()
+        {
+            if (_editor != null)
+            {
+                _editor.Close();
+            }
         }
     }
 }

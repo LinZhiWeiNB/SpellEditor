@@ -27,6 +27,7 @@ namespace UILogic
 
         public void Clear()
         {
+            Timers.inst.Remove(RefitLater);
             _frame = null;
             _dialog.Close();
             if (_wrapper != null)
@@ -69,10 +70,15 @@ namespace UILogic
                     Report(setupError);
                 }
 
+                if (playIdle && _setup.Groups.Count > 0)
+                    _setup.GroupId = _setup.Groups[0].Id;
+
                 if (!SpineSpellLoading.TryCreate(SourceOf(document), _settings, _setup.Write(), out _view, out error))
                     return false;
 
                 _frame = frame;
+                if (playIdle && _holder != null)
+                    _holder.relations.ClearAll();
                 if (!Ensure(parent, insertBefore))
                 {
                     error = "Spine 预览组件没有加载出来。";
@@ -89,6 +95,10 @@ namespace UILogic
 
                 _wrapper.SetWrapTarget(_view.GameObject, false);
                 _preview.visible = true;
+                _preview.group = frame.group;
+                _preview.sortingOrder = frame.sortingOrder + 1;
+                if (insertBefore != null && insertBefore.sortingOrder <= _preview.sortingOrder)
+                    insertBefore.sortingOrder = _preview.sortingOrder + 1;
                 if (playIdle)
                 {
                     _preview.m_btnEdit.visible = false;
@@ -99,6 +109,7 @@ namespace UILogic
                     _holder.SetXY(0, 0);
                     _holder.SetSize(_preview.width, _preview.height);
                     PresentIdle();
+                    Timers.inst.CallLater(RefitLater);
                 }
                 else
                 {
@@ -120,12 +131,14 @@ namespace UILogic
         bool Ensure(GComponent parent, GObject insertBefore)
         {
             if (_preview != null) return true;
-            _preview = UI_SpinePreview.CreateInstance();
+            var existing = parent.GetChild("spinePreview") as UI_SpinePreview;
+            _preview = existing ?? UI_SpinePreview.CreateInstance();
             if (_preview == null) return false;
             _holder = _preview.m_holder;
             _holder.touchable = false;
             _preview.m_btnEdit.onClick.Set(OpenDetails);
             _preview.m_rowTrigger.m_title.text = "动画触发器";
+            if (existing != null) return true;
             var index = insertBefore == null ? parent.numChildren : parent.GetChildIndex(insertBefore);
             if (index < 0) index = parent.numChildren;
             parent.AddChildAt(_preview, index);
@@ -236,20 +249,37 @@ namespace UILogic
             }
         }
 
+        void RefitLater(object param)
+        {
+            if (_view == null || _holder == null || _preview == null || _frame == null || !_preview.visible) return;
+            Place(_frame);
+            _holder.relations.ClearAll();
+            _holder.SetXY(0, 0);
+            _holder.SetSize(_preview.width, _preview.height);
+            PresentIdle();
+        }
+
         void PresentIdle()
         {
             var trigger = IdleTrigger(_setup.Triggers);
-            string clip;
-            if (trigger != null)
+            string clip = "";
+            try
             {
-                _setup.TriggerId = trigger.Id;
-                _view.PlayTrigger(trigger.Id, 0, true);
-                clip = _setup.ResolveClip();
+                if (trigger != null)
+                {
+                    _setup.TriggerId = trigger.Id;
+                    _view.PlayTrigger(trigger.Id, 0, true);
+                    clip = _setup.ResolveClip();
+                }
+                else
+                {
+                    _view.Play(0, 0, true);
+                    clip = _view.Animations.Count > 0 ? _view.Animations[0] : "";
+                }
             }
-            else
+            catch (Exception ex)
             {
-                _view.Play(0, 0, true);
-                clip = _view.Animations.Count > 0 ? _view.Animations[0] : "";
+                Debug.LogException(ex);
             }
 
             Fit();

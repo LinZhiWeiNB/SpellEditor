@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using FairyGUI;
-using PackageAtrribute;
 using PackageSpell;
 using PackageUnit;
 using RebornFrame.Spell;
@@ -28,6 +27,7 @@ namespace UILogic
             });
             view.m_btnAddActive.onClick.Set(() => PickSpell(_active, Unit().ActiveSpells, view.m_activeSpells));
             view.m_btnAddPassive.onClick.Set(() => PickSpell(_passive, Unit().PassiveSpells, view.m_passiveSpells));
+            view.m_btnPreset.onClick.Set(PickPreset);
             view.m_btnSpine.onClick.Set(PickSpine);
             var id = data != null && data.Length > 0 && data[0] is ulong value ? value : 0UL;
             _record = UnitLibrary.Find(id);
@@ -68,7 +68,7 @@ namespace UILogic
                 view.m_cOrigin.selectedIndex = (int)UI_PanelUnitEdit.EcOrigin.本项目;
                 view.m_valueId.text = "";
                 view.m_btnSpine.title = "选择 Spine 骨骼";
-                view.m_presets.numItems = 0;
+                view.m_btnPreset.title = "选择属性预设";
                 view.m_values.numItems = 0;
                 view.m_activeSpells.numItems = 0;
                 view.m_passiveSpells.numItems = 0;
@@ -91,7 +91,8 @@ namespace UILogic
                 ? "资源列表里还没有 Spine 骨骼。"
                 : "点按钮，从资源列表里选择一个 Spine 骨骼。";
             RenderSpineButton();
-            RenderPresets();
+            KeepOnePreset();
+            RenderPresetButton();
             RenderValues();
             RenderSpellRows(view.m_activeSpells, _record.Unit.ActiveSpells);
             RenderSpellRows(view.m_passiveSpells, _record.Unit.PassiveSpells);
@@ -107,51 +108,75 @@ namespace UILogic
             UnitLibrary.Commit(_record);
         }
 
-        void RenderPresets()
+        void KeepOnePreset()
         {
             var unit = Unit();
-            view.m_presets.itemRenderer = (index, obj) =>
+            if (unit == null || unit.PresetAttributes.Count <= 1)
             {
-                var id = _attributes[index];
-                var button = (UI_ButtonCheck)obj;
-                button.title = UnitCatalogs.AttributeLabel(id);
-                button.SetSize(view.m_presets.width, button.height);
-                button.selected = unit.PresetAttributes.Contains(id);
-                button.onChanged.Set(() =>
+                return;
+            }
+
+            var keep = unit.PresetAttributes[0];
+            unit.PresetAttributes.Clear();
+            unit.PresetAttributes.Add(keep);
+            for (var i = unit.Values.Count - 1; i >= 0; i--)
+            {
+                if (unit.Values[i].AttributeId != keep)
                 {
-                    if (_applying)
-                    {
-                        return;
-                    }
+                    unit.Values.RemoveAt(i);
+                }
+            }
 
-                    if (button.selected)
-                    {
-                        if (!unit.PresetAttributes.Contains(id))
-                        {
-                            unit.PresetAttributes.Add(id);
-                        }
+            Commit();
+        }
 
-                        UnitCatalogs.SetRaw(unit, id, UnitCatalogs.Raw(unit, id));
-                    }
-                    else
-                    {
-                        unit.PresetAttributes.Remove(id);
-                        for (var i = unit.Values.Count - 1; i >= 0; i--)
-                        {
-                            if (unit.Values[i].AttributeId == id)
-                            {
-                                unit.Values.RemoveAt(i);
-                            }
-                        }
-                    }
+        void RenderPresetButton()
+        {
+            var unit = Unit();
+            var chosen = unit != null && unit.PresetAttributes.Count > 0 ? unit.PresetAttributes[0] : 0UL;
+            view.m_btnPreset.title = unit == null || unit.PresetAttributes.Count == 0
+                ? "选择属性预设"
+                : UnitCatalogs.AttributeLabel(chosen);
+        }
 
-                    Commit();
-                    RenderValues();
-                });
-            };
-            _applying = true;
-            view.m_presets.numItems = _attributes.Count;
-            _applying = false;
+        void PickPreset()
+        {
+            var unit = Unit();
+            if (unit == null)
+            {
+                return;
+            }
+
+            var keys = new List<string>();
+            var titles = new List<string>();
+            for (var i = 0; i < _attributes.Count; i++)
+            {
+                keys.Add(_attributes[i].ToString());
+                titles.Add(UnitCatalogs.AttributeLabel(_attributes[i]));
+            }
+
+            _pick.Open("选择属性预设", keys, titles, key =>
+            {
+                if (!ulong.TryParse(key, out var id))
+                {
+                    return;
+                }
+
+                unit.PresetAttributes.Clear();
+                unit.PresetAttributes.Add(id);
+                for (var i = unit.Values.Count - 1; i >= 0; i--)
+                {
+                    if (unit.Values[i].AttributeId != id)
+                    {
+                        unit.Values.RemoveAt(i);
+                    }
+                }
+
+                UnitCatalogs.SetRaw(unit, id, UnitCatalogs.Raw(unit, id));
+                Commit();
+                RenderPresetButton();
+                RenderValues();
+            });
         }
 
         void RenderValues()

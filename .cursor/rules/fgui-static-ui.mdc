@@ -1,0 +1,30 @@
+---
+description: 静态界面必须在 FairyGUI 编辑器里做，不要用代码拼控件
+alwaysApply: true
+---
+
+# 静态界面用 FairyGUI
+
+窗口、按钮、输入框、下拉框、列表、标签、底和布局写在 `UI/assets` 的组件 xml 里，用 FairyGUI 编辑器改。发布后代码只 `CreateInstance`，再填文本、选中项，或按数据增减已经发布的列表项。
+
+不要用 `new GComponent`、`new GGraph`、`new GTextField`、`new GTextInput`、`new GList`、`new GComboBox` 拼静态界面。下拉框用编辑器里的 ComboBox 和它的 dropdown，不要在运行时组装列表再自己算弹出位置。
+
+行数随数据变化时，行本身仍是编辑器里的组件。列表的 `defaultItem` 指向该组件，`itemRenderer` 只填这一行的数据。
+
+```csharp
+// 编辑器里的下拉框
+var box = UI_ComboClip.CreateInstance();
+box.items = labels;
+box.values = keys;
+box.value = current;
+
+// 编辑器里的一行
+list.defaultItem = UI_ItemSpineSlot.URL;
+list.itemRenderer = (index, obj) =>
+{
+    var row = (UI_ItemSpineSlot)obj;
+    row.m_title.text = slots[index].Name;
+};
+```
+
+不要手写 `UI_` 绑定类，也不要改发布出来的 bytes。组件缺了就补 `UI/assets` 里的 xml，等编辑器发布。

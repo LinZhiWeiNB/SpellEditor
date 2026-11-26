@@ -29,6 +29,7 @@ namespace UILogic
             view.m_btnCopy.onClick.Set(CopyUnit);
             view.m_btnEdit.onClick.Set(EditUnit);
             view.m_btnOpenResource.onClick.Set(OpenResource);
+            OpenPreviewSpace();
             view.m_cSpine.selectedIndex = UnitCatalogs.SpineEnabled()
                 ? (int)UI_PanelUnitList.EcSpine.开
                 : (int)UI_PanelUnitList.EcSpine.关;
@@ -168,6 +169,36 @@ namespace UILogic
             _spineKey = "";
             view.m_cDetail.selectedIndex = (int)UI_PanelUnitList.EcDetail.未选中;
             view.m_btnDelete.title = "删除";
+        }
+
+        void OpenPreviewSpace()
+        {
+            const float cut = 24f;
+            view.m_presets.height -= cut;
+            view.m_labelValues.y -= cut;
+            view.m_values.y -= cut;
+            view.m_values.height -= cut;
+            view.m_labelActive.y -= cut * 2f;
+            view.m_activeSpells.y -= cut * 2f;
+            view.m_activeSpells.height -= cut;
+            view.m_labelPassive.y -= cut * 3f;
+            view.m_passiveSpells.y -= cut * 3f;
+            view.m_passiveSpells.height -= cut;
+            var lift = cut * 4f;
+            view.m_labelSpine.y -= lift;
+            view.m_valueSpine.y -= lift;
+            view.m_previewLabel.y -= lift;
+            view.m_preview.y -= lift;
+            view.m_preview.height += lift;
+            view.m_btnOpenResource.SetXY(
+                view.m_preview.x + view.m_preview.width - view.m_btnOpenResource.width,
+                view.m_labelSpine.y - 4f);
+            var spinePreview = view.GetChild("spinePreview");
+            if (spinePreview != null)
+            {
+                spinePreview.SetXY(view.m_preview.x, view.m_preview.y);
+                spinePreview.SetSize(view.m_preview.width, view.m_preview.height);
+            }
         }
 
         void ShowSpine(string key)

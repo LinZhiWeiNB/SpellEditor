@@ -9,14 +9,12 @@ namespace UILogic
     public class PanelNewProject : FguiPanelBase
     {
         UI_WindowNewProject view;
-        string _folderHint;
         string _sourceHint;
         readonly List<LoadedSource> _sources = new List<LoadedSource>();
 
         public override void Start(object[] data)
         {
             view = (UI_WindowNewProject)FGUIComponent;
-            _folderHint = view.m_folderHint.text;
             _sourceHint = view.m_sourceHint.text;
             view.m_inputName.text = "";
             view.m_inputFolder.text = "";
@@ -70,7 +68,6 @@ namespace UILogic
             }
 
             view.m_inputFolder.text = folder;
-            ShowFolderHint(_folderHint, false);
         }
 
         void AddSource()
@@ -137,12 +134,9 @@ namespace UILogic
             return text;
         }
 
-        void ShowFolderHint(string text, bool error)
+        void ShowFolderHint(string text)
         {
             view.m_folderHint.text = text;
-            view.m_cFolder.selectedIndex = error
-                ? (int)UI_WindowNewProject.EcFolder.错误
-                : (int)UI_WindowNewProject.EcFolder.说明;
         }
 
         void Create()
@@ -177,7 +171,7 @@ namespace UILogic
                 }
                 else
                 {
-                    ShowFolderHint(error, true);
+                    ShowFolderHint(error);
                 }
 
                 return;

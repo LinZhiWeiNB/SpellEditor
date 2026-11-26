@@ -7,16 +7,16 @@
     <graph id="n1_lpw01" name="side" xy="0,0" size="520,900" type="rect" lineSize="0" fillColor="#ff1e2128">
       <relation target="" sidePair="height-height"/>
     </graph>
-    <text id="n2_lpw01" name="brand" xy="48,80" size="420,48" fontSize="32" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="游戏内容编辑器"/>
-    <text id="n3_lpw01" name="brandDesc" xy="48,140" size="420,72" fontSize="16" color="#ffb7b2a8" autoSize="height" text="从最近的项目进入，或新建项目。打开项目时选择一个 .byte 存档，选定后进入主界面。"/>
+    <text id="n2_lpw01" name="brand" xy="69,241" size="420,54" fontSize="40" color="#e8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="游戏内容编辑器"/>
+    <text id="n3_lpw01" name="brandDesc" xy="69,321" size="420,276" fontSize="16" color="#b7b2a8" autoSize="none" text="一站式游戏内容编辑中心&#xA;&#xA;·面向游戏开发者或UGC创作者&#xA;&#xA;·资源管理&#xA;&#xA;·技能编辑&#xA;&#xA;·单位编辑&#xA;&#xA;·多语言编辑"/>
     <component id="n4_lpw01" name="btnNew" src="lpb01" fileName="ButtonPrimary.xml" xy="584,48" size="140,40">
       <Button title="新建项目"/>
     </component>
     <component id="n5_lpw01" name="btnOpen" src="lpb02" fileName="ButtonSecondary.xml" xy="740,48" size="140,40">
       <Button title="打开项目"/>
     </component>
-    <text id="n6_lpw01" name="recentTitle" xy="584,120" size="200,28" fontSize="18" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="最近打开"/>
-    <list id="n7_lpw01" name="recent" xy="584,168" size="936,180" overflow="scroll" scrollBar="hidden" lineGap="12" defaultItem="ui://mskevjh6lpi01" autoClearItems="true" selectionMode="none">
+    <text id="n6_lpw01" name="recentTitle" xy="584,120" size="200,28" fontSize="18" color="#e8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="最近打开"/>
+    <list id="n7_lpw01" name="recent" xy="584,168" size="936,180" selectionMode="none" overflow="scroll" scrollBar="hidden" lineGap="12" defaultItem="ui://mskevjh6lpi01" autoClearItems="true">
       <item title="游戏本体">
         <property target="meta" propertyId="0" value="游戏开发者  ·  今天 09:40  ·  /SpellProjects/Game/Game.byte"/>
       </item>

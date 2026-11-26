@@ -110,9 +110,9 @@ namespace PackageAtrribute
 
         public GGraph m_bg;
         public PackageLaunch.UI_ButtonGhost m_btnBack;
-        public GGraph m_leftBg;
         public GTextField m_modSource;
-        public GTextField m_modSourceSub;
+        public UI_ButtonPrimary m_btnAdd;
+        public GGraph m_leftBg;
         public GGraph m_searchBg;
         public GTextInput m_search;
         public UI_ButtonPill m_filterAll;
@@ -125,27 +125,22 @@ namespace PackageAtrribute
         public GTextField m_otherSection;
         public GList m_others;
         public GGroup m_otherSources;
-        public UI_ButtonPrimary m_btnAdd;
-        public GGroup m_listMod;
-        public GGraph m_split;
         public GTextField m_emptyHint;
+        public GGraph m_cardIdentity;
         public GTextField m_mTitle;
-        public GTextField m_mMeta;
         public UI_ButtonGhost m_mDelete;
-        public GTextField m_mLoaded;
         public GTextField m_mNameLabel;
         public GGraph m_mNameBg;
         public GTextInput m_mNameInput;
         public GTextField m_mIdLabel;
         public GGraph m_mIdBg;
         public GTextInput m_mIdInput;
-        public GTextField m_mIdHint;
         public GTextField m_mWarn;
+        public GGraph m_cardParent;
         public GTextField m_mParentLabel;
         public GTextField m_mPath;
         public GList m_parents;
         public GGroup m_inspector;
-        public GGroup m_catalog;
         public const string URL = "ui://m5lrgzhjg8btd";
 
         public static UI_PanelTag CreateInstance()
@@ -164,9 +159,9 @@ namespace PackageAtrribute
             m_cMessage = GetControllerAt(4);
             m_bg = (GGraph)GetChildAt(0);
             m_btnBack = (PackageLaunch.UI_ButtonGhost)GetChildAt(1);
-            m_leftBg = (GGraph)GetChildAt(2);
-            m_modSource = (GTextField)GetChildAt(3);
-            m_modSourceSub = (GTextField)GetChildAt(4);
+            m_modSource = (GTextField)GetChildAt(2);
+            m_btnAdd = (UI_ButtonPrimary)GetChildAt(3);
+            m_leftBg = (GGraph)GetChildAt(4);
             m_searchBg = (GGraph)GetChildAt(5);
             m_search = (GTextInput)GetChildAt(6);
             m_filterAll = (UI_ButtonPill)GetChildAt(7);
@@ -179,27 +174,22 @@ namespace PackageAtrribute
             m_otherSection = (GTextField)GetChildAt(14);
             m_others = (GList)GetChildAt(15);
             m_otherSources = (GGroup)GetChildAt(16);
-            m_btnAdd = (UI_ButtonPrimary)GetChildAt(17);
-            m_listMod = (GGroup)GetChildAt(18);
-            m_split = (GGraph)GetChildAt(19);
-            m_emptyHint = (GTextField)GetChildAt(20);
-            m_mTitle = (GTextField)GetChildAt(21);
-            m_mMeta = (GTextField)GetChildAt(22);
-            m_mDelete = (UI_ButtonGhost)GetChildAt(23);
-            m_mLoaded = (GTextField)GetChildAt(24);
-            m_mNameLabel = (GTextField)GetChildAt(25);
-            m_mNameBg = (GGraph)GetChildAt(26);
-            m_mNameInput = (GTextInput)GetChildAt(27);
-            m_mIdLabel = (GTextField)GetChildAt(28);
-            m_mIdBg = (GGraph)GetChildAt(29);
-            m_mIdInput = (GTextInput)GetChildAt(30);
-            m_mIdHint = (GTextField)GetChildAt(31);
-            m_mWarn = (GTextField)GetChildAt(32);
-            m_mParentLabel = (GTextField)GetChildAt(33);
-            m_mPath = (GTextField)GetChildAt(34);
-            m_parents = (GList)GetChildAt(35);
-            m_inspector = (GGroup)GetChildAt(36);
-            m_catalog = (GGroup)GetChildAt(37);
+            m_emptyHint = (GTextField)GetChildAt(17);
+            m_cardIdentity = (GGraph)GetChildAt(18);
+            m_mTitle = (GTextField)GetChildAt(19);
+            m_mDelete = (UI_ButtonGhost)GetChildAt(20);
+            m_mNameLabel = (GTextField)GetChildAt(21);
+            m_mNameBg = (GGraph)GetChildAt(22);
+            m_mNameInput = (GTextInput)GetChildAt(23);
+            m_mIdLabel = (GTextField)GetChildAt(24);
+            m_mIdBg = (GGraph)GetChildAt(25);
+            m_mIdInput = (GTextInput)GetChildAt(26);
+            m_mWarn = (GTextField)GetChildAt(27);
+            m_cardParent = (GGraph)GetChildAt(28);
+            m_mParentLabel = (GTextField)GetChildAt(29);
+            m_mPath = (GTextField)GetChildAt(30);
+            m_parents = (GList)GetChildAt(31);
+            m_inspector = (GGroup)GetChildAt(32);
         }
     }
 }

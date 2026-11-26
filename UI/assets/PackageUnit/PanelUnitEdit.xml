@@ -16,9 +16,11 @@
     <text id="n3_mnu02" name="labelId" xy="48,76" size="120,28" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="标识"/>
     <text id="n4_mnu02" name="valueId" xy="176,76" size="320,28" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" singleLine="true" text="0:1"/>
     <text id="n5_mnu02" name="labelPreset" xy="48,120" size="240,24" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="属性预设"/>
-    <list id="n6_mnu02" name="presets" xy="48,148" size="720,220" overflow="scroll" scrollBar="hidden" defaultItem="ui://m5lrgzhjg8bt0" autoClearItems="true" selectionMode="none"/>
-    <text id="n7_mnu02" name="labelValues" xy="48,384" size="240,24" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="属性值"/>
-    <list id="n8_mnu02" name="values" xy="48,412" size="720,440" overflow="scroll" scrollBar="hidden" defaultItem="ui://unt4p8n2mnu05" autoClearItems="true" selectionMode="none"/>
+    <component id="n6_mnu02" name="btnPreset" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="48,148" size="720,36">
+      <Button title="选择属性预设"/>
+    </component>
+    <text id="n7_mnu02" name="labelValues" xy="48,200" size="240,24" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="属性值"/>
+    <list id="n8_mnu02" name="values" xy="48,228" size="720,624" overflow="scroll" scrollBar="hidden" defaultItem="ui://unt4p8n2mnu05" autoClearItems="true" selectionMode="none"/>
     <text id="n9_mnu02" name="labelActive" xy="820,76" size="400,24" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="主动技能"/>
     <component id="n22_mnu02" name="btnAddActive" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="1400,70" size="140,32">
       <Button title="新增技能"/>

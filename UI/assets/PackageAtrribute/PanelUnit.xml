@@ -1,65 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component size="1600,900">
-  <controller name="cRole" pages="0,游戏开发者,1,模组作者" selected="0"/>
+  <controller name="cOthers" pages="0,显示,1,隐藏" selected="0"/>
+  <controller name="cInspect" pages="0,未选中,1,已选中" selected="0"/>
   <displayList>
     <graph id="n0_g8btc" name="bg" xy="0,0" size="1600,900" type="rect" lineSize="0" fillColor="#ff16181d">
       <relation target="" sidePair="width-width,height-height"/>
     </graph>
-    <graph id="n140_g8btc" name="pLeft" xy="0,48" size="300,852" group="n201_g8btc" type="rect" lineSize="0" fillColor="#ff1e2128"/>
-    <graph id="n141_g8btc" name="pSplit" xy="300,48" size="1,852" group="n201_g8btc" type="rect" lineSize="0" fillColor="#ff3a3e48"/>
-    <text id="n150_g8btc" name="pgTitle" xy="16,65" size="268,26" group="n201_g8btc" fontSize="16" color="#e8e6e3" autoSize="none" bold="true" singleLine="true" text="单位预设">
-      <gearText controller="cRole" pages="1" values="游戏单位"/>
-    </text>
-    <text id="n151_g8btc" name="pgDesc" xy="16,97" size="268,36" group="n201_g8btc" fontSize="12" color="#8d887e" autoSize="height" text="新建的单位写入当前数据源。其他数据源的单位在这里只读。">
-      <gearText controller="cRole" pages="1" values="模组使用游戏里已经定义的单位，不能新建单位。"/>
-    </text>
-    <list id="n152_g8btc" name="units" xy="0,169" size="300,112" group="n201_g8btc" overflow="scroll" scrollBar="auto" defaultItem="ui://m5lrgzhjg8bta" autoClearItems="true">
-      <item title="英雄" controllers="button,1">
-        <property target="meta" propertyId="0" value="当前数据源"/>
-      </item>
-      <item title="小兵">
-        <property target="meta" propertyId="0" value="当前数据源"/>
-      </item>
-    </list>
-    <component id="n158_g8btc" name="pgCreate" src="g8bt5" fileName="ButtonSecondary.xml" xy="16,301" size="140,36" group="n201_g8btc">
-      <gearDisplay controller="cRole" pages="0"/>
-      <Button title="新建单位"/>
-    </component>
-    <text id="n159_g8btc" name="pgNameLabel" xy="332,65" size="100,28" group="n201_g8btc" fontSize="16" color="#e8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="单位名称"/>
-    <graph id="n160_g8btc" name="pgNameBg" xy="440,61" size="240,36" group="n201_g8btc" type="rect" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
-    <text id="n161_g8btc" name="pgName" xy="452,61" size="216,36" group="n201_g8btc" fontSize="15" color="#e8e6e3" vAlign="middle" autoSize="none" text="英雄" input="true">
-      <gearLook controller="cRole" pages="1" values="1,0,0,0" default="1,0,0,1"/>
-    </text>
-    <text id="n162_g8btc" name="pgOwn" xy="1100,69" size="200,22" group="n201_g8btc" fontSize="13" color="#8d887e" align="right" autoSize="none" singleLine="true" text="游戏数据"/>
-    <text id="n163_g8btc" name="pgHint" xy="332,113" size="1100,22" group="n201_g8btc" fontSize="13" color="#b7b2a8" autoSize="none" singleLine="true" text="其他数据源的属性可以看见，是否纳入由那份数据源决定，这里不能改。">
-      <gearText controller="cRole" pages="1" values="勾选只对当前模组里的属性生效。游戏和其他数据源里的属性保持原样。"/>
-    </text>
-    <text id="n164_g8btc" name="pgHead" xy="332,149" size="1100,22" group="n201_g8btc" fontSize="12" color="#8d887e" autoSize="none" singleLine="true" text="纳入          属性            类型            数据源"/>
-    <list id="n165_g8btc" name="included" xy="332,181" size="1100,176" group="n201_g8btc" selectionMode="none" overflow="scroll" scrollBar="auto" lineGap="4" defaultItem="ui://m5lrgzhjg8btb" autoClearItems="true">
-      <item title="生命" controllers="button,1">
-        <property target="kind" propertyId="0" value="资源"/>
-        <property target="source" propertyId="0" value="游戏数据"/>
-      </item>
-      <item title="魔法" controllers="button,1">
-        <property target="kind" propertyId="0" value="资源"/>
-        <property target="source" propertyId="0" value="游戏数据"/>
-      </item>
-      <item title="攻击" controllers="button,1">
-        <property target="kind" propertyId="0" value="数值"/>
-        <property target="source" propertyId="0" value="游戏数据"/>
-      </item>
-      <item title="移动速度" controllers="button,1">
-        <property target="kind" propertyId="0" value="数值"/>
-        <property target="source" propertyId="0" value="游戏数据"/>
-      </item>
-      <item title="眩晕" controllers="button,1">
-        <property target="kind" propertyId="0" value="标记"/>
-        <property target="source" propertyId="0" value="游戏数据"/>
-      </item>
-    </list>
-    <group id="n201_g8btc" name="preset" xy="0,48" size="1432,852" advanced="true"/>
-    <component id="n301_g8btc" name="btnBack" src="lpb03" fileName="ButtonGhost.xml" pkg="mskevjh6" xy="48,6" size="88,36">
+    <component id="n301_g8btc" name="btnBack" src="lpb03" fileName="ButtonGhost.xml" pkg="mskevjh6" xy="16,16" size="88,36">
       <Button title="返回"/>
     </component>
+    <text id="n150_g8btc" name="pgTitle" xy="116,18" size="140,32" fontSize="18" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="单位预设"/>
+    <component id="n158_g8btc" name="btnAdd" src="g8bt3" fileName="ButtonPrimary.xml" xy="264,16" size="120,36">
+      <Button title="新增预设"/>
+    </component>
+    <graph id="n140_g8btc" name="pLeft" xy="16,68" size="300,816" type="rect" lineSize="0" fillColor="#ff1e2128" corner="8"/>
+    <component id="n170_g8btc" name="toggleOthers" src="g8bt0" fileName="ButtonCheck.xml" xy="32,84" size="268,28">
+      <Button checked="true" title="显示其他数据源" controller="cOthers" page="0"/>
+    </component>
+    <text id="n171_g8btc" name="modSection" xy="32,124" size="268,22" fontSize="12" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="当前数据源"/>
+    <list id="n152_g8btc" name="units" xy="16,152" size="300,340" overflow="scroll" scrollBar="auto" defaultItem="ui://m5lrgzhjg8bta" autoClearItems="true">
+      <item title="英雄" controllers="button,1">
+        <property target="meta" propertyId="0" value="预设 ID 1"/>
+      </item>
+    </list>
+    <text id="n172_g8btc" name="otherSection" xy="32,504" size="268,22" group="n212_g8btc" fontSize="12" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="其他数据源"/>
+    <list id="n173_g8btc" name="others" xy="16,532" size="300,336" group="n212_g8btc" overflow="scroll" scrollBar="auto" defaultItem="ui://m5lrgzhjg8bta" autoClearItems="true">
+      <item title="小兵">
+        <property target="meta" propertyId="0" value="预设 ID 2"/>
+      </item>
+    </list>
+    <group id="n212_g8btc" name="otherSources" xy="16,504" size="300,364" advanced="true">
+      <gearDisplay controller="cOthers" pages="0"/>
+    </group>
+    <text id="n174_g8btc" name="emptyHint" xy="348,84" size="800,28" fontSize="14" color="#ff8d887e" vAlign="middle" autoSize="none" singleLine="true" text="请选择或新建一个单位预设。">
+      <gearDisplay controller="cInspect" pages="0"/>
+    </text>
+    <graph id="n175_g8btc" name="cardName" xy="332,68" size="1252,108" group="n221_g8btc" type="rect" lineSize="0" fillColor="#ff1e2128" corner="8"/>
+    <text id="n159_g8btc" name="pgNameLabel" xy="348,84" size="120,22" group="n221_g8btc" fontSize="14" color="#ffe8e6e3" autoSize="none" bold="true" singleLine="true" text="名称"/>
+    <graph id="n160_g8btc" name="pgNameBg" xy="348,112" size="480,36" group="n221_g8btc" type="rect" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
+    <text id="n161_g8btc" name="pgName" xy="360,112" size="456,36" group="n221_g8btc" fontSize="15" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="英雄" input="true"/>
+    <graph id="n176_g8btc" name="cardAttrs" xy="332,192" size="1252,692" group="n221_g8btc" type="rect" lineSize="0" fillColor="#ff1e2128" corner="8"/>
+    <text id="n164_g8btc" name="pgHead" xy="348,208" size="240,28" group="n221_g8btc" fontSize="16" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="属性"/>
+    <component id="n166_g8btc" name="btnAddAttribute" src="g8bt5" fileName="ButtonSecondary.xml" xy="1424,204" size="140,36" group="n221_g8btc">
+      <Button title="新增属性"/>
+    </component>
+    <list id="n165_g8btc" name="included" xy="348,252" size="1220,612" group="n221_g8btc" selectionMode="none" overflow="scroll" scrollBar="hidden" lineGap="4" defaultItem="ui://unt4p8n2mnu08" autoClearItems="true"/>
+    <group id="n221_g8btc" name="detail" xy="332,68" size="1252,816" advanced="true">
+      <gearDisplay controller="cInspect" pages="1"/>
+    </group>
   </displayList>
 </component>

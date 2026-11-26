@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component size="1600,900">
-  <controller name="cRole" pages="0,游戏开发者,1,模组作者" selected="0"/>
-  <controller name="cFolder" pages="0,说明,1,错误" selected="0"/>
+  <controller name="cRole" pages="0,游戏开发者,1,模组作者" selected="1"/>
   <displayList>
     <graph id="n0_lpw02" name="bg" xy="0,0" size="1600,900" type="rect" lineSize="0" fillColor="#ff16181d">
       <relation target="" sidePair="width-width,height-height"/>
@@ -19,11 +18,8 @@
     <component id="n9_lpw02" name="btnFolder" src="lpb02" fileName="ButtonSecondary.xml" xy="1052,194" size="148,40">
       <Button title="选择文件夹"/>
     </component>
-    <text id="n10_lpw02" name="folderHint" xy="400,240" size="800,22" fontSize="13" color="#ff8d887e" autoSize="none" singleLine="true" text="存档会写成这个文件夹里的 .byte 文件。下次打开项目时选中该文件即可读回。">
-      <gearColor controller="cFolder" pages="1" values="#ffe06a6a"/>
-    </text>
-    <text id="n11_lpw02" name="labelRole" xy="400,276" size="200,28" fontSize="16" color="#e8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="身份"/>
-    <list id="n12_lpw02" name="roles" xy="400,312" size="800,160" overflow="scroll" scrollBar="hidden" lineGap="8" defaultItem="ui://mskevjh6lpi03" selectionController="cRole">
+    <text id="n11_lpw02" name="labelRole" xy="400,256" size="200,28" fontSize="16" color="#e8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="身份"/>
+    <list id="n12_lpw02" name="roles" xy="400,292" size="800,160" overflow="scroll" scrollBar="hidden" lineGap="8" defaultItem="ui://mskevjh6lpi03" selectionController="cRole">
       <item title="游戏开发者">
         <property target="desc" propertyId="0" value="编写游戏本体。不用填写作者 ID，编辑器会为这份存档保存游戏开发者身份。"/>
       </item>
@@ -31,18 +27,15 @@
         <property target="desc" propertyId="0" value="在游戏数据之上编写自己的内容。需要一个作者 ID，并选择要一起载入的数据源。"/>
       </item>
     </list>
-    <text id="n20_lpw02" name="labelAuthor" xy="400,476" size="200,24" group="n40_lpw02" fontSize="14" color="#b7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="作者 ID"/>
-    <graph id="n21_lpw02" name="bgAuthor" xy="400,504" size="240,36" group="n40_lpw02" type="rect" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
-    <text id="n22_lpw02" name="inputAuthor" xy="412,504" size="216,36" group="n40_lpw02" fontSize="15" color="#e8e6e3" vAlign="middle" autoSize="none" text="100" input="true" prompt="1 到 4294967295" maxLength="10" restrict="[0-9]"/>
-    <graph id="n23_lpw02" name="calloutBg" xy="400,556" size="800,108" group="n40_lpw02" type="rect" lineSize="0" fillColor="#ff243044" corner="4"/>
-    <text id="n24_lpw02" name="calloutTitle" xy="416,564" size="768,22" group="n40_lpw02" fontSize="14" color="#e8e6e3" autoSize="none" bold="true" singleLine="true" text="这是一个君子协定"/>
-    <text id="n25_lpw02" name="calloutBody" xy="416,590" size="768,56" group="n40_lpw02" fontSize="13" color="#b7b2a8" autoSize="height" text="作者 ID 会写在你创建的每条属性、标签和法术标识前面，用来标明内容出自谁。编辑器不分配号码，也不会到网上查询这个号码有没有人用。请自己选一个还没被占用的整数，并一直沿用。两份数据用了同一个作者 ID 再被一起载入时，标识相同的内容会撞在一起：内容不一致就无法合并，完全一样则当成同一条。"/>
-    <text id="n26_lpw02" name="labelSources" xy="400,668" size="240,28" group="n40_lpw02" fontSize="16" color="#e8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="载入的数据源"/>
-    <component id="n42_lpw02" name="btnAddSource" src="lpb02" fileName="ButtonSecondary.xml" xy="1052,664" size="148,36" group="n40_lpw02">
-      <Button title="添加数据源"/>
-    </component>
-    <text id="n27_lpw02" name="sourceHint" xy="400,704" size="800,22" group="n40_lpw02" fontSize="13" color="#8d887e" autoSize="none" singleLine="true" text="选择数据包来添加。属于游戏的显示为游戏数据源，其余显示为模组数据源。模组需要一份游戏数据源。"/>
-    <list id="n28_lpw02" name="sources" xy="400,732" size="800,112" group="n40_lpw02" selectionMode="none" overflow="scroll" scrollBar="hidden" lineGap="8" defaultItem="ui://mskevjh6lpi04" autoClearItems="true">
+    <text id="n20_lpw02" name="labelAuthor" xy="400,453" size="200,24" group="n40_lpw02" fontSize="14" color="#b7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="作者 ID"/>
+    <graph id="n21_lpw02" name="bgAuthor" xy="400,481" size="240,36" group="n40_lpw02" type="rect" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
+    <text id="n22_lpw02" name="inputAuthor" xy="412,481" size="216,36" group="n40_lpw02" fontSize="15" color="#e8e6e3" vAlign="middle" autoSize="none" text="100" input="true" prompt="1 到 4294967295" maxLength="10" restrict="[0-9]"/>
+    <graph id="n23_lpw02" name="calloutBg" xy="400,533" size="800,100" group="n40_lpw02" type="rect" lineSize="0" fillColor="#ff243044" corner="4"/>
+    <text id="n24_lpw02" name="calloutTitle" xy="416,541" size="768,22" group="n40_lpw02" fontSize="14" color="#e8e6e3" autoSize="none" bold="true" singleLine="true" text="注意"/>
+    <text id="n25_lpw02" name="calloutBody" xy="416,545" size="768,56" group="n40_lpw02" fontSize="13" color="#b7b2a8" autoSize="height" text="作者 ID 会写在你创建的每条属性、标签和法术标识前面，用来标明内容出自谁。编辑器不分配号码，也不会到网上查询这个号码有没有人用。请自己选一个还没被占用的整数，并一直沿用。两份数据用了同一个作者 ID 再被一起载入时，以后载入的数据源为准，载入顺序通常由游戏的模组管理器复制统筹安排。"/>
+    <text id="n26_lpw02" name="labelSources" xy="400,645" size="240,28" group="n40_lpw02" fontSize="16" color="#e8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="载入的数据源"/>
+    <text id="n27_lpw02" name="sourceHint" xy="400,681" size="800,22" group="n40_lpw02" fontSize="13" color="#ffcc00" autoSize="none" singleLine="true" text="选择数据包来添加。此处的数据源仅用于编辑器内显示，并非保证游戏载入时包含此数据源。"/>
+    <list id="n28_lpw02" name="sources" xy="400,711" size="800,164" group="n40_lpw02" selectionMode="none" overflow="scroll" scrollBar="hidden" lineGap="8" defaultItem="ui://mskevjh6lpi04" autoClearItems="true">
       <item title="游戏数据">
         <property target="kind" propertyId="0" value="游戏数据源"/>
         <property target="path" propertyId="0" value="/SpellProjects/Game"/>
@@ -52,11 +45,15 @@
         <property target="path" propertyId="0" value="/SpellProjects/Heroes"/>
       </item>
     </list>
-    <group id="n40_lpw02" name="modFields" xy="400,476" size="800,374" advanced="true">
+    <component id="n42_lpw02" name="btnAddSource" src="lpb02" fileName="ButtonSecondary.xml" xy="1052,643" size="148,36" group="n40_lpw02">
+      <Button title="添加数据源"/>
+    </component>
+    <group id="n40_lpw02" name="modFields" xy="400,453" size="800,422" advanced="true">
       <gearDisplay controller="cRole" pages="1"/>
     </group>
     <component id="n41_lpw02" name="btnCreate" src="lpb01" fileName="ButtonPrimary.xml" xy="1040,26" size="160,40">
       <Button title="创建并进入"/>
     </component>
+    <text id="n43_jrlk" name="folderHint" xy="601,170" size="800,22" fontSize="13" color="#ff3300" autoSize="none" singleLine="true" text=""/>
   </displayList>
 </component>

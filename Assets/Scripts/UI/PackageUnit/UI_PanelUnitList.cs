@@ -76,6 +76,7 @@ namespace PackageUnit
         public GTextField m_valueSpine;
         public GTextField m_previewLabel;
         public GGraph m_preview;
+        public PackageResource.UI_SpinePreview m_spinePreview;
         public PackageAtrribute.UI_ButtonSecondary m_btnOpenResource;
         public GGroup m_spineInfo;
         public GGroup m_detail;
@@ -121,9 +122,10 @@ namespace PackageUnit
             m_valueSpine = (GTextField)GetChildAt(26);
             m_previewLabel = (GTextField)GetChildAt(27);
             m_preview = (GGraph)GetChildAt(28);
-            m_btnOpenResource = (PackageAtrribute.UI_ButtonSecondary)GetChildAt(29);
-            m_spineInfo = (GGroup)GetChildAt(30);
-            m_detail = (GGroup)GetChildAt(31);
+            m_spinePreview = (PackageResource.UI_SpinePreview)GetChildAt(29);
+            m_btnOpenResource = (PackageAtrribute.UI_ButtonSecondary)GetChildAt(30);
+            m_spineInfo = (GGroup)GetChildAt(31);
+            m_detail = (GGroup)GetChildAt(32);
         }
     }
 }

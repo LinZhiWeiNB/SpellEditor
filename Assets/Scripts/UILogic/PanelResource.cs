@@ -59,6 +59,7 @@ namespace UILogic
         bool _editRename;
         string _editKind = "";
         string _editDir = "";
+        ResourceAsset _pendingDelete;
 
         public override void Start(object[] data)
         {
@@ -599,13 +600,17 @@ namespace UILogic
                 return;
             }
 
+            _pendingDelete = null;
             _editKind = row.Kind;
             _editDir = row.Directory;
             var count = CountUnder(row.Kind, row.Directory);
+            var refs = ReferencesUnder(row.Kind, row.Directory);
             view.m_pickTitle.text = "删除目录";
             view.m_pickHint.text = count == 0
                 ? "这个目录是空的。"
-                : "同时删除其中的 " + count + " 个资源。";
+                : refs == 0
+                    ? "同时删除其中的 " + count + " 个资源。"
+                    : "同时删除其中的 " + count + " 个资源，还有 " + refs + " 处引用。";
             view.m_btnPlace.title = "删除";
         }
 
@@ -614,7 +619,15 @@ namespace UILogic
             var page = view.m_cPick.selectedIndex;
             if (page == (int)UI_PanelResource.EcPick.删除)
             {
-                ConfirmDeleteFolder();
+                if (_pendingDelete != null)
+                {
+                    ConfirmDeleteAsset();
+                }
+                else
+                {
+                    ConfirmDeleteFolder();
+                }
+
                 return;
             }
 
@@ -709,6 +722,22 @@ namespace UILogic
                 if (assets[i].Owned && KindEquals(assets[i].Kind, kind) && UnderDirectory(assets[i].Key, directory))
                 {
                     count++;
+                }
+            }
+
+            return count;
+        }
+
+        int ReferencesUnder(string kind, string directory)
+        {
+            var assets = ResourceLibrary.List();
+            var count = 0;
+            for (var i = 0; i < assets.Count; i++)
+            {
+                var asset = assets[i];
+                if (asset.Owned && KindEquals(asset.Kind, kind) && UnderDirectory(asset.Key, directory))
+                {
+                    count += ResourceLibrary.ReferenceCount(asset);
                 }
             }
 
@@ -1009,6 +1038,7 @@ namespace UILogic
         void CloseImport()
         {
             var naming = view.m_cPick.selectedIndex == (int)UI_PanelResource.EcPick.同名;
+            _pendingDelete = null;
             view.m_cPick.selectedIndex = (int)UI_PanelResource.EcPick.关;
             if (!naming)
             {
@@ -1277,12 +1307,51 @@ namespace UILogic
             }
 
             var refs = ResourceLibrary.ReferenceCount(asset);
-            if (!ResourceLibrary.Delete(asset, out var error))
+            if (refs == 0)
             {
-                Status(error, true);
+                if (!ResourceLibrary.Delete(asset, out var error))
+                {
+                    Status(error, true);
+                    return;
+                }
+
+                NoteDeleted(asset, 0);
                 return;
             }
 
+            if (!OpenPick(UI_PanelResource.EcPick.删除))
+            {
+                return;
+            }
+
+            _pendingDelete = asset;
+            view.m_pickTitle.text = "删除资源";
+            view.m_pickHint.text = "还有 " + refs + " 处引用，删除后仍指向原来的键。";
+            view.m_btnPlace.title = "删除";
+        }
+
+        void ConfirmDeleteAsset()
+        {
+            var asset = _pendingDelete;
+            if (asset == null)
+            {
+                return;
+            }
+
+            var refs = ResourceLibrary.ReferenceCount(asset);
+            if (!ResourceLibrary.Delete(asset, out var error))
+            {
+                view.m_pickHint.text = error ?? "没有删掉。";
+                return;
+            }
+
+            _pendingDelete = null;
+            view.m_cPick.selectedIndex = (int)UI_PanelResource.EcPick.关;
+            NoteDeleted(asset, refs);
+        }
+
+        void NoteDeleted(ResourceAsset asset, int refs)
+        {
             var name = asset.Name;
             _selectedKey = "";
             ClearSelection();

@@ -125,6 +125,14 @@ namespace SpellEditor
                 GameDataKinds.SpellModuleKey,
                 GameDataKinds.SpellModule,
                 ProjectSession.OwnModule.ToByteArray()));
+            var presets = ProjectSession.Archive == null ? null : ProjectSession.Archive.UnitPresets;
+            if (presets != null && presets.Count > 0)
+            {
+                content.Entries.Add(new GameDataEntry(
+                    UnitPresetPackage.Key,
+                    UnitPresetPackage.Kind,
+                    UnitPresetPackage.Encode(presets)));
+            }
             if (!ResourceLibrary.TryExportEntries(content.Entries, out var resourceError))
             {
                 return resourceError;

@@ -1,0 +1,31 @@
+---
+description: 本项目资源引用要写入项目目录，资源页只读这份记录
+alwaysApply: true
+---
+
+# 资源引用
+
+引用只描述本项目谁用了哪条资源键。其他数据源的资源不扫描、不记录、不显示引用。
+
+记录写在项目目录的 `resource-references.txt`，和 `.byte` 放在一起。目录迁移时跟着搬走。不要把它写入 `GameDataFile`，也不要放进导出的数据包。
+
+资源页通过 `ResourceLibrary.References` / `DetailReferences` 读这份文件。不要在界面里临时扫描单位、技能或其他数据源来拼引用。
+
+改资源键时走 `ResourceReferences`，用稳定的 owner 覆盖旧记录。键为空就 `Unbind`。
+
+```csharp
+// 单位选了 Spine 骨骼
+_unit.SpineKey = key;
+ResourceReferences.BindUnitSpine(_unit.Id, key);
+
+// 技能轨道、Buff 等新的引用点：一个槽位一个 owner
+ResourceReferences.Bind(
+    ResourceReferences.SpellTrack(spell.Id, trackIndex),
+    key,
+    "技能 " + new SpellId(spell.Id));
+
+// 删除单位或清掉这个槽位
+ResourceReferences.Unbind(ResourceReferences.UnitSpine(unit.Id));
+```
+
+资源改目录时调用 `ResourceReferences.Retarget(oldKey, newKey)`，预制体键和整包键都要改。只改单位或技能里的字符串、不改引用文件，资源页会显示旧键。

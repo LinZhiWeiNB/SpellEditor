@@ -501,16 +501,6 @@ namespace SpellEditor
                 }
             }
 
-            for (int i = 0; i < Sources.Count; i++)
-            {
-                var foreign = FindAttribute(Sources[i].Module, next);
-                if (foreign != null && !SameDefinition(definition, foreign))
-                {
-                    error = "这个标识和已载入的数据源冲突。";
-                    return false;
-                }
-            }
-
             MoveAttributeName(definition.Id, next);
             definition.Id = next;
             Save();

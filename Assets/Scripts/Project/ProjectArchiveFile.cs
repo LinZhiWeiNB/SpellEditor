@@ -27,6 +27,7 @@ namespace SpellEditor
         public uint RenderPlugins;
         public readonly List<EditorUnit> Units = new List<EditorUnit>();
         public readonly Dictionary<ulong, string> TagNames = new Dictionary<ulong, string>();
+        public readonly List<UnitPreset> UnitPresets = new List<UnitPreset>();
 
         public byte[] Write()
         {
@@ -71,6 +72,12 @@ namespace SpellEditor
             {
                 output.WriteTag(15, WireFormat.WireType.LengthDelimited);
                 output.WriteBytes(EncodeName(pair.Key, pair.Value));
+            }
+
+            for (int i = 0; i < UnitPresets.Count; i++)
+            {
+                output.WriteTag(16, WireFormat.WireType.LengthDelimited);
+                output.WriteBytes(UnitPresets[i].Write());
             }
 
             output.Flush();
@@ -130,6 +137,9 @@ namespace SpellEditor
                         break;
                     case 15:
                         ReadName(input.ReadBytes(), archive.TagNames);
+                        break;
+                    case 16:
+                        archive.UnitPresets.Add(UnitPreset.Read(input.ReadBytes()));
                         break;
                     default:
                         input.SkipLastField();

@@ -56,6 +56,7 @@
     <text id="n25_mnu01" name="valueSpine" xy="760,628" size="400,24" group="n30_mnu01" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" singleLine="true" text="未选择"/>
     <text id="n26_mnu01" name="previewLabel" xy="512,660" size="120,22" group="n30_mnu01" fontSize="13" color="#ff8d887e" vAlign="middle" autoSize="none" singleLine="true" text="预览"/>
     <graph id="n27_mnu01" name="preview" xy="512,688" size="1056,176" group="n30_mnu01" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
+    <component id="n43_mnu01" name="spinePreview" src="spn17" fileName="SpinePreview.xml" pkg="res4p8n2" xy="512,688" size="1056,176" group="n30_mnu01" visible="false"/>
     <component id="n42_mnu01" name="btnOpenResource" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="1432,700" size="120,32" group="n30_mnu01">
       <Button title="打开资源"/>
     </component>

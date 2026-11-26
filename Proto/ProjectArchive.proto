@@ -45,9 +45,20 @@ message ProjectArchive {
 
   // 本项目标签的备注名。键是标签完整标识。SpellModuleData 里没有备注名。
   map<uint64, string> tag_names = 15;
+
+  // 本项目的单位预设。标识相同的预设，游戏按模组载入顺序覆盖，后载入的生效。
+  repeated UnitPreset unit_presets = 16;
 }
 
-// 一条单位。属性预设是纳入的属性，属性值是这些属性的数值。
+// 一条单位预设。纳入的属性按属性标识记录。
+message UnitPreset {
+  uint64 id = 1;
+  string name = 2;
+  repeated uint64 attributes = 3;
+}
+
+// 一条单位。属性预设只有一个，属性值是这个属性的数值。
+// preset_attributes 仍是重复字段，用来读旧存档；编辑时只保留第一项。
 message EditorUnit {
   uint64 id = 1;
   repeated uint64 preset_attributes = 2;

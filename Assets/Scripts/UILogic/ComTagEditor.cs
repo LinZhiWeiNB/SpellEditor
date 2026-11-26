@@ -46,25 +46,8 @@ namespace UILogic
             view.m_mIdInput.onFocusOut.Add(CommitId);
             view.m_mDelete.onClick.Add(DeleteSelected);
             view.m_btnAdd.onClick.Add(AddTag);
-            BindHeader();
             RefreshLists();
             ClearSelection();
-        }
-
-        void BindHeader()
-        {
-            var archive = ProjectSession.Archive;
-            view.m_modSource.text = archive == null ? "" : archive.Name;
-            view.m_modSourceSub.text = archive == null || archive.AuthorId == 0
-                ? "当前数据源 · 游戏项目"
-                : "当前数据源 · 作者 " + archive.AuthorId;
-            var names = archive == null ? "" : archive.Name;
-            for (var i = 0; i < ProjectSession.Sources.Count; i++)
-            {
-                names += "、" + ProjectSession.Sources[i].Title;
-            }
-
-            view.m_mLoaded.text = "已载入 " + names + "。只有" + (archive == null ? "当前项目" : archive.Name) + "里的标签可以改。";
         }
 
         void RefreshLists()
@@ -126,7 +109,7 @@ namespace UILogic
             for (var i = 0; i < module.Tags.Count; i++)
             {
                 var definition = module.Tags[i];
-                if (definition == null || !Match(definition, source))
+                if (definition == null || !Match(definition))
                 {
                     continue;
                 }
@@ -142,7 +125,7 @@ namespace UILogic
             }
         }
 
-        bool Match(TagDefinitionConfig definition, LoadedSource source)
+        bool Match(TagDefinitionConfig definition)
         {
             var filter = (UI_PanelTag.EcFilter)view.m_cFilter.selectedIndex;
             var rooted = definition.ParentId == 0;
@@ -164,12 +147,10 @@ namespace UILogic
 
             var id = new TagId(definition.Id);
             var name = ProjectSession.TagName(definition.Id, id.LocalId);
-            var sourceName = source == null ? ProjectSession.Archive.Name : source.Title;
             var parent = definition.ParentId == 0 ? "根" : ProjectSession.TagName(definition.ParentId, new TagId(definition.ParentId).LocalId);
             return name.IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0
                    || id.LocalId.ToString().IndexOf(query, StringComparison.Ordinal) >= 0
                    || id.ToString().IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0
-                   || sourceName.IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0
                    || parent.IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
@@ -192,8 +173,8 @@ namespace UILogic
             var id = new TagId(shown.Definition.Id);
             row.title = ProjectSession.TagName(shown.Definition.Id, id.LocalId);
             row.m_type.text = shown.Definition.ParentId == 0 ? "根" : "子";
-            row.m_meta.text = "标签 ID " + id.LocalId + " · " + shown.Source.Title;
-            row.m_cTone.selectedIndex = 1;
+            row.m_meta.text = "标签 ID " + id.LocalId + " · " + ParentMeta(shown.Definition);
+            row.m_cTone.selectedIndex = 0;
             row.selected = !_selectedOwned && _selected != null && _selected.Id == shown.Definition.Id;
         }
 
@@ -259,14 +240,12 @@ namespace UILogic
         {
             var definition = _selected;
             var id = new TagId(definition.Id);
-            var sourceName = _selectedOwned ? ProjectSession.Archive.Name : SourceTitle(definition.Id);
             _suppress = true;
             view.m_cInspect.selectedIndex = (int)UI_PanelTag.EcInspect.已选中;
             view.m_cEdit.selectedIndex = _selectedOwned
                 ? (int)UI_PanelTag.EcEdit.可编辑
                 : (int)UI_PanelTag.EcEdit.只读;
             view.m_mTitle.text = ProjectSession.TagName(definition.Id, id.LocalId);
-            view.m_mMeta.text = sourceName + "    " + (_selectedOwned ? "可编辑" : "只读");
             view.m_mNameInput.text = view.m_mTitle.text;
             view.m_mIdInput.text = id.LocalId.ToString();
             view.m_mPath.text = PathOf(definition.Id);
@@ -755,27 +734,6 @@ namespace UILogic
 
             names.Reverse();
             return names.Count == 0 ? "根" : string.Join(" / ", names);
-        }
-
-        string SourceTitle(ulong id)
-        {
-            for (var i = 0; i < _otherShown.Count; i++)
-            {
-                if (_otherShown[i].Definition.Id == id)
-                {
-                    return _otherShown[i].Source.Title;
-                }
-            }
-
-            for (var i = 0; i < ProjectSession.Sources.Count; i++)
-            {
-                if (Contains(ProjectSession.Sources[i].Module, id, null))
-                {
-                    return ProjectSession.Sources[i].Title;
-                }
-            }
-
-            return "";
         }
 
         void Warn(string text)

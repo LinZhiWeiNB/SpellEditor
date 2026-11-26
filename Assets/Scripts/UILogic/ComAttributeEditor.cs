@@ -39,25 +39,55 @@ namespace UILogic
             view.m_mScale.onChanged.Add(OnScaleChanged);
             view.m_mNonNeg.onChanged.Add(OnNonNegativeChanged);
             view.m_mDelete.onClick.Add(DeleteSelected);
-            BindHeader();
+            view.m_btnAdd.onClick.Add(AddAttribute);
             RefreshLists();
             ClearSelection();
         }
 
-        void BindHeader()
+        public void Select(ulong id)
         {
-            var archive = ProjectSession.Archive;
-            view.m_modSource.text = archive.Name;
-            view.m_modSourceSub.text = archive.AuthorId == 0
-                ? "当前数据源 · 游戏项目"
-                : "当前数据源 · 作者 " + archive.AuthorId;
-            var names = archive.Name;
-            for (int i = 0; i < ProjectSession.Sources.Count; i++)
+            view.m_search.onChanged.Remove(RefreshLists);
+            view.m_cFilter.onChanged.Remove(RefreshLists);
+            view.m_search.text = "";
+            view.m_cFilter.selectedIndex = (int)UI_PanelAttribute.EcFilter.全部;
+            view.m_toggleOthers.selected = true;
+            view.m_cOthers.selectedIndex = (int)UI_PanelAttribute.EcOthers.显示;
+            view.m_search.onChanged.Add(RefreshLists);
+            view.m_cFilter.onChanged.Add(RefreshLists);
+            _selected = FindAttribute(ProjectSession.OwnModule, id);
+            _selectedOwned = _selected != null;
+            if (_selected == null)
             {
-                names += "、" + ProjectSession.Sources[i].Title;
+                for (var i = 0; i < ProjectSession.Sources.Count; i++)
+                {
+                    _selected = FindAttribute(ProjectSession.Sources[i].Module, id);
+                    if (_selected != null)
+                    {
+                        break;
+                    }
+                }
             }
 
-            view.m_mLoaded.text = "已载入 " + names + "。只有" + archive.Name + "里的属性可以改。";
+            RefreshLists();
+        }
+
+        static AttributeDefinitionConfig FindAttribute(SpellModuleData module, ulong id)
+        {
+            if (module == null)
+            {
+                return null;
+            }
+
+            for (var i = 0; i < module.Attributes.Count; i++)
+            {
+                var definition = module.Attributes[i];
+                if (definition != null && definition.Id == id)
+                {
+                    return definition;
+                }
+            }
+
+            return null;
         }
 
         void RefreshLists()
@@ -132,7 +162,7 @@ namespace UILogic
             for (int i = 0; i < attributes.Count; i++)
             {
                 var definition = attributes[i];
-                if (!Match(definition, source))
+                if (!Match(definition))
                 {
                     continue;
                 }
@@ -141,14 +171,14 @@ namespace UILogic
                 {
                     own.Add(definition);
                 }
-                else
+                else if (!OwnHas(definition.Id))
                 {
                     other.Add(new ShownOther { Definition = definition, Source = source });
                 }
             }
         }
 
-        bool Match(AttributeDefinitionConfig definition, LoadedSource source)
+        bool Match(AttributeDefinitionConfig definition)
         {
             var filter = (UI_PanelAttribute.EcFilter)view.m_cFilter.selectedIndex;
             if (filter != UI_PanelAttribute.EcFilter.全部 && BehaviorOf(definition) != filter)
@@ -164,11 +194,9 @@ namespace UILogic
 
             var id = new AttributeId(definition.Id);
             var name = ProjectSession.AttributeName(definition.Id, id.LocalId);
-            var sourceName = source == null ? ProjectSession.Archive.Name : source.Title;
             return name.IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0
                    || id.LocalId.ToString().IndexOf(query, StringComparison.Ordinal) >= 0
-                   || id.ToString().IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0
-                   || sourceName.IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0;
+                   || id.ToString().IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
         static UI_PanelAttribute.EcFilter BehaviorOf(AttributeDefinitionConfig definition)
@@ -208,7 +236,7 @@ namespace UILogic
             var row = (UI_ItemAttr)item;
             row.title = ProjectSession.AttributeName(definition.Id, id.LocalId);
             row.m_type.text = BehaviorLabel(definition);
-            row.m_meta.text = "属性 ID " + id.LocalId + " · " + ProjectSession.Archive.Name;
+            row.m_meta.text = "属性 ID " + id.LocalId;
             row.m_cTone.selectedIndex = (int)UI_ItemAttr.EcTone.本源;
         }
 
@@ -219,8 +247,8 @@ namespace UILogic
             var row = (UI_ItemAttr)item;
             row.title = ProjectSession.AttributeName(shown.Definition.Id, id.LocalId);
             row.m_type.text = BehaviorLabel(shown.Definition);
-            row.m_meta.text = "属性 ID " + id.LocalId + " · " + shown.Source.Title;
-            row.m_cTone.selectedIndex = (int)UI_ItemAttr.EcTone.只读;
+            row.m_meta.text = "属性 ID " + id.LocalId;
+            row.m_cTone.selectedIndex = (int)UI_ItemAttr.EcTone.本源;
         }
 
         void OnClickOwn(EventContext context)
@@ -294,14 +322,12 @@ namespace UILogic
         {
             var definition = _selected;
             var id = new AttributeId(definition.Id);
-            var sourceName = _selectedOwned ? ProjectSession.Archive.Name : SourceTitle(definition.Id);
             view.m_cInspect.selectedIndex = (int)UI_PanelAttribute.EcInspect.已选中;
             view.m_mTitle.text = ProjectSession.AttributeName(definition.Id, id.LocalId);
-            view.m_mMeta.text = sourceName + "    " + (_selectedOwned ? "可编辑" : "只读");
             _suppress = true;
             view.m_mNameInput.text = ProjectSession.Archive.AttributeNames.TryGetValue(definition.Id, out var name) ? name : "";
             view.m_mIdInput.text = id.LocalId.ToString();
-            view.m_mIdHint.text = "完整标识是 " + id + "。作者身份在创建项目时确定，这里只改属性 ID。";
+            view.m_mIdHint.text = "";
             var behavior = (AttributeBehavior)definition.Behavior;
             var page = behavior == AttributeBehavior.Resource || behavior == AttributeBehavior.Numeric || behavior == AttributeBehavior.Marker
                 ? (int)behavior - 1
@@ -309,28 +335,14 @@ namespace UILogic
             view.m_cType.selectedIndex = page;
             view.m_mScale.selected = definition.ScaleCurrentWithMax;
             view.m_mNonNeg.selected = definition.NonNegative;
-            view.m_cEdit.selectedIndex = _selectedOwned
-                ? (int)UI_PanelAttribute.EcEdit.可编辑
-                : (int)UI_PanelAttribute.EcEdit.只读;
+            view.m_cEdit.selectedIndex = (int)UI_PanelAttribute.EcEdit.可编辑;
+            view.m_mDelete.visible = _selectedOwned;
             _suppress = false;
-        }
-
-        string SourceTitle(ulong id)
-        {
-            for (int i = 0; i < _otherShown.Count; i++)
-            {
-                if (_otherShown[i].Definition.Id == id)
-                {
-                    return _otherShown[i].Source.Title;
-                }
-            }
-
-            return "";
         }
 
         void CommitName(EventContext context)
         {
-            if (_suppress || !_selectedOwned || _selected == null)
+            if (_suppress || _selected == null)
             {
                 return;
             }
@@ -343,7 +355,7 @@ namespace UILogic
 
         void CommitId(EventContext context)
         {
-            if (_suppress || !_selectedOwned || _selected == null)
+            if (_suppress || _selected == null)
             {
                 return;
             }
@@ -354,8 +366,22 @@ namespace UILogic
                 return;
             }
 
+            var previous = _selected;
+            var wasOwned = _selectedOwned;
+            if (!PrepareEdit(out var created))
+            {
+                return;
+            }
+
             if (!ProjectSession.TryChangeLocalId(_selected, localId, out var error))
             {
+                if (created)
+                {
+                    ProjectSession.OwnModule.Attributes.Remove(_selected);
+                    _selected = previous;
+                    _selectedOwned = wasOwned;
+                }
+
                 view.m_mIdHint.text = error;
                 view.m_mIdInput.text = new AttributeId(_selected.Id).LocalId.ToString();
                 return;
@@ -374,7 +400,7 @@ namespace UILogic
 
         void OnTypeChanged(EventContext context)
         {
-            if (_suppress || !_selectedOwned || _selected == null)
+            if (_suppress || !PrepareEdit(out _))
             {
                 return;
             }
@@ -426,7 +452,7 @@ namespace UILogic
 
         void OnScaleChanged(EventContext context)
         {
-            if (_suppress || !_selectedOwned || _selected == null)
+            if (_suppress || _selected == null)
             {
                 return;
             }
@@ -436,14 +462,20 @@ namespace UILogic
                 return;
             }
 
+            if (!PrepareEdit(out _))
+            {
+                return;
+            }
+
             _selected.ScaleCurrentWithMax = view.m_mScale.selected;
             _selected.NonNegative = true;
             ProjectSession.Save();
+            RefreshLists();
         }
 
         void OnNonNegativeChanged(EventContext context)
         {
-            if (_suppress || !_selectedOwned || _selected == null)
+            if (_suppress || _selected == null)
             {
                 return;
             }
@@ -453,9 +485,127 @@ namespace UILogic
                 return;
             }
 
+            if (!PrepareEdit(out _))
+            {
+                return;
+            }
+
             _selected.NonNegative = view.m_mNonNeg.selected;
             _selected.ScaleCurrentWithMax = false;
             ProjectSession.Save();
+            RefreshLists();
+        }
+
+        void AddAttribute()
+        {
+            if (!ProjectSession.IsOpen || ProjectSession.OwnModule == null)
+            {
+                return;
+            }
+
+            var localId = NextLocalId();
+            var attribute = new AttributeDefinitionConfig
+            {
+                Id = AttributeId.Combine(ProjectSession.AuthorId, localId).Value,
+                ValueKind = (int)AttributeValueKind.Fixed64,
+                Behavior = (int)AttributeBehavior.Numeric,
+            };
+            ProjectSession.OwnModule.Attributes.Add(attribute);
+            ProjectSession.Save();
+            _selected = attribute;
+            _selectedOwned = true;
+            view.m_search.onChanged.Remove(RefreshLists);
+            view.m_cFilter.onChanged.Remove(RefreshLists);
+            view.m_search.text = "";
+            view.m_cFilter.selectedIndex = (int)UI_PanelAttribute.EcFilter.全部;
+            view.m_search.onChanged.Add(RefreshLists);
+            view.m_cFilter.onChanged.Add(RefreshLists);
+            RefreshLists();
+        }
+
+        static uint NextLocalId()
+        {
+            var author = ProjectSession.AuthorId;
+            var highest = 0u;
+            NoteHighest(ProjectSession.OwnModule, author, ref highest);
+            for (var i = 0; i < ProjectSession.Sources.Count; i++)
+            {
+                NoteHighest(ProjectSession.Sources[i].Module, author, ref highest);
+            }
+
+            var next = highest + 1;
+            return next == 0 ? 1u : next;
+        }
+
+        static void NoteHighest(SpellModuleData module, uint author, ref uint highest)
+        {
+            if (module == null)
+            {
+                return;
+            }
+
+            for (var i = 0; i < module.Attributes.Count; i++)
+            {
+                var id = new AttributeId(module.Attributes[i].Id);
+                if (id.AuthorId == author && id.LocalId > highest)
+                {
+                    highest = id.LocalId;
+                }
+            }
+        }
+
+        bool PrepareEdit(out bool created)
+        {
+            created = false;
+            if (_selected == null || !ProjectSession.IsOpen || ProjectSession.OwnModule == null)
+            {
+                return false;
+            }
+
+            if (_selectedOwned)
+            {
+                return true;
+            }
+
+            var id = _selected.Id;
+            var attributes = ProjectSession.OwnModule.Attributes;
+            for (var i = 0; i < attributes.Count; i++)
+            {
+                if (attributes[i].Id != id)
+                {
+                    continue;
+                }
+
+                _selected = attributes[i];
+                _selectedOwned = true;
+                return true;
+            }
+
+            var copy = _selected.Clone();
+            attributes.Add(copy);
+            _selected = copy;
+            _selectedOwned = true;
+            created = true;
+            return true;
+        }
+
+        static bool OwnHas(ulong id)
+        {
+            var module = ProjectSession.OwnModule;
+            if (module == null)
+            {
+                return false;
+            }
+
+            for (var i = 0; i < module.Attributes.Count; i++)
+            {
+                if (module.Attributes[i].Id == id)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         void DeleteSelected()

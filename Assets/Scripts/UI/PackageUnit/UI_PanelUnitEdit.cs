@@ -54,7 +54,7 @@ namespace PackageUnit
         public GTextField m_labelId;
         public GTextField m_valueId;
         public GTextField m_labelPreset;
-        public GList m_presets;
+        public PackageAtrribute.UI_ButtonSecondary m_btnPreset;
         public GTextField m_labelValues;
         public GList m_values;
         public GTextField m_labelActive;
@@ -87,7 +87,7 @@ namespace PackageUnit
             m_labelId = (GTextField)GetChildAt(4);
             m_valueId = (GTextField)GetChildAt(5);
             m_labelPreset = (GTextField)GetChildAt(6);
-            m_presets = (GList)GetChildAt(7);
+            m_btnPreset = (PackageAtrribute.UI_ButtonSecondary)GetChildAt(7);
             m_labelValues = (GTextField)GetChildAt(8);
             m_values = (GList)GetChildAt(9);
             m_labelActive = (GTextField)GetChildAt(10);
