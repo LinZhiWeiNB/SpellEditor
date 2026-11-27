@@ -11,6 +11,7 @@
     "com.reborn.spell.spine": "git@github.com:LinZhiWeiNB/RebornFrameSpellSpine.git",
     "com.reborn.spell.vfxgraph": "git@github.com:LinZhiWeiNB/RebornFrameSpellVfxGraph.git",
     "com.reborn.utils": "git@github.com:LinZhiWeiNB/RebornFrameUtils.git",
+    "com.unity.render-pipelines.universal": "17.6.0",
     "com.unity.visualeffectgraph": "17.6.0",
     "com.unity.entities": "6.6.0",
     "com.unity.ide.rider": "3.0.38",

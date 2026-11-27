@@ -7,9 +7,10 @@
   <controller name="cClipName" pages="0,动画名,1,触发器名" selected="0"/>
   <displayList>
     <graph id="n0_mns01" name="funcPane" xy="0,0" size="320,630" type="rect" lineSize="0" fillColor="#ff1e2128"/>
-    <graph id="n1_mns01" name="preview" xy="320,0" size="960,630" type="rect" lineSize="0" fillColor="#ff14161b"/>
     <graph id="n2_mns01" name="inspectPane" xy="1280,0" size="320,630" type="rect" lineSize="0" fillColor="#ff1e2128"/>
-    <graph id="n3_mns01" name="timePane" xy="0,630" size="1600,270" type="rect" lineSize="0" fillColor="#ff1e2128"/>
+    <graph id="n3_mns01" name="timePane" xy="0,630" size="1600,270" type="rect" lineSize="0" fillColor="#ff1e2128">
+      <relation target="" sidePair="bottomext-bottom"/>
+    </graph>
     <graph id="n4_mns01" name="vSplitL" xy="320,0" size="1,630" type="rect" lineSize="0" fillColor="#ff3a3e48"/>
     <graph id="n5_mns01" name="vSplitR" xy="1279,0" size="1,630" type="rect" lineSize="0" fillColor="#ff3a3e48"/>
     <graph id="n6_mns01" name="hSplit" xy="0,630" size="1600,1" type="rect" lineSize="0" fillColor="#ff3a3e48"/>
@@ -23,22 +24,20 @@
     <component id="n12_mns01" name="btnSwitchUnit" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="16,124" size="288,36">
       <Button title="切换预览单位"/>
     </component>
-    <text id="n13_mns01" name="funcSkill" xy="16,176" size="288,20" fontSize="13" color="#8d887e" vAlign="middle" autoSize="none" singleLine="true" text="技能"/>
-    <component id="n15_mns01" name="btnAddKey" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="16,204" size="288,36">
+    <text id="n13_mns01" name="funcSkill" xy="16,224" size="288,20" fontSize="13" color="#8d887e" vAlign="middle" autoSize="none" singleLine="true" text="技能"/>
+    <component id="n15_mns01" name="btnAddKey" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="16,252" size="288,36">
       <Button title="增加关键帧"/>
     </component>
-    <component id="n90_s0uw" name="btnDeleteKey" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="16,248" size="288,36">
+    <component id="n90_s0uw" name="btnDeleteKey" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="16,296" size="288,36">
       <Button title="删除关键帧"/>
     </component>
-    <text id="n16_mns01" name="funcSpine" xy="16,344" size="288,20" group="n18_mns01" fontSize="13" color="#8d887e" vAlign="middle" autoSize="none" singleLine="true" text="Spine"/>
-    <component id="n17_mns01" name="btnAddClip" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="16,372" size="288,36" group="n18_mns01">
+    <text id="n16_mns01" name="funcSpine" xy="16,392" size="288,20" group="n18_mns01" fontSize="13" color="#8d887e" vAlign="middle" autoSize="none" singleLine="true" text="Spine"/>
+    <component id="n17_mns01" name="btnAddClip" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="16,420" size="288,36" group="n18_mns01">
       <Button title="创建动画片段"/>
     </component>
-    <group id="n18_mns01" name="spineBlock" xy="16,344" size="288,64" advanced="true">
+    <group id="n18_mns01" name="spineBlock" xy="16,392" size="288,64" advanced="true">
       <gearDisplay controller="cSpine" pages="1"/>
     </group>
-    <text id="n19_mns01" name="previewLabel" xy="336,16" size="120,22" fontSize="13" color="#8d887e" vAlign="middle" autoSize="none" singleLine="true" text="预览"/>
-    <graph id="n20_mns01" name="floor" xy="420,500" size="760,1" type="rect" lineSize="0" fillColor="#ff3a3e48"/>
     <text id="n21_mns01" name="inspectTitle" xy="1296,16" size="288,28" fontSize="18" color="#e8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="检视"/>
     <text id="n22_mns01" name="inspectKind" xy="1296,48" size="288,20" fontSize="13" color="#8d887e" vAlign="middle" autoSize="none" singleLine="true" text="技能关键帧"/>
     <text id="n23_mns01" name="inspectEmpty" xy="1296,88" size="288,48" fontSize="13" color="#8d887e" autoSize="none" text="选中技能或 Spine 的关键帧后在这里配置。">
@@ -134,15 +133,26 @@
     <group id="n60_mns01" name="spineInspect" xy="1296,80" size="288,368" advanced="true">
       <gearDisplay controller="cInspect" pages="2"/>
     </group>
-    <list id="n73_mns01" name="units" xy="16,164" size="288,180" overflow="scroll" scrollBar="hidden" lineGap="4" defaultItem="ui://m5lrgzhjg8bt5" autoClearItems="true">
+    <list id="n73_mns01" name="units" xy="16,212" size="288,180" overflow="scroll" scrollBar="hidden" lineGap="4" defaultItem="ui://m5lrgzhjg8bt5" autoClearItems="true">
       <gearDisplay controller="cUnits" pages="1"/>
     </list>
-    <text id="n74_mns01" name="previewCast" xy="420,456" size="760,22" fontSize="13" color="#e8e6e3" align="center" vAlign="middle" autoSize="none" singleLine="true" text=""/>
-    <list id="n75_mns01" name="dummies" xy="420,520" size="760,44" layout="row" overflow="scroll" scroll="horizontal" scrollBar="hidden" colGap="8" defaultItem="ui://m5lrgzhjg8bt5" autoClearItems="true"/>
-    <component id="n61_mns01" name="marks" src="s0uwc" fileName="ComMarks.xml" xy="176,638" size="1416,261"/>
-    <component id="n68_mns01" name="tracks" src="s0uwe" fileName="ComTracks.xml" xy="0,674"/>
-    <component id="n87_mns01" name="progress" src="s0uwd" fileName="ComProgress.xml" xy="168,658" size="1432,241"/>
+    <component id="n61_mns01" name="marks" src="s0uwc" fileName="ComMarks.xml" xy="176,638" size="1416,261">
+      <relation target="" sidePair="bottomext-bottom"/>
+    </component>
+    <component id="n68_mns01" name="tracks" src="s0uwe" fileName="ComTracks.xml" xy="0,674">
+      <relation target="" sidePair="bottomext-bottom"/>
+    </component>
+    <component id="n87_mns01" name="progress" src="s0uwd" fileName="ComProgress.xml" xy="168,658" size="1432,241">
+      <relation target="" sidePair="bottomext-bottom"/>
+    </component>
     <component id="n88_s0uw" name="scrollH" src="s0uwg" fileName="ScrollBarH.xml" xy="176,888" size="1423,10"/>
     <component id="n89_s0uw" name="scrollV" src="s0uwh" fileName="ScrollBarV.xml" xy="163,674" size="10,225"/>
+    <graph id="n91_view" name="previewHit" xy="320,0" size="960,630" type="rect" lineSize="0" fillColor="#00ffffff"/>
+    <component id="n92_view" name="btnResetCamera" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="332,586" size="128,32">
+      <Button title="重置摄像机"/>
+    </component>
+    <component id="n93_view" name="btnAddDummy" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="16,168" size="288,36">
+      <Button title="添加木桩"/>
+    </component>
   </displayList>
 </component>

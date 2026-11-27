@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text;
 using FairyGUI;
 using PackageAtrribute;
 using PackageSpell;
@@ -46,7 +47,6 @@ namespace UILogic
         readonly List<ulong> _tags = new List<ulong>();
         readonly List<ulong> _buffs = new List<ulong>();
         readonly List<EditorUnit> _owners = new List<EditorUnit>();
-        readonly List<ulong> _dummies = new List<ulong>();
         ulong _spellId;
         bool _hasPrefer;
         ulong _preferOwner;
@@ -63,6 +63,7 @@ namespace UILogic
         float _vGrip;
         GComponent _scrollH;
         GComponent _scrollV;
+        float _scrollable;
         EventCallback1 _onDeleteKey;
 
         public override void Start(object[] data)
@@ -85,6 +86,19 @@ namespace UILogic
             view.m_btnSwitchUnit.onClick.Set(ToggleUnits);
             view.m_unitName.text = "未选择";
             view.m_btnAddKey.onClick.Set(AddSkillKey);
+            var addDummy = view.GetChild("btnAddDummy") as GButton;
+            if (addDummy == null)
+            {
+                ShiftForDummyButton();
+                addDummy = UI_ButtonSecondary.CreateInstance();
+                addDummy.name = "btnAddDummy";
+                addDummy.title = "添加木桩";
+                addDummy.SetSize(288, 36);
+                addDummy.SetXY(16, 168);
+                view.AddChild(addDummy);
+            }
+
+            addDummy.onClick.Set(() => SpellPreviewStage.AddDummy());
             var deleteKey = view.GetChild("btnDeleteKey") as GButton;
             if (deleteKey != null)
                 deleteKey.onClick.Set(DeleteSkillKey);
@@ -124,12 +138,150 @@ namespace UILogic
             RenderMarks();
             CollectOwners();
             ClearSelection();
+            OpenPreview();
         }
 
         public override void OnClose()
         {
+            SpellPreviewStage.Close();
             if (_onDeleteKey != null)
                 Stage.inst.onKeyDown.Remove(_onDeleteKey);
+        }
+
+        void ShiftForDummyButton()
+        {
+            const float drop = 48f;
+            view.m_funcSkill.y += drop;
+            view.m_btnAddKey.y += drop;
+            var deleteKey = view.GetChild("btnDeleteKey");
+            if (deleteKey != null)
+                deleteKey.y += drop;
+            view.m_funcSpine.y += drop;
+            view.m_btnAddClip.y += drop;
+            if (view.m_units != null)
+                view.m_units.y += drop;
+        }
+
+        void OpenPreview()
+        {
+            HideLeftover("preview");
+            HideLeftover("previewLabel");
+            HideLeftover("floor");
+            HideLeftover("previewCast");
+            HideLeftover("dummies");
+            var hit = view.GetChild("previewHit");
+            if (hit == null)
+                hit = view.GetChild("preview");
+            if (hit != null)
+            {
+                hit.alpha = 0f;
+                hit.visible = true;
+                hit.touchable = true;
+            }
+
+            var reset = view.GetChild("btnResetCamera") as GButton;
+            if (reset == null)
+            {
+                reset = UI_ButtonSecondary.CreateInstance();
+                reset.name = "btnResetCamera";
+                reset.title = "重置摄像机";
+                reset.SetSize(128, 32);
+                reset.SetXY(332, 586);
+                view.AddChild(reset);
+            }
+
+            reset.onClick.Set(() => SpellPreviewStage.ResetCamera());
+            SpellPreviewStage.Open(hit, OnPreviewUnit);
+            SpellPreviewStage.SetCaster(CurrentOwner());
+        }
+
+        void OnPreviewUnit(PreviewActor actor)
+        {
+            if (actor == null)
+            {
+                if (_track >= 0 && _key >= 0 && _track < _tracks.Count)
+                    ApplyInspector();
+                else
+                {
+                    view.m_cInspect.selectedIndex = (int)UI_PanelSpell.EcInspect.空;
+                    view.m_inspectKind.text = "";
+                    RestoreInspectEmpty();
+                }
+
+                return;
+            }
+
+            ShowUnitInspect(actor);
+        }
+
+        void ShowUnitInspect(PreviewActor actor)
+        {
+            _applying = true;
+            view.m_cInspect.selectedIndex = (int)UI_PanelSpell.EcInspect.空;
+            view.m_inspectKind.text = actor.Unit == null
+                ? actor.name
+                : new SpellId(actor.Unit.Id).ToString();
+            view.m_inspectEmpty.singleLine = false;
+            view.m_inspectEmpty.SetSize(288, 520);
+            view.m_inspectEmpty.text = UnitReport(actor);
+            _applying = false;
+        }
+
+        void RestoreInspectEmpty()
+        {
+            view.m_inspectEmpty.SetSize(288, 48);
+            view.m_inspectEmpty.text = "选中技能或 Spine 的关键帧后在这里配置。";
+        }
+
+        static string UnitReport(PreviewActor actor)
+        {
+            var text = new StringBuilder();
+            text.Append("属性\n");
+            var any = false;
+            if (actor.Unit != null)
+            {
+                var seen = new HashSet<ulong>();
+                var unit = actor.Unit;
+                for (var i = 0; i < unit.PresetAttributes.Count; i++)
+                    any |= AppendAttribute(text, unit, unit.PresetAttributes[i], seen);
+                for (var i = 0; i < unit.Values.Count; i++)
+                    any |= AppendAttribute(text, unit, unit.Values[i].AttributeId, seen);
+            }
+
+            if (!any)
+                text.Append("没有属性\n");
+            text.Append("\n标签\n");
+            if (actor.Tags.Count == 0)
+                text.Append("没有标签\n");
+            for (var i = 0; i < actor.Tags.Count; i++)
+            {
+                var id = actor.Tags[i];
+                text.Append(ProjectSession.TagName(id, (uint)id));
+                text.Append('\n');
+            }
+
+            text.Append("\nBuff\n");
+            if (actor.Buffs.Count == 0)
+                text.Append("没有 Buff\n");
+            for (var i = 0; i < actor.Buffs.Count; i++)
+            {
+                text.Append(FormatId(actor.Buffs[i]));
+                text.Append('\n');
+            }
+
+            return text.ToString();
+        }
+
+        static bool AppendAttribute(StringBuilder text, EditorUnit unit, ulong id, HashSet<ulong> seen)
+        {
+            if (!seen.Add(id))
+                return false;
+            var parsed = new AttributeId(id);
+            text.Append(ProjectSession.AttributeName(id, parsed.LocalId));
+            text.Append("  ");
+            text.Append(UnitCatalogs.Raw(unit, id));
+            text.Append('\n');
+            return true;
         }
 
         void OnDeleteKey(EventContext context)
@@ -141,32 +293,6 @@ namespace UILogic
 
         void RenderMarks()
         {
-            var list = MarkList();
-            if (list == null) return;
-
-            var span = FrameSpan();
-            const int step = 12;
-            var count = span / step + 1;
-            var host = view.GetChild("marks") as GComponent;
-            var viewWidth = PaneView(host, true);
-            var tickSpan = viewWidth * span / 60f;
-            var itemWidth = 36f;
-            var gap = count <= 1 ? 0f : tickSpan / (count - 1) - itemWidth;
-            list.autoResizeItem = false;
-            list.columnGap = Mathf.RoundToInt(gap);
-            list.touchable = false;
-            list.itemRenderer = (index, obj) =>
-            {
-                var label = ((GComponent)obj).GetChild("mark0") as GTextField;
-                if (label != null)
-                    label.text = (index * step).ToString();
-            };
-            list.numItems = count;
-            if (host == null || host.GetChild("marks") == null) return;
-            if (count > 0)
-                itemWidth = list.GetChildAt(0).width;
-            var width = count <= 1 ? itemWidth : (count - 1) * (itemWidth + list.columnGap) + itemWidth;
-            list.SetSize(width, list.height);
             LayoutTimeline();
         }
 
@@ -377,17 +503,19 @@ namespace UILogic
             button.touchable = skill;
         }
 
-        void BindSkillKey(GButton button, KeyFrame key, float px)
+        void BindKey(GButton button, KeyFrame key, float px, bool skill)
         {
             var originX = 0f;
             var pointerX = 0f;
             var moved = false;
+            var home = key.Frame;
             button.onTouchBegin.Add(context =>
             {
                 context.CaptureTouch();
                 moved = false;
                 originX = button.x;
                 pointerX = context.inputEvent.x;
+                home = key.Frame;
             });
             button.onTouchMove.Add(context =>
             {
@@ -397,16 +525,26 @@ namespace UILogic
                 if (!moved && Mathf.Abs(dx) < 4f) return;
                 moved = true;
                 var x = Mathf.Max(0f, originX + dx);
+                if (!skill)
+                {
+                    var frame = BlockedStart(button, home, Mathf.RoundToInt(x / px), ClipSpan(px), px);
+                    x = frame * px;
+                }
+
                 button.x = x;
-                button.title = Mathf.RoundToInt(x / px).ToString();
+                button.title = Mathf.Max(0, Mathf.RoundToInt(x / px)).ToString();
             });
             button.onTouchEnd.Add(() =>
             {
                 if (!moved) return;
-                key.Frame = Mathf.Max(0, Mathf.RoundToInt(button.x / px));
+                var frame = Mathf.Max(0, Mathf.RoundToInt(button.x / px));
+                if (!skill)
+                    frame = BlockedStart(button, home, frame, ClipSpan(px), px);
+                key.Frame = frame;
                 Timers.inst.CallLater(_ =>
                 {
-                    PackSkillTracks();
+                    if (skill)
+                        PackSkillTracks();
                     SelectKey(key);
                 });
             });
@@ -439,12 +577,18 @@ namespace UILogic
             view.m_cInspect.selectedIndex = (int)UI_PanelSpell.EcInspect.空;
             view.m_inspectKind.text = "";
             _applying = false;
+            var actor = SpellPreviewStage.Selected;
+            if (actor != null)
+                ShowUnitInspect(actor);
+            else
+                RestoreInspectEmpty();
             RefreshDeleteKey();
             RefreshPreview();
         }
 
         void ApplyInspector()
         {
+            RestoreInspectEmpty();
             var track = _tracks[_track];
             var key = track.Keys[_key];
             _applying = true;
@@ -492,11 +636,10 @@ namespace UILogic
             };
             list.numItems = _tracks.Count;
             list.ResizeToFit(_tracks.Count);
-            PlaceKeys();
             LayoutTimeline();
         }
 
-        void PlaceKeys()
+        void PlaceKeys(float px)
         {
             var keys = KeysPane();
             if (keys == null) return;
@@ -507,9 +650,6 @@ namespace UILogic
                 if (child.name == "extent") continue;
                 child.Dispose();
             }
-
-            var px = PaneView(keys, true) / 60f;
-            if (px < 1f) px = 1f;
             for (var t = 0; t < _tracks.Count; t++)
             {
                 var track = _tracks[t];
@@ -520,17 +660,9 @@ namespace UILogic
                     button.title = frame.Frame.ToString();
                     button.selected = t == _track && k == _key;
                     button.SetXY(frame.Frame * px, t * 44f + 6f);
-                    if (track.Kind == TrackKind.Skill)
-                    {
-                        button.SetSize(px, button.height);
-                        BindSkillKey(button, frame, px);
-                    }
-                    else
-                    {
-                        var trackIndex = t;
-                        var keyIndex = k;
-                        button.onClick.Set(() => Select(trackIndex, keyIndex));
-                    }
+                    var span = track.Kind == TrackKind.Skill ? 1 : ClipSpan(px);
+                    button.SetSize(span * px, button.height);
+                    BindKey(button, frame, px, track.Kind == TrackKind.Skill);
 
                     keys.AddChild(button);
                 }
@@ -540,12 +672,24 @@ namespace UILogic
         void LayoutTimeline()
         {
             BindTimelineScroll();
-            var span = FrameSpan();
             var marks = view.GetChild("marks") as GComponent;
             var tracks = view.GetChild("tracks") as GComponent;
             var progress = view.GetChild("progress") as GComponent;
             var keys = KeysPane();
             if (marks == null || tracks == null || progress == null || keys == null) return;
+
+            var kept = ScrollPerc(keys);
+            var laneX = tracks.x + keys.x;
+            var laneW = keys.width;
+            marks.SetXY(laneX, marks.y);
+            marks.SetSize(laneW, marks.height);
+            progress.SetXY(laneX, progress.y);
+            progress.SetSize(laneW, progress.height);
+            if (_scrollH != null)
+            {
+                _scrollH.SetXY(laneX, _scrollH.y);
+                _scrollH.SetSize(laneW, _scrollH.height);
+            }
 
             var contentH = _tracks.Count == 0 ? 0f : _tracks.Count * 40f + (_tracks.Count - 1) * 4f;
             var trackList = TrackList();
@@ -553,26 +697,128 @@ namespace UILogic
                 trackList.SetSize(trackList.width, contentH);
             keys.SetSize(keys.width, Mathf.Max(contentH, 1f));
 
+            var px = PaneView(keys, true) / 60f;
+            if (px < 1f) px = 1f;
+            var span = FrameSpan(px);
+            var timeline = Mathf.CeilToInt(px * span);
+            PlaceKeys(px);
+            var content = timeline;
+            for (var i = 0; i < keys.numChildren; i++)
+            {
+                var child = keys.GetChildAt(i);
+                if (child.name == "extent") continue;
+                content = Mathf.Max(content, Mathf.CeilToInt(child.x + child.width));
+            }
+
+            PlaceMarks(marks, px, span);
+            for (var i = 0; i < marks.numChildren; i++)
+            {
+                var child = marks.GetChildAt(i);
+                if (child.name != "tick") continue;
+                content = Mathf.Max(content, Mathf.CeilToInt(child.x + child.width));
+            }
+
+            var markList = MarkList();
+            if (markList != null)
+            {
+                markList.visible = false;
+                markList.SetSize(0f, 0f);
+            }
+
             var extent = keys.GetChild("extent");
             if (extent != null)
-            {
-                var contentW = PaneView(keys, true) * span / 60f;
-                extent.SetSize(contentW, Mathf.Max(contentH, keys.height));
-            }
+                extent.SetSize(content, Mathf.Max(contentH, keys.height));
 
             var slider = progress.GetChild("progress") as GSlider;
             if (slider != null)
             {
+                slider.x = 0f;
                 slider.max = span;
-                slider.SetSize(PaneView(progress, true) * span / 60f, slider.height);
+                slider.SetSize(timeline, slider.height);
+                slider.opaque = true;
             }
 
+            Pad(marks, content);
+            Pad(progress, content);
             marks.EnsureBoundsCorrect();
             tracks.EnsureBoundsCorrect();
             progress.EnsureBoundsCorrect();
             keys.EnsureBoundsCorrect();
+            _scrollable = SharedScrollable(marks, keys, progress);
+            Stretch(marks, "pad");
+            Stretch(keys, "extent");
+            Stretch(progress, "pad");
+            ApplyScrollX(kept);
             UpdateScrollBars();
             Timers.inst.CallLater(RefreshScrollLater);
+        }
+
+        void PlaceMarks(GComponent marks, float px, int span)
+        {
+            for (var i = marks.numChildren - 1; i >= 0; i--)
+            {
+                var child = marks.GetChildAt(i);
+                if (child.name == "tick")
+                    child.Dispose();
+            }
+
+            const int step = 12;
+            for (var frame = 0; frame <= span; frame += step)
+            {
+                var item = UI_ItemMark.CreateInstance();
+                item.name = "tick";
+                item.touchable = false;
+                item.SetXY(frame * px, 0f);
+                item.m_mark0.text = frame.ToString();
+                marks.AddChild(item);
+            }
+        }
+
+        static void Pad(GComponent host, float width)
+        {
+            var pad = host.GetChild("pad");
+            if (pad == null)
+            {
+                var graph = new GGraph();
+                graph.name = "pad";
+                graph.touchable = false;
+                host.AddChild(graph);
+                pad = graph;
+            }
+
+            pad.SetXY(0f, 0f);
+            pad.SetSize(width, 1f);
+        }
+
+        static float ScrollPerc(GComponent keys)
+        {
+            var pane = keys?.scrollPane;
+            if (pane == null || pane.contentWidth <= pane.viewWidth + 1f)
+                return 0f;
+            return pane.percX;
+        }
+
+        static float SharedScrollable(GComponent marks, GComponent keys, GComponent progress)
+        {
+            return Mathf.Max(Scrollable(marks), Mathf.Max(Scrollable(keys), Scrollable(progress)));
+        }
+
+        static float Scrollable(GComponent com)
+        {
+            var pane = com?.scrollPane;
+            if (pane == null) return 0f;
+            return Mathf.Max(0f, pane.contentWidth - pane.viewWidth);
+        }
+
+        void Stretch(GComponent com, string spacer)
+        {
+            var pane = com?.scrollPane;
+            var child = com?.GetChild(spacer);
+            if (pane == null || child == null) return;
+            var desired = pane.viewWidth + _scrollable;
+            if (pane.contentWidth + 0.5f >= desired) return;
+            child.SetSize(desired, Mathf.Max(child.height, 1f));
+            com.EnsureBoundsCorrect();
         }
 
         void RefreshScrollLater(object param)
@@ -596,6 +842,7 @@ namespace UILogic
             Hold(tracks);
             Hold(progress);
             Hold(keys);
+            progress.opaque = false;
             BindGrip(_scrollH, true);
             BindGrip(_scrollV, false);
             _scrollReady = true;
@@ -664,9 +911,10 @@ namespace UILogic
 
         void ApplyScrollX(float perc)
         {
-            SetPercX(view.GetChild("marks") as GComponent, perc);
-            SetPercX(KeysPane(), perc);
-            SetPercX(view.GetChild("progress") as GComponent, perc);
+            var pos = _scrollable * Mathf.Clamp01(perc);
+            SetPosX(view.GetChild("marks") as GComponent, pos);
+            SetPosX(KeysPane(), pos);
+            SetPosX(view.GetChild("progress") as GComponent, pos);
         }
 
         void ApplyScrollY(float perc)
@@ -676,11 +924,11 @@ namespace UILogic
             pane.percY = perc;
         }
 
-        static void SetPercX(GComponent com, float perc)
+        static void SetPosX(GComponent com, float pos)
         {
             var pane = com?.scrollPane;
             if (pane == null) return;
-            pane.percX = pane.contentWidth <= pane.viewWidth + 1f ? 0f : perc;
+            pane.posX = pos;
         }
 
         void UpdateScrollBars()
@@ -751,16 +999,95 @@ namespace UILogic
             return size > 1f ? size : horizontal ? com.width : com.height;
         }
 
-        int FrameSpan()
+        int ClipSpan(float px)
+        {
+            return Mathf.Max(1, Mathf.CeilToInt(64f / Mathf.Max(px, 1f)));
+        }
+
+        int BlockedStart(GButton button, int home, int desired, int span, float px)
+        {
+            desired = Mathf.Max(0, desired);
+            if (span < 1) span = 1;
+            var parent = button.parent;
+            if (parent == null || px < 1f) return desired;
+
+            var occupied = new List<int>();
+            for (var i = 0; i < parent.numChildren; i++)
+            {
+                var other = parent.GetChildAt(i);
+                if (other == button || other.name == "extent") continue;
+                if (Mathf.Abs(other.y - button.y) > 2f) continue;
+                var otherStart = Mathf.RoundToInt(other.x / px);
+                var otherSpan = Mathf.Max(1, Mathf.RoundToInt(other.width / px));
+                occupied.Add(otherStart);
+                occupied.Add(otherStart + otherSpan);
+            }
+
+            if (occupied.Count == 0) return desired;
+            for (var i = 2; i < occupied.Count; i += 2)
+            {
+                var start = occupied[i];
+                var end = occupied[i + 1];
+                var j = i;
+                while (j > 0 && occupied[j - 2] > start)
+                {
+                    occupied[j] = occupied[j - 2];
+                    occupied[j + 1] = occupied[j - 1];
+                    j -= 2;
+                }
+
+                occupied[j] = start;
+                occupied[j + 1] = end;
+            }
+
+            var merged = new List<int>();
+            for (var i = 0; i < occupied.Count; i += 2)
+            {
+                if (merged.Count == 0 || occupied[i] > merged[merged.Count - 1])
+                {
+                    merged.Add(occupied[i]);
+                    merged.Add(occupied[i + 1]);
+                }
+                else if (occupied[i + 1] > merged[merged.Count - 1])
+                {
+                    merged[merged.Count - 1] = occupied[i + 1];
+                }
+            }
+
+            var best = desired;
+            var bestDist = int.MaxValue;
+            var found = false;
+            Consider(0, merged[0] - span);
+            for (var i = 0; i < merged.Count - 2; i += 2)
+                Consider(merged[i + 1], merged[i + 2] - span);
+            Consider(merged[merged.Count - 1], int.MaxValue);
+            return found ? best : desired;
+
+            void Consider(int lo, int hi)
+            {
+                if (hi < 0 || hi < lo) return;
+                if (lo < 0) lo = 0;
+                var candidate = desired < lo ? lo : desired > hi ? hi : desired;
+                var dist = Mathf.Abs(candidate - desired);
+                if (found && dist > bestDist) return;
+                if (found && dist == bestDist && Mathf.Abs(candidate - home) >= Mathf.Abs(best - home)) return;
+                best = candidate;
+                bestDist = dist;
+                found = true;
+            }
+        }
+
+        int FrameSpan(float px)
         {
             var span = 60;
+            var clip = ClipSpan(px);
             for (var i = 0; i < _tracks.Count; i++)
             {
                 var keys = _tracks[i].Keys;
                 var skill = _tracks[i].Kind == TrackKind.Skill;
                 for (var k = 0; k < keys.Count; k++)
                 {
-                    var end = skill ? keys[k].Frame + 1 : keys[k].Frame;
+                    var end = skill ? keys[k].Frame + 1 : keys[k].Frame + clip;
                     if (end > span) span = end;
                 }
             }
@@ -924,17 +1251,12 @@ namespace UILogic
             view.m_unitName.text = _owner < 0
                 ? "没有单位拥有这个技能"
                 : new SpellId(_owners[_owner].Id).ToString();
-            var cast = view.GetChild("previewCast") as GTextField;
-            if (cast == null) return;
+            SpellPreviewStage.SetCaster(CurrentOwner());
+        }
 
-            cast.text = _owner < 0 ? "" : "主体  " + view.m_unitName.text;
-            var picked = _track >= 0
-                         && _key >= 0
-                         && _tracks[_track].Kind == TrackKind.Skill
-                         && _tracks[_track].Keys[_key].Pick == 0;
-            cast.color = picked
-                ? new Color(0.94f, 0.78f, 0.42f)
-                : new Color(0.91f, 0.90f, 0.89f);
+        EditorUnit CurrentOwner()
+        {
+            return _owner < 0 || _owner >= _owners.Count ? null : _owners[_owner];
         }
 
         void ToggleUnits()
@@ -972,43 +1294,13 @@ namespace UILogic
         void RefreshPreview()
         {
             ShowOwner();
-            _dummies.Clear();
-            for (var i = 0; i < _tracks.Count; i++)
-            {
-                if (_tracks[i].Kind != TrackKind.Skill) continue;
-                var keys = _tracks[i].Keys;
-                for (var k = 0; k < keys.Count; k++)
-                {
-                    var tags = keys[k].Tags;
-                    for (var t = 0; t < tags.Count; t++)
-                    {
-                        if (!_dummies.Contains(tags[t])) _dummies.Add(tags[t]);
-                    }
-                }
-            }
+        }
 
-            var list = view.GetChild("dummies") as GList;
-            if (list == null) return;
-
-            var current = _track >= 0 && _key >= 0 && _tracks[_track].Kind == TrackKind.Skill
-                ? _tracks[_track].Keys[_key].Tags
-                : null;
-            list.itemRenderer = (index, obj) =>
-            {
-                var button = (GButton)obj;
-                var id = _dummies[index];
-                var picked = current != null && current.Contains(id);
-                var local = (uint)id;
-                button.title = (picked ? "● " : "") + ProjectSession.TagName(id, local);
-                var title = button.GetChild("title") as GTextField;
-                if (title != null)
-                {
-                    title.color = picked
-                        ? new Color(0.94f, 0.78f, 0.42f)
-                        : new Color(0.55f, 0.53f, 0.49f);
-                }
-            };
-            list.numItems = _dummies.Count;
+        void HideLeftover(string name)
+        {
+            var child = view.GetChild(name);
+            if (child != null)
+                child.visible = false;
         }
 
         static string FormatId(ulong id)
