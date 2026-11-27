@@ -17,7 +17,7 @@
     </component>
     <text id="n4_mns02" name="title" xy="112,20" size="200,28" fontSize="18" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="技能"/>
     <graph id="n5_mns02" name="bgSearch" xy="16,68" size="448,36" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
-    <text id="n6_mns02" name="search" xy="28,68" size="424,36" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" input="true" prompt="搜索技能"/>
+    <text id="n6_mns02" name="search" xy="28,68" size="424,36" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" singleLine="true" input="true" prompt="搜索技能"/>
     <component id="n41_mns02" name="toggleOthers" src="g8bt0" fileName="ButtonCheck.xml" pkg="m5lrgzhj" xy="16,112" size="448,28">
       <Button checked="true" title="显示其他数据源" controller="cOwn" page="0"/>
     </component>

@@ -33,6 +33,10 @@ namespace PackageSpell
         public PackageAtrribute.UI_ButtonSecondary m_btnAddTag;
         public GTextField m_empty;
         public GList m_tags;
+        public GTextField m_labelPreset;
+        public PackageAtrribute.UI_ButtonSecondary m_btnPreset;
+        public GTextField m_valueEmpty;
+        public GList m_values;
         public GTextField m_report;
         public const string URL = "ui://skl4p8n2unit1";
 
@@ -51,7 +55,11 @@ namespace PackageSpell
             m_btnAddTag = (PackageAtrribute.UI_ButtonSecondary)GetChildAt(2);
             m_empty = (GTextField)GetChildAt(3);
             m_tags = (GList)GetChildAt(4);
-            m_report = (GTextField)GetChildAt(5);
+            m_labelPreset = (GTextField)GetChildAt(5);
+            m_btnPreset = (PackageAtrribute.UI_ButtonSecondary)GetChildAt(6);
+            m_valueEmpty = (GTextField)GetChildAt(7);
+            m_values = (GList)GetChildAt(8);
+            m_report = (GTextField)GetChildAt(9);
         }
     }
 }

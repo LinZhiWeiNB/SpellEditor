@@ -19,7 +19,7 @@
     <graph id="n5_rnam1" name="pathBg" xy="614,550" size="372,36" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4">
       <relation target="n1_rnam1" sidePair="left-left,top-top"/>
     </graph>
-    <text id="n6_rnam1" name="inputPath" xy="626,550" size="348,36" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" input="true" prompt="新路径，例如 heroes/player">
+    <text id="n6_rnam1" name="inputPath" xy="626,550" size="348,36" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" singleLine="true" input="true" prompt="新路径，例如 heroes/player">
       <relation target="n1_rnam1" sidePair="left-left,top-top"/>
     </text>
     <component id="n7_rnam1" name="btnPlace" src="g8bt3" fileName="ButtonPrimary.xml" pkg="m5lrgzhj" xy="614,594" size="372,36">

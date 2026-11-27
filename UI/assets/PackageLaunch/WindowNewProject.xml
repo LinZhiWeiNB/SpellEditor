@@ -11,7 +11,7 @@
     <text id="n2_lpw02" name="title" xy="400,28" size="240,36" fontSize="22" color="#e8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="新建项目"/>
     <text id="n3_lpw02" name="labelName" xy="400,88" size="200,24" fontSize="14" color="#b7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="项目名称"/>
     <graph id="n4_lpw02" name="bgName" xy="400,116" size="800,36" type="rect" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
-    <text id="n5_lpw02" name="inputName" xy="412,116" size="776,36" fontSize="15" color="#e8e6e3" vAlign="middle" autoSize="none" text="" input="true" prompt="例如 符文模组" maxLength="32"/>
+    <text id="n5_lpw02" name="inputName" xy="412,116" size="776,36" fontSize="15" color="#e8e6e3" vAlign="middle" autoSize="none" text="" singleLine="true" input="true" prompt="例如 符文模组" maxLength="32"/>
     <text id="n6_lpw02" name="labelFolder" xy="400,168" size="200,24" fontSize="14" color="#b7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="项目文件夹"/>
     <graph id="n7_lpw02" name="bgFolder" xy="400,196" size="640,36" type="rect" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
     <text id="n8_lpw02" name="inputFolder" xy="412,196" size="616,36" fontSize="15" color="#e8e6e3" vAlign="middle" autoSize="none" singleLine="true" text="/SpellProjects/Runes" input="true"/>
@@ -29,7 +29,7 @@
     </list>
     <text id="n20_lpw02" name="labelAuthor" xy="400,453" size="200,24" group="n40_lpw02" fontSize="14" color="#b7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="模组 ID"/>
     <graph id="n21_lpw02" name="bgAuthor" xy="400,481" size="240,36" group="n40_lpw02" type="rect" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
-    <text id="n22_lpw02" name="inputAuthor" xy="412,481" size="216,36" group="n40_lpw02" fontSize="15" color="#e8e6e3" vAlign="middle" autoSize="none" text="100" input="true" prompt="1 到 4294967295" maxLength="10" restrict="[0-9]"/>
+    <text id="n22_lpw02" name="inputAuthor" xy="412,481" size="216,36" group="n40_lpw02" fontSize="15" color="#e8e6e3" vAlign="middle" autoSize="none" text="100" singleLine="true" input="true" prompt="1 到 4294967295" maxLength="10" restrict="[0-9]"/>
     <graph id="n23_lpw02" name="calloutBg" xy="400,533" size="800,100" group="n40_lpw02" type="rect" lineSize="0" fillColor="#ff243044" corner="4"/>
     <text id="n24_lpw02" name="calloutTitle" xy="416,541" size="768,22" group="n40_lpw02" fontSize="14" color="#e8e6e3" autoSize="none" bold="true" singleLine="true" text="注意"/>
     <text id="n25_lpw02" name="calloutBody" xy="416,545" size="768,56" group="n40_lpw02" fontSize="13" color="#b7b2a8" autoSize="height" text="模组 ID 会写在你创建的每条属性、标签和法术标识前面，用来标明内容出自谁。编辑器不分配号码，也不会到网上查询这个号码有没有人用。请自己选一个还没被占用的整数，并一直沿用。两份数据用了同一个模组 ID 再被一起载入时，以后载入的数据源为准，载入顺序通常由游戏的模组管理器复制统筹安排。"/>

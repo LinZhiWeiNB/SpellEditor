@@ -17,7 +17,7 @@
     </component>
     <text id="n4_mnu01" name="title" xy="112,20" size="200,28" fontSize="18" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="单位"/>
     <graph id="n5_mnu01" name="bgSearch" xy="16,68" size="448,36" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
-    <text id="n6_mnu01" name="search" xy="28,68" size="424,36" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" input="true" prompt="搜索单位"/>
+    <text id="n6_mnu01" name="search" xy="28,68" size="424,36" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" singleLine="true" input="true" prompt="搜索单位"/>
     <list id="n7_mnu01" name="units" xy="0,116" size="480,716" overflow="scroll" scrollBar="hidden" defaultItem="ui://unt4p8n2mnu03" autoClearItems="true">
       <item title="0:1">
         <property target="meta" propertyId="0" value="属性 2  ·  技能 1"/>

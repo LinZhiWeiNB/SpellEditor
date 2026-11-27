@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="288,64">
+  <displayList>
+    <text id="n0_uval" name="title" xy="0,0" size="156,28" fontSize="13" color="#e8e6e3" vAlign="middle" autoSize="none" singleLine="true" text="属性"/>
+    <component id="n3_uval" name="track" src="g8bt0" fileName="ButtonCheck.xml" pkg="m5lrgzhj" xy="160,0" size="128,28">
+      <Button title="跟踪显示"/>
+    </component>
+    <text id="n4_uval" name="currentLabel" xy="0,34" size="36,28" fontSize="12" color="#b7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="当前"/>
+    <graph id="n1_uval" name="bg" xy="36,36" size="96,24" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
+    <text id="n2_uval" name="input" xy="42,36" size="84,24" fontSize="13" color="#e8e6e3" vAlign="middle" autoSize="none" text="0" singleLine="true" input="true" restrict="[0-9\-]"/>
+    <text id="n5_uval" name="maxLabel" xy="140,34" size="36,28" fontSize="12" color="#b7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="最大"/>
+    <graph id="n6_uval" name="maxBg" xy="176,36" size="108,24" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
+    <text id="n7_uval" name="maxInput" xy="182,36" size="96,24" fontSize="13" color="#e8e6e3" vAlign="middle" autoSize="none" text="0" singleLine="true" input="true" restrict="[0-9\-]"/>
+  </displayList>
+</component>

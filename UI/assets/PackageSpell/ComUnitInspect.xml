@@ -11,7 +11,13 @@
       <Button title="添加"/>
     </component>
     <text id="n3_unit" name="empty" xy="8,48" size="288,24" fontSize="13" color="#8d887e" vAlign="middle" autoSize="none" singleLine="true" text="没有标签"/>
-    <list id="n4_unit" name="tags" xy="8,48" size="288,240" overflow="scroll" defaultItem="ui://skl4p8n2utag1" autoClearItems="true"/>
-    <text id="n5_unit" name="report" xy="8,300" size="288,230" fontSize="13" color="#e8e6e3" autoSize="none" text=""/>
+    <list id="n4_unit" name="tags" xy="8,48" size="288,156" overflow="scroll" defaultItem="ui://skl4p8n2utag1" autoClearItems="true"/>
+    <text id="n6_unit" name="labelPreset" xy="8,212" size="120,28" fontSize="13" color="#b7b2a8" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="属性预设"/>
+    <component id="n7_unit" name="btnPreset" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="136,212" size="160,28">
+      <Button title="选择"/>
+    </component>
+    <text id="n8_unit" name="valueEmpty" xy="8,248" size="288,24" fontSize="13" color="#8d887e" vAlign="middle" autoSize="none" singleLine="true" text="选择单位预设后编辑默认值"/>
+    <list id="n9_unit" name="values" xy="8,248" size="288,282" overflow="scroll" defaultItem="ui://skl4p8n2uval1" autoClearItems="true"/>
+    <text id="n5_unit" name="report" xy="8,212" size="288,318" fontSize="13" color="#e8e6e3" autoSize="none" text=""/>
   </displayList>
 </component>

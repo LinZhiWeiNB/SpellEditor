@@ -15,10 +15,14 @@ namespace UILogic
         public sealed class Seed
         {
             public ulong StableId;
+            public ulong PresetId;
             public Vector3 Position;
             public readonly List<ulong> Tags = new List<ulong>();
             public readonly List<ulong> CastTags = new List<ulong>();
             public readonly List<EditorUnitValue> Values = new List<EditorUnitValue>();
+            public readonly List<EditorUnitValue> PreviewValues = new List<EditorUnitValue>();
+            public readonly List<ulong> HiddenAttributes = new List<ulong>();
+            public readonly List<ulong> TrackedAttributes = new List<ulong>();
         }
 
         public struct Pick
@@ -159,6 +163,7 @@ namespace UILogic
                             {
                                 AttributeId = attributes[a].Id.Value,
                                 Raw = attributes[a].CurrentBits,
+                                Max = attributes[a].MaxBits,
                             });
                         }
 

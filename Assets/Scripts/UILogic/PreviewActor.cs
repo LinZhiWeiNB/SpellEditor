@@ -21,6 +21,8 @@ namespace UILogic
         [System.NonSerialized] public readonly List<ulong> Tags = new List<ulong>();
         [System.NonSerialized] public readonly List<ulong> Buffs = new List<ulong>();
         [System.NonSerialized] public readonly List<EditorUnitValue> InitialValues = new List<EditorUnitValue>();
+        [System.NonSerialized] public readonly List<ulong> HiddenAttributes = new List<ulong>();
+        [System.NonSerialized] public readonly List<ulong> TrackedAttributes = new List<ulong>();
         [System.NonSerialized] public readonly List<EditorUnitValue> Sampled = new List<EditorUnitValue>();
 
         int _fit;
@@ -31,6 +33,28 @@ namespace UILogic
         public void RememberHome()
         {
             HomePosition = transform.position;
+        }
+
+        public bool Tracks(ulong id)
+        {
+            if (UnitCatalogs.IsResource(id))
+            {
+                for (var i = 0; i < HiddenAttributes.Count; i++)
+                {
+                    if (HiddenAttributes[i] == id)
+                        return false;
+                }
+
+                return true;
+            }
+
+            for (var i = 0; i < TrackedAttributes.Count; i++)
+            {
+                if (TrackedAttributes[i] == id)
+                    return true;
+            }
+
+            return false;
         }
 
         public void RememberTags()

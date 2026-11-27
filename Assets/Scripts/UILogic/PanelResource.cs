@@ -71,6 +71,7 @@ namespace UILogic
             view.m_refs.itemRenderer = RenderRef;
             view.m_btnImport.onClick.Set(OpenImport);
             view.m_btnDelete.onClick.Set(DeleteSelected);
+            DeleteGesture.Bind(this, DeleteSelected);
             view.m_btnMove.onClick.Set(MoveSelected);
             _spinePreview.NoteChanged = SetPreviewNote;
             ClearStatus();
@@ -82,8 +83,14 @@ namespace UILogic
             }
         }
 
+        public override void OnShow()
+        {
+            DeleteGesture.Bind(this, DeleteSelected);
+        }
+
         public override void OnClose()
         {
+            DeleteGesture.Unbind(this);
             ClearPreview();
         }
 

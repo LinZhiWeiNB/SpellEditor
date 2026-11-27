@@ -30,6 +30,10 @@
     <component id="ptag1" name="PanelTagPick.xml" path="/" exported="true"/>
     <component id="pblk1" name="PanelBlank.xml" path="/" exported="true"/>
     <component id="tip01" name="ButtonTip.xml" path="/" exported="true"/>
+    <component id="itag1" name="ItemInfoTag.xml" path="/" exported="true"/>
+    <component id="iatr1" name="ItemInfoAttr.xml" path="/" exported="true"/>
+    <component id="uinf1" name="ComUnitInfo.xml" path="/" exported="true"/>
+    <component id="uval1" name="ItemUnitValue.xml" path="/" exported="true"/>
   </resources>
   <publish name="" genCode="true"/>
 </packageDescription>

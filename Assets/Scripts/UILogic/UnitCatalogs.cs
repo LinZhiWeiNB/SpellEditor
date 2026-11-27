@@ -85,6 +85,107 @@ namespace UILogic
             return 0;
         }
 
+        public static bool IsResource(ulong id)
+        {
+            var own = Behavior(ProjectSession.OwnModule, id);
+            if (own == AttributeBehavior.Resource)
+                return true;
+            if (own != AttributeBehavior.None)
+                return false;
+            for (var i = 0; i < ProjectSession.Sources.Count; i++)
+            {
+                if (Behavior(ProjectSession.Sources[i].Module, id) == AttributeBehavior.Resource)
+                    return true;
+            }
+
+            return false;
+        }
+
+        public static bool LayoutRaw(ulong id, out long raw)
+        {
+            if (LayoutRaw(ProjectSession.OwnModule, id, out raw))
+                return true;
+            for (var i = 0; i < ProjectSession.Sources.Count; i++)
+            {
+                if (LayoutRaw(ProjectSession.Sources[i].Module, id, out raw))
+                    return true;
+            }
+
+            raw = 0;
+            return false;
+        }
+
+        public static void CollectPresets(List<UnitPreset> into)
+        {
+            into.Clear();
+            var seen = new HashSet<ulong>();
+            var archive = ProjectSession.Archive;
+            if (archive != null)
+            {
+                for (var i = 0; i < archive.UnitPresets.Count; i++)
+                {
+                    var preset = archive.UnitPresets[i];
+                    if (preset == null || preset.Id == 0 || !seen.Add(preset.Id))
+                        continue;
+                    into.Add(preset);
+                }
+            }
+
+            var foreign = new List<UnitPreset>();
+            for (var i = 0; i < ProjectSession.Sources.Count; i++)
+            {
+                foreign.Clear();
+                UnitPresetPackage.Read(ProjectSession.Sources[i].AbsolutePath, foreign);
+                for (var j = 0; j < foreign.Count; j++)
+                {
+                    var preset = foreign[j];
+                    if (preset == null || preset.Id == 0 || !seen.Add(preset.Id))
+                        continue;
+                    into.Add(preset);
+                }
+            }
+        }
+
+        public static UnitPreset FindPreset(ulong id)
+        {
+            if (id == 0)
+                return null;
+            var archive = ProjectSession.Archive;
+            if (archive != null)
+            {
+                for (var i = 0; i < archive.UnitPresets.Count; i++)
+                {
+                    var preset = archive.UnitPresets[i];
+                    if (preset != null && preset.Id == id)
+                        return preset;
+                }
+            }
+
+            var foreign = new List<UnitPreset>();
+            for (var i = 0; i < ProjectSession.Sources.Count; i++)
+            {
+                foreign.Clear();
+                UnitPresetPackage.Read(ProjectSession.Sources[i].AbsolutePath, foreign);
+                for (var j = 0; j < foreign.Count; j++)
+                {
+                    var preset = foreign[j];
+                    if (preset != null && preset.Id == id)
+                        return preset;
+                }
+            }
+
+            return null;
+        }
+
+        public static string PresetTitle(UnitPreset preset)
+        {
+            if (preset == null)
+                return "选择";
+            if (!string.IsNullOrEmpty(preset.Name))
+                return preset.Name;
+            return "预设 " + new SpellId(preset.Id).LocalId;
+        }
+
         public static void SetRaw(EditorUnit unit, ulong attributeId, long raw)
         {
             for (var i = 0; i < unit.Values.Count; i++)
@@ -119,6 +220,37 @@ namespace UILogic
             }
 
             return null;
+        }
+
+        static AttributeBehavior Behavior(SpellModuleData module, ulong id)
+        {
+            if (module == null)
+                return AttributeBehavior.None;
+            for (var i = 0; i < module.Attributes.Count; i++)
+            {
+                var attribute = module.Attributes[i];
+                if (attribute.Id == id)
+                    return (AttributeBehavior)attribute.Behavior;
+            }
+
+            return AttributeBehavior.None;
+        }
+
+        static bool LayoutRaw(SpellModuleData module, ulong id, out long raw)
+        {
+            raw = 0;
+            if (module == null)
+                return false;
+            for (var i = 0; i < module.AttributeLayout.Count; i++)
+            {
+                var entry = module.AttributeLayout[i];
+                if (entry.AttributeId != id)
+                    continue;
+                raw = entry.Raw;
+                return true;
+            }
+
+            return false;
         }
 
         static void AddAttributes(SpellModuleData module, List<ulong> ids, HashSet<ulong> seen)

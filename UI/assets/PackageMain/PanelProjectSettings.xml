@@ -15,7 +15,7 @@
     </text>
     <text id="n4_mnp01" name="labelName" xy="400,108" size="240,24" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="项目名称"/>
     <graph id="n5_mnp01" name="bgName" xy="400,136" size="800,36" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
-    <text id="n6_mnp01" name="inputName" xy="412,136" size="776,36" fontSize="15" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" input="true" prompt="例如 符文模组" maxLength="32"/>
+    <text id="n6_mnp01" name="inputName" xy="412,136" size="776,36" fontSize="15" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" singleLine="true" input="true" prompt="例如 符文模组" maxLength="32"/>
     <text id="n7_mnp01" name="labelFolder" xy="400,188" size="240,24" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="项目文件夹"/>
     <graph id="n8_mnp01" name="bgFolder" xy="400,216" size="640,36" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
     <text id="n9_mnp01" name="folder" xy="412,216" size="616,36" fontSize="15" color="#ffe8e6e3" vAlign="middle" autoSize="none" singleLine="true" text=""/>
@@ -25,7 +25,7 @@
     <text id="n11_mnp01" name="folderHint" xy="400,260" size="800,22" fontSize="13" color="#ff8d887e" autoSize="none" singleLine="true" text="存档会移到所选文件夹，并按新位置重写数据包的相对路径。"/>
     <text id="n23_mnp01" name="labelLogic" xy="400,296" size="240,24" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="逻辑帧率"/>
     <graph id="n24_mnp01" name="bgLogic" xy="400,324" size="800,36" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
-    <text id="n25_mnp01" name="inputLogicFps" xy="412,324" size="776,36" fontSize="15" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="30" input="true" prompt="30" restrict="[0-9]" maxLength="3"/>
+    <text id="n25_mnp01" name="inputLogicFps" xy="412,324" size="776,36" fontSize="15" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="30" singleLine="true" input="true" prompt="30" restrict="[0-9]" maxLength="3"/>
     <text id="n26_mnp01" name="logicHint" xy="400,368" size="800,22" fontSize="13" color="#ff8d887e" autoSize="none" singleLine="true" text="时间轴和动画片段按这个帧率把秒换算成逻辑帧。"/>
     <text id="n12_mnp01" name="pluginTitle" xy="400,404" size="240,28" fontSize="16" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="渲染插件"/>
     <text id="n13_mnp01" name="pluginHint" xy="400,436" size="800,22" fontSize="13" color="#ff8d887e" autoSize="none" singleLine="true" text="导出时会把这些开关写成位掩码，放进游戏数据包。">

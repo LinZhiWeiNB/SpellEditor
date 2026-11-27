@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="48,22">
+  <displayList>
+    <graph id="n0_itag" name="bg" xy="0,0" size="48,22" type="rect" lineSize="0" fillColor="#ff243044" corner="8">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <text id="n1_itag" name="title" xy="8,1" size="32,20" fontSize="12" color="#ffe8e6e3" align="center" vAlign="middle" autoSize="none" singleLine="true" text="标签">
+      <relation target="" sidePair="width-width,height-height"/>
+    </text>
+  </displayList>
+</component>

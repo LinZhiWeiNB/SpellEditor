@@ -19,7 +19,7 @@
     </component>
     <text id="n4_mnr01" name="title" xy="112,20" size="200,28" fontSize="18" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="资源"/>
     <graph id="n5_mnr01" name="bgSearch" xy="16,68" size="448,36" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
-    <text id="n6_mnr01" name="search" xy="28,68" size="424,36" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" input="true" prompt="搜索资源"/>
+    <text id="n6_mnr01" name="search" xy="28,68" size="424,36" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" singleLine="true" input="true" prompt="搜索资源"/>
     <list id="n7_mnr01" name="resources" xy="0,116" size="480,688" overflow="scroll" scrollBar="hidden" defaultItem="ui://res4p8n2mnr02" autoClearItems="true">
       <item title="knight">
         <property target="meta" propertyId="0" value="本项目  ·  heroes"/>
@@ -54,7 +54,7 @@
       <gearDisplay controller="cOwn" pages="1"/>
     </text>
     <graph id="n51_mnr01" name="folderBg" xy="668,192" size="640,36" group="n30_mnr01" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
-    <text id="n21_mnr01" name="inputFolder" xy="680,192" size="616,36" group="n30_mnr01" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="heroes" input="true" prompt="heroes/player"/>
+    <text id="n21_mnr01" name="inputFolder" xy="680,192" size="616,36" group="n30_mnr01" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="heroes" singleLine="true" input="true" prompt="heroes/player"/>
     <component id="n22_mnr01" name="btnMove" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="1320,192" size="120,36" group="n30_mnr01">
       <Button title="移动"/>
     </component>

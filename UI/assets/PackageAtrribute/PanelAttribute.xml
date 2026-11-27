@@ -18,7 +18,7 @@
     </component>
     <graph id="n4_g8bt7" name="leftBg" xy="16,68" size="300,816" type="rect" lineSize="0" fillColor="#ff1e2128" corner="8"/>
     <graph id="n5_g8bt7" name="searchBg" xy="32,84" size="268,32" type="rect" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
-    <text id="n6_g8bt7" name="search" xy="44,84" size="244,32" fontSize="13" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" input="true" prompt="搜索名称或属性 ID"/>
+    <text id="n6_g8bt7" name="search" xy="44,84" size="244,32" fontSize="13" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" singleLine="true" input="true" prompt="搜索名称或属性 ID"/>
     <component id="n7_g8bt7" name="filterAll" src="g8bt2" fileName="ButtonPill.xml" xy="32,128" size="60,28">
       <Button checked="true" title="全部" controller="cFilter" page="0"/>
     </component>
@@ -59,12 +59,12 @@
     </component>
     <text id="n104_g8bt7" name="mNameLabel" xy="348,128" size="120,22" group="n221_g8bt7" fontSize="14" color="#ffe8e6e3" autoSize="none" bold="true" singleLine="true" text="名称"/>
     <graph id="n105_g8bt7" name="mNameBg" xy="348,154" size="480,36" group="n221_g8bt7" type="rect" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
-    <text id="n106_g8bt7" name="mNameInput" xy="360,154" size="456,36" group="n221_g8bt7" fontSize="15" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="符文强度" input="true">
+    <text id="n106_g8bt7" name="mNameInput" xy="360,154" size="456,36" group="n221_g8bt7" fontSize="15" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="符文强度" singleLine="true" input="true">
       <gearLook controller="cEdit" pages="1" values="1,0,1,0" default="1,0,0,1"/>
     </text>
     <text id="n107_g8bt7" name="mIdLabel" xy="848,128" size="120,22" group="n221_g8bt7" fontSize="14" color="#ffe8e6e3" autoSize="none" bold="true" singleLine="true" text="属性 ID"/>
     <graph id="n108_g8bt7" name="mIdBg" xy="848,154" size="200,36" group="n221_g8bt7" type="rect" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
-    <text id="n109_g8bt7" name="mIdInput" xy="860,154" size="176,36" group="n221_g8bt7" fontSize="15" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="1" input="true" restrict="[0-9]">
+    <text id="n109_g8bt7" name="mIdInput" xy="860,154" size="176,36" group="n221_g8bt7" fontSize="15" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="1" singleLine="true" input="true" restrict="[0-9]">
       <gearLook controller="cEdit" pages="1" values="1,0,1,0" default="1,0,0,1"/>
     </text>
     <text id="n110_g8bt7" name="mIdHint" xy="1064,161" size="360,22" group="n221_g8bt7" fontSize="13" color="#ffe06a6a" vAlign="middle" autoSize="none" singleLine="true" text=""/>

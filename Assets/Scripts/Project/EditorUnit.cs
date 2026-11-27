@@ -111,6 +111,8 @@ namespace GameContentEditor
     {
         public ulong AttributeId;
         public long Raw;
+        public long Max;
+        public bool HasMax;
 
         public ByteString Write()
         {
@@ -120,6 +122,12 @@ namespace GameContentEditor
             output.WriteUInt64(AttributeId);
             output.WriteTag(2, WireFormat.WireType.Varint);
             output.WriteInt64(Raw);
+            if (HasMax)
+            {
+                output.WriteTag(3, WireFormat.WireType.Varint);
+                output.WriteInt64(Max);
+            }
+
             output.Flush();
             return ByteString.CopyFrom(stream.ToArray());
         }
@@ -138,6 +146,10 @@ namespace GameContentEditor
                         break;
                     case 2:
                         value.Raw = input.ReadInt64();
+                        break;
+                    case 3:
+                        value.Max = input.ReadInt64();
+                        value.HasMax = true;
                         break;
                     default:
                         input.SkipLastField();

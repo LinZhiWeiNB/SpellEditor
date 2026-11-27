@@ -34,10 +34,21 @@ namespace UILogic
             view.m_spells.onClickItem.Add(OnClick);
             view.m_btnAdd.onClick.Set(AddSpell);
             view.m_btnDelete.onClick.Set(DeleteSpell);
+            DeleteGesture.Bind(this, DeleteSpell);
             view.m_btnCopy.onClick.Set(CopySpell);
             view.m_btnEdit.onClick.Set(EditSpell);
             Reload();
             ClearSelection();
+        }
+
+        public override void OnShow()
+        {
+            DeleteGesture.Bind(this, DeleteSpell);
+        }
+
+        public override void OnClose()
+        {
+            DeleteGesture.Unbind(this);
         }
 
         void Reload()

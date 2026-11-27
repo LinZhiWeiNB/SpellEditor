@@ -87,7 +87,6 @@ namespace UILogic
         GComponent _scrollH;
         GComponent _scrollV;
         float _scrollable;
-        EventCallback1 _onDeleteKey;
         BlobAssetReference<SpellCatalogBlob> _previewCatalog;
         bool _ignoreProgress;
         bool _progressBound;
@@ -106,6 +105,11 @@ namespace UILogic
         GComponent _spineInspect;
         GComponent _unitInspect;
         PreviewActor _unitActor;
+        readonly List<ulong> _previewAttrs = new List<ulong>();
+        bool _presetUiNoted;
+        PreviewActor _presetTitleActor;
+        ulong _presetTitleId;
+        string _presetTitle = "选择";
         GComponent _timeline;
         Controller _cInspect;
         Controller _cSpine;
@@ -115,6 +119,8 @@ namespace UILogic
         const int InspectSkill = 1;
         const int InspectSpine = 2;
         const int InspectUnit = 3;
+        static readonly Color EditableColor = new Color(0.91f, 0.90f, 0.89f);
+        static readonly Color LockedColor = new Color(0.55f, 0.53f, 0.49f);
 
         void BindRegions()
         {
@@ -210,9 +216,8 @@ namespace UILogic
             Btn(_func, "btnAddDummy").onClick.Set(() => SpellPreviewStage.AddDummy());
             var deleteKey = Btn(_func, "btnDeleteKey");
             if (deleteKey != null)
-                deleteKey.onClick.Set(DeleteSkillKey);
-            _onDeleteKey = OnDeleteKey;
-            Stage.inst.onKeyDown.Add(_onDeleteKey);
+                deleteKey.onClick.Set(DeleteSelectedKey);
+            DeleteGesture.Bind(this, OnDeletePressed);
             Btn(_func, "btnAddClip").onClick.Set(AddSpineClip);
             BindSkillFrame();
             BindUnitInspect();
@@ -257,12 +262,14 @@ namespace UILogic
 
         public override void OnShow()
         {
+            DeleteGesture.Bind(this, OnDeletePressed);
             if (!_entered || !SkillSelected()) return;
             ApplyInspector();
         }
 
         public override void OnClose()
         {
+            DeleteGesture.Unbind(this);
             CloseDialogs();
             SpellPreviewStage.Changed -= OnStageChanged;
             SaveLayout();
@@ -270,8 +277,6 @@ namespace UILogic
                 ProjectSession.Save();
             ReleasePreview();
             SpellPreviewStage.Close();
-            if (_onDeleteKey != null)
-                Stage.inst.onKeyDown.Remove(_onDeleteKey);
         }
 
         void OpenPreview()
@@ -330,6 +335,8 @@ namespace UILogic
 
         void OnPreviewUnit(PreviewActor actor)
         {
+            if (view == null || view.isDisposed)
+                return;
             if (actor == null)
             {
                 _unitActor = null;
@@ -368,9 +375,13 @@ namespace UILogic
                 if (add != null)
                     add.visible = _editing;
                 RenderUnitTags();
+                RenderUnitValues();
                 var report = Label(_unitInspect, "report");
                 if (report != null)
+                {
                     report.text = UnitBody(actor);
+                    report.visible = ListOf(_unitInspect, "values") == null;
+                }
             }
             else
             {
@@ -396,6 +407,9 @@ namespace UILogic
             var add = Btn(_unitInspect, "btnAddTag");
             if (add != null)
                 add.onClick.Set(AddUnitTag);
+            var preset = Btn(_unitInspect, "btnPreset");
+            if (preset != null)
+                preset.onClick.Set(PickDummyPreset);
         }
 
         void RenderUnitTags()
@@ -449,6 +463,432 @@ namespace UILogic
             list.numItems = tags.Count;
         }
 
+        void RenderUnitValues()
+        {
+            var actor = _unitActor;
+            var list = ListOf(_unitInspect, "values");
+            var button = Btn(_unitInspect, "btnPreset");
+            var heading = Label(_unitInspect, "labelPreset");
+            var empty = Label(_unitInspect, "valueEmpty");
+            if (actor == null)
+                return;
+            if (list == null && _editing && !_presetUiNoted)
+            {
+                _presetUiNoted = true;
+                Debug.LogWarning("PackageSpell 里的单位检视还没有属性预设，先在 FairyGUI 发布技能包。");
+            }
+
+            var dummy = actor.Unit == null;
+            if (heading != null)
+                heading.text = _editing ? (dummy ? "属性预设" : "初始属性") : "本帧属性";
+            if (button != null)
+            {
+                button.visible = dummy;
+                button.touchable = _editing;
+                button.grayed = !_editing;
+                button.title = dummy ? PresetTitle(actor) : "选择";
+            }
+
+            CollectPreviewAttributes(actor, _previewAttrs);
+            if (empty != null)
+            {
+                empty.visible = _previewAttrs.Count == 0;
+                if (!_editing)
+                    empty.text = "这一帧没有属性";
+                else
+                    empty.text = dummy ? "选择单位预设后编辑默认值" : "这个单位没有属性";
+            }
+
+            if (list == null)
+                return;
+            var attrs = _previewAttrs;
+            list.itemRenderer = (index, obj) =>
+            {
+                var row = obj.asCom;
+                var id = attrs[index];
+                var resource = UnitCatalogs.IsResource(id);
+                row.SetSize(list.width, 64f);
+                var title = row.GetChild("title") as GTextField;
+                if (title != null)
+                    title.text = UnitCatalogs.AttributeLabel(id);
+                var input = row.GetChild("input") as GTextInput;
+                var currentBg = row.GetChild("bg");
+                if (!resource)
+                {
+                    if (currentBg != null)
+                        currentBg.SetSize(248f, 24f);
+                    if (input != null)
+                        input.SetSize(236f, 24f);
+                }
+                else
+                {
+                    if (currentBg != null)
+                        currentBg.SetSize(96f, 24f);
+                    if (input != null)
+                        input.SetSize(84f, 24f);
+                }
+
+                if (input != null)
+                {
+                    input.singleLine = true;
+                    input.touchable = _editing;
+                    input.color = _editing ? EditableColor : LockedColor;
+                    input.text = (_editing || !actor.HasSample ? DisplayedRaw(actor, id) : FrameRaw(actor, id)).ToString();
+                    input.onChanged.Set(() =>
+                    {
+                        if (_applying || !_editing)
+                            return;
+                        long.TryParse(input.text, out var raw);
+                        WritePreviewValue(actor, id, raw);
+                    });
+                }
+
+                var showMax = resource;
+                var maxEditable = _editing;
+                var maxLabel = row.GetChild("maxLabel");
+                var maxBg = row.GetChild("maxBg");
+                if (maxLabel != null)
+                    maxLabel.visible = showMax;
+                if (maxBg != null)
+                    maxBg.visible = showMax;
+                var maxInput = row.GetChild("maxInput") as GTextInput;
+                if (maxInput != null)
+                {
+                    maxInput.visible = showMax;
+                    maxInput.singleLine = true;
+                    maxInput.touchable = maxEditable;
+                    maxInput.color = maxEditable ? EditableColor : LockedColor;
+                    if (showMax)
+                    {
+                        maxInput.text = (_editing || !actor.HasSample ? DisplayedMax(actor, id) : FrameMax(actor, id)).ToString();
+                        maxInput.onChanged.Set(() =>
+                        {
+                            if (_applying || !maxEditable)
+                                return;
+                            long.TryParse(maxInput.text, out var max);
+                            WritePreviewMax(actor, id, max);
+                        });
+                    }
+                }
+
+                var track = row.GetChild("track") as GButton;
+                if (track != null)
+                {
+                    track.touchable = _editing;
+                    track.selected = actor.Tracks(id);
+                    track.onChanged.Set(() =>
+                    {
+                        if (_applying || !_editing)
+                            return;
+                        SetTracked(actor, id, track.selected);
+                    });
+                }
+            };
+            list.numItems = attrs.Count;
+        }
+
+        string PresetTitle(PreviewActor actor)
+        {
+            if (_editing || _presetTitleActor != actor || _presetTitleId != actor.PresetId)
+            {
+                _presetTitleActor = actor;
+                _presetTitleId = actor.PresetId;
+                _presetTitle = UnitCatalogs.PresetTitle(UnitCatalogs.FindPreset(actor.PresetId));
+            }
+
+            return _presetTitle;
+        }
+
+        void CollectPreviewAttributes(PreviewActor actor, List<ulong> into)
+        {
+            into.Clear();
+            if (actor.Unit == null)
+            {
+                if (_editing)
+                {
+                    var preset = UnitCatalogs.FindPreset(actor.PresetId);
+                    if (preset != null)
+                    {
+                        for (var i = 0; i < preset.Attributes.Count; i++)
+                            AddPreviewAttribute(into, preset.Attributes[i]);
+                        return;
+                    }
+                }
+
+                for (var i = 0; i < actor.InitialValues.Count; i++)
+                    AddPreviewAttribute(into, actor.InitialValues[i].AttributeId);
+                return;
+            }
+
+            for (var i = 0; i < actor.Unit.PresetAttributes.Count; i++)
+                AddPreviewAttribute(into, actor.Unit.PresetAttributes[i]);
+            for (var i = 0; i < actor.Unit.Values.Count; i++)
+                AddPreviewAttribute(into, actor.Unit.Values[i].AttributeId);
+        }
+
+        static bool KeptMax(PreviewActor actor, ulong id, out long max)
+        {
+            max = 0;
+            for (var i = 0; i < actor.InitialValues.Count; i++)
+            {
+                var value = actor.InitialValues[i];
+                if (value.AttributeId != id || !value.HasMax)
+                    continue;
+                max = value.Max;
+                return true;
+            }
+
+            return false;
+        }
+
+        static void Prune(List<ulong> ids, List<EditorUnitValue> values)
+        {
+            for (var i = ids.Count - 1; i >= 0; i--)
+            {
+                if (!Listed(values, ids[i]))
+                    ids.RemoveAt(i);
+            }
+        }
+
+        static bool Listed(List<EditorUnitValue> values, ulong id)
+        {
+            for (var i = 0; i < values.Count; i++)
+            {
+                if (values[i].AttributeId == id)
+                    return true;
+            }
+
+            return false;
+        }
+
+        static void AddPreviewAttribute(List<ulong> into, ulong id)
+        {
+            if (id == 0)
+                return;
+            for (var i = 0; i < into.Count; i++)
+            {
+                if (into[i] == id)
+                    return;
+            }
+
+            into.Add(id);
+        }
+
+        static long FrameRaw(PreviewActor actor, ulong id)
+        {
+            for (var i = 0; i < actor.Sampled.Count; i++)
+            {
+                if (actor.Sampled[i].AttributeId == id)
+                    return actor.Sampled[i].Raw;
+            }
+
+            return 0;
+        }
+
+        static long FrameMax(PreviewActor actor, ulong id)
+        {
+            for (var i = 0; i < actor.Sampled.Count; i++)
+            {
+                if (actor.Sampled[i].AttributeId == id)
+                    return actor.Sampled[i].Max;
+            }
+
+            return 0;
+        }
+
+        void SetTracked(PreviewActor actor, ulong id, bool tracked)
+        {
+            if (UnitCatalogs.IsResource(id))
+            {
+                if (tracked)
+                    actor.HiddenAttributes.Remove(id);
+                else if (!actor.HiddenAttributes.Contains(id))
+                    actor.HiddenAttributes.Add(id);
+            }
+            else if (tracked)
+            {
+                if (!actor.TrackedAttributes.Contains(id))
+                    actor.TrackedAttributes.Add(id);
+            }
+            else
+            {
+                actor.TrackedAttributes.Remove(id);
+            }
+
+            OnStageChanged();
+        }
+
+        static long DisplayedRaw(PreviewActor actor, ulong id)
+        {
+            for (var i = 0; i < actor.InitialValues.Count; i++)
+            {
+                if (actor.InitialValues[i].AttributeId == id)
+                    return actor.InitialValues[i].Raw;
+            }
+
+            if (actor.Unit != null)
+            {
+                for (var i = 0; i < actor.Unit.Values.Count; i++)
+                {
+                    if (actor.Unit.Values[i].AttributeId == id)
+                        return actor.Unit.Values[i].Raw;
+                }
+            }
+
+            if (UnitCatalogs.LayoutRaw(id, out var layout))
+                return layout;
+            return 0;
+        }
+
+        static long DisplayedMax(PreviewActor actor, ulong id)
+        {
+            for (var i = 0; i < actor.InitialValues.Count; i++)
+            {
+                var value = actor.InitialValues[i];
+                if (value.AttributeId == id && value.HasMax)
+                    return value.Max;
+            }
+
+            if (UnitCatalogs.LayoutRaw(id, out var layout))
+                return layout;
+            return 0;
+        }
+
+        void WritePreviewValue(PreviewActor actor, ulong id, long raw)
+        {
+            EnsurePreviewValues(actor);
+            for (var i = 0; i < actor.InitialValues.Count; i++)
+            {
+                if (actor.InitialValues[i].AttributeId != id)
+                    continue;
+                if (actor.InitialValues[i].Raw == raw)
+                    return;
+                actor.InitialValues[i].Raw = raw;
+                OnStageChanged();
+                return;
+            }
+
+            actor.InitialValues.Add(PreviewValue(actor, id, raw));
+            OnStageChanged();
+        }
+
+        void WritePreviewMax(PreviewActor actor, ulong id, long max)
+        {
+            EnsurePreviewValues(actor);
+            for (var i = 0; i < actor.InitialValues.Count; i++)
+            {
+                var value = actor.InitialValues[i];
+                if (value.AttributeId != id)
+                    continue;
+                if (value.HasMax && value.Max == max)
+                    return;
+                value.HasMax = true;
+                value.Max = max;
+                OnStageChanged();
+                return;
+            }
+        }
+
+        static EditorUnitValue PreviewValue(PreviewActor actor, ulong id, long raw)
+        {
+            var value = new EditorUnitValue { AttributeId = id, Raw = raw };
+            if (UnitCatalogs.IsResource(id))
+            {
+                value.HasMax = true;
+                value.Max = DisplayedMax(actor, id);
+            }
+
+            return value;
+        }
+
+        void EnsurePreviewValues(PreviewActor actor)
+        {
+            CollectPreviewAttributes(actor, _previewAttrs);
+            for (var i = 0; i < _previewAttrs.Count; i++)
+            {
+                var id = _previewAttrs[i];
+                var found = false;
+                for (var v = 0; v < actor.InitialValues.Count; v++)
+                {
+                    if (actor.InitialValues[v].AttributeId != id)
+                        continue;
+                    found = true;
+                    break;
+                }
+
+                if (!found)
+                    actor.InitialValues.Add(PreviewValue(actor, id, DisplayedRaw(actor, id)));
+            }
+        }
+
+        void PickDummyPreset()
+        {
+            var actor = _unitActor;
+            if (actor == null || actor.Unit != null || !_editing)
+                return;
+            var presets = new List<UnitPreset>();
+            UnitCatalogs.CollectPresets(presets);
+            var keys = new List<string>(presets.Count);
+            var titles = new List<string>(presets.Count);
+            for (var i = 0; i < presets.Count; i++)
+            {
+                keys.Add(presets[i].Id.ToString());
+                titles.Add(UnitCatalogs.PresetTitle(presets[i]));
+            }
+
+            PanelUnitPick.Show("选择单位预设", keys, titles, key =>
+            {
+                if (actor == null || !ulong.TryParse(key, out var id))
+                    return;
+                ApplyDummyPreset(actor, id);
+            });
+        }
+
+        void ApplyDummyPreset(PreviewActor actor, ulong presetId)
+        {
+            if (actor == null || actor.Unit != null)
+                return;
+            var preset = UnitCatalogs.FindPreset(presetId);
+            if (preset == null)
+                return;
+            var next = new List<EditorUnitValue>();
+            for (var i = 0; i < preset.Attributes.Count; i++)
+            {
+                var id = preset.Attributes[i];
+                if (id == 0 || Listed(next, id))
+                    continue;
+                var found = false;
+                long raw = 0;
+                for (var v = 0; v < actor.InitialValues.Count; v++)
+                {
+                    if (actor.InitialValues[v].AttributeId != id)
+                        continue;
+                    raw = actor.InitialValues[v].Raw;
+                    found = true;
+                    break;
+                }
+
+                if (!found && UnitCatalogs.LayoutRaw(id, out var layout))
+                    raw = layout;
+                var value = new EditorUnitValue { AttributeId = id, Raw = raw };
+                if (UnitCatalogs.IsResource(id))
+                {
+                    value.HasMax = true;
+                    value.Max = found && KeptMax(actor, id, out var kept) ? kept : raw;
+                }
+
+                next.Add(value);
+            }
+
+            actor.PresetId = presetId;
+            actor.InitialValues.Clear();
+            actor.InitialValues.AddRange(next);
+            Prune(actor.HiddenAttributes, next);
+            Prune(actor.TrackedAttributes, next);
+            ShowUnitInspect(actor);
+            OnStageChanged();
+        }
+
         void AddUnitTag()
         {
             var actor = _unitActor;
@@ -498,13 +938,6 @@ namespace UILogic
         {
             actor.Tags.Clear();
             actor.Tags.AddRange(actor.DefaultTags);
-            var dummy = actor.GetComponent<PreviewDummy>();
-            if (dummy == null)
-                return;
-            var names = new List<string>(actor.DefaultTags.Count);
-            for (var i = 0; i < actor.DefaultTags.Count; i++)
-                names.Add(TagPath(actor.DefaultTags[i]));
-            dummy.SetTags(names);
         }
 
         static string TagPath(ulong id)
@@ -600,11 +1033,19 @@ namespace UILogic
             return true;
         }
 
-        void OnDeleteKey(EventContext context)
+        void OnDeletePressed()
         {
-            if (context.inputEvent.keyCode != KeyCode.Delete) return;
-            if (Stage.inst.focus is GTextInput) return;
-            DeleteSkillKey();
+            if (_cInspect != null && _cInspect.selectedIndex == InspectUnit)
+            {
+                var actor = _unitActor != null ? _unitActor : SpellPreviewStage.Selected;
+                if (actor != null && actor.Unit == null && !actor.Locked)
+                {
+                    SpellPreviewStage.RemoveDummy(actor);
+                    return;
+                }
+            }
+
+            DeleteSelectedKey();
         }
 
         void RenderMarks()
@@ -670,18 +1111,28 @@ namespace UILogic
             RecordLogic();
         }
 
-        void DeleteSkillKey()
+        void DeleteSelectedKey()
         {
             if (_track < 0 || _key < 0 || _track >= _tracks.Count) return;
             var track = _tracks[_track];
-            if (track.Kind != TrackKind.Skill || _key >= track.Keys.Count) return;
+            if (_key >= track.Keys.Count) return;
+            var skill = track.Kind == TrackKind.Skill;
+            var kind = track.Kind;
             track.Keys.RemoveAt(_key);
             _track = -1;
             _key = -1;
-            PackSkillTracks();
+            if (skill)
+            {
+                PackSkillTracks();
+                ClearSelection();
+                RenderTracks();
+                RecordLogic();
+                return;
+            }
+
             ClearSelection();
             RenderTracks();
-            RecordLogic();
+            RecordRender(kind);
         }
 
         Track SkillTrack()
@@ -837,11 +1288,12 @@ namespace UILogic
         {
             var button = Btn(_func, "btnDeleteKey");
             if (button == null) return;
-            var skill = _track >= 0
-                        && _track < _tracks.Count
-                        && _tracks[_track].Kind == TrackKind.Skill;
-            button.grayed = !skill;
-            button.touchable = skill;
+            var can = _track >= 0
+                      && _track < _tracks.Count
+                      && _key >= 0
+                      && _key < _tracks[_track].Keys.Count;
+            button.grayed = !can;
+            button.touchable = can;
         }
 
         void BindKey(GButton button, KeyFrame key, float px, bool skill)
@@ -2648,9 +3100,12 @@ namespace UILogic
 
             layout.Actors.Clear();
             SpellPreviewStage.CopySeeds(_seeds);
+            var seen = new HashSet<ulong>();
             for (var i = 0; i < _seeds.Count; i++)
             {
                 var seed = _seeds[i];
+                if (seed.StableId != 0 && !seen.Add(seed.StableId))
+                    continue;
                 var record = new SpellPreviewActorRecord
                 {
                     StableId = seed.StableId,
@@ -2658,17 +3113,15 @@ namespace UILogic
                     Y = seed.Position.y,
                     Z = seed.Position.z,
                 };
+                record.PresetId = seed.PresetId;
                 var owner = CurrentOwner();
                 if (owner != null && owner.Id == seed.StableId)
-                {
                     record.UnitId = owner.Id;
-                    if (owner.PresetAttributes.Count > 0)
-                        record.PresetId = owner.PresetAttributes[0];
-                }
-
                 record.Tags.AddRange(seed.Tags);
                 record.CastTags.AddRange(seed.CastTags);
-                record.Values.AddRange(seed.Values);
+                record.Values.AddRange(seed.PreviewValues);
+                record.HiddenAttributes.AddRange(seed.HiddenAttributes);
+                record.TrackedAttributes.AddRange(seed.TrackedAttributes);
                 layout.Actors.Add(record);
             }
         }
@@ -2685,11 +3138,15 @@ namespace UILogic
                 break;
             }
 
+            SpellPreviewStage.ClearDummies();
             if (layout == null) return;
             var owner = CurrentOwner();
+            var seen = new HashSet<ulong>();
             for (var i = 0; i < layout.Actors.Count; i++)
             {
                 var record = layout.Actors[i];
+                if (record.StableId != 0 && !seen.Add(record.StableId))
+                    continue;
                 var caster = owner != null && (record.UnitId == owner.Id || record.StableId == owner.Id);
                 if (caster)
                 {
@@ -2702,9 +3159,13 @@ namespace UILogic
                         actors[a].Tags.AddRange(record.Tags);
                         actors[a].CastTags.Clear();
                         actors[a].CastTags.AddRange(record.CastTags);
-                        actors[a].PresetId = record.PresetId;
+                        actors[a].PresetId = 0;
                         actors[a].InitialValues.Clear();
                         actors[a].InitialValues.AddRange(record.Values);
+                        actors[a].HiddenAttributes.Clear();
+                        actors[a].HiddenAttributes.AddRange(record.HiddenAttributes);
+                        actors[a].TrackedAttributes.Clear();
+                        actors[a].TrackedAttributes.AddRange(record.TrackedAttributes);
                         actors[a].RememberHome();
                         actors[a].RememberTags();
                     }
@@ -2718,6 +3179,10 @@ namespace UILogic
                 dummy.CastTags.AddRange(record.CastTags);
                 dummy.PresetId = record.PresetId;
                 dummy.InitialValues.AddRange(record.Values);
+                dummy.HiddenAttributes.Clear();
+                dummy.HiddenAttributes.AddRange(record.HiddenAttributes);
+                dummy.TrackedAttributes.Clear();
+                dummy.TrackedAttributes.AddRange(record.TrackedAttributes);
                 dummy.RememberHome();
                 dummy.RememberTags();
             }

@@ -608,7 +608,7 @@ namespace UILogic
             return false;
         }
 
-        void DeleteSelected()
+        public void DeleteSelected()
         {
             if (!_selectedOwned || _selected == null)
             {

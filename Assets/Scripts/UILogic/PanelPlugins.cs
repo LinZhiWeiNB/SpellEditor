@@ -17,9 +17,20 @@ namespace UILogic
             view.m_btnBack.onClick.Set(() => FGUIPanelManager.Instance.Back());
             view.m_btnImport.onClick.Set(Import);
             view.m_btnDelete.onClick.Set(Delete);
+            DeleteGesture.Bind(this, Delete);
             view.m_list.itemRenderer = RenderItem;
             view.m_list.onClickItem.Set(OnClickItem);
             Refresh("");
+        }
+
+        public override void OnShow()
+        {
+            DeleteGesture.Bind(this, Delete);
+        }
+
+        public override void OnClose()
+        {
+            DeleteGesture.Unbind(this);
         }
 
         void Import()

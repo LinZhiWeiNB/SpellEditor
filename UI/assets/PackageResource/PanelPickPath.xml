@@ -16,7 +16,7 @@
     <graph id="n4_rpth1" name="pathBg" xy="614,426" size="372,36" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4">
       <relation target="n1_rpth1" sidePair="left-left,top-top"/>
     </graph>
-    <text id="n5_rpth1" name="inputPath" xy="626,426" size="348,36" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" input="true" prompt="目录名">
+    <text id="n5_rpth1" name="inputPath" xy="626,426" size="348,36" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" singleLine="true" input="true" prompt="目录名">
       <relation target="n1_rpth1" sidePair="left-left,top-top"/>
     </text>
     <component id="n6_rpth1" name="btnPlace" src="g8bt3" fileName="ButtonPrimary.xml" pkg="m5lrgzhj" xy="614,470" size="180,36">

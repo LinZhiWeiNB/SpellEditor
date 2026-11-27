@@ -17,7 +17,7 @@
     </component>
     <text id="n120_g8btd" name="status" xy="560,20" size="1020,28" fontSize="14" color="#ffe06a6a" vAlign="middle" autoSize="none" singleLine="true" text=""/>
     <graph id="n5_g8btd" name="searchBg" xy="16,64" size="1568,32" type="rect" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
-    <text id="n6_g8btd" name="search" xy="28,64" size="1544,32" fontSize="13" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" input="true" prompt="搜索层级"/>
+    <text id="n6_g8btd" name="search" xy="28,64" size="1544,32" fontSize="13" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" singleLine="true" input="true" prompt="搜索层级"/>
     <graph id="n4_g8btd" name="leftBg" xy="16,112" size="776,772" type="rect" lineSize="0" fillColor="#ff1e2128" corner="8">
       <gearSize controller="cOthers" pages="1" values="1568,772,1,1" default="776,772,1,1"/>
     </graph>

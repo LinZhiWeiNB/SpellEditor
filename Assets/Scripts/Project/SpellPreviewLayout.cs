@@ -65,6 +65,8 @@ namespace GameContentEditor
         public readonly List<ulong> Tags = new List<ulong>();
         public readonly List<ulong> CastTags = new List<ulong>();
         public readonly List<EditorUnitValue> Values = new List<EditorUnitValue>();
+        public readonly List<ulong> HiddenAttributes = new List<ulong>();
+        public readonly List<ulong> TrackedAttributes = new List<ulong>();
 
         public ByteString Write()
         {
@@ -98,6 +100,18 @@ namespace GameContentEditor
             {
                 output.WriteTag(9, WireFormat.WireType.Varint);
                 output.WriteUInt64(CastTags[i]);
+            }
+
+            for (var i = 0; i < HiddenAttributes.Count; i++)
+            {
+                output.WriteTag(10, WireFormat.WireType.Varint);
+                output.WriteUInt64(HiddenAttributes[i]);
+            }
+
+            for (var i = 0; i < TrackedAttributes.Count; i++)
+            {
+                output.WriteTag(11, WireFormat.WireType.Varint);
+                output.WriteUInt64(TrackedAttributes[i]);
             }
 
             output.Flush();
@@ -139,6 +153,12 @@ namespace GameContentEditor
                         break;
                     case 9:
                         actor.CastTags.Add(input.ReadUInt64());
+                        break;
+                    case 10:
+                        actor.HiddenAttributes.Add(input.ReadUInt64());
+                        break;
+                    case 11:
+                        actor.TrackedAttributes.Add(input.ReadUInt64());
                         break;
                     default:
                         input.SkipLastField();

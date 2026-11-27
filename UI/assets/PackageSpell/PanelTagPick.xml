@@ -13,7 +13,7 @@
     <graph id="n3_wtag1" name="bgSearch" xy="504,180" size="592,36" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4">
       <relation target="n1_wtag1" sidePair="left-left,top-top"/>
     </graph>
-    <text id="n4_wtag1" name="search" xy="516,180" size="568,36" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" input="true" prompt="搜索标签的任意一段">
+    <text id="n4_wtag1" name="search" xy="516,180" size="568,36" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" singleLine="true" input="true" prompt="搜索标签的任意一段">
       <relation target="n1_wtag1" sidePair="left-left,top-top"/>
     </text>
     <list id="n5_wtag1" name="choices" xy="504,228" size="592,400" overflow="scroll" scrollBar="hidden" defaultItem="ui://m5lrgzhjg8bte" autoClearItems="true" selectionMode="none">
@@ -28,7 +28,7 @@
     <graph id="n10_wtag1" name="bgName" xy="504,668" size="420,36" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4">
       <relation target="n1_wtag1" sidePair="left-left,top-top"/>
     </graph>
-    <text id="n11_wtag1" name="inputName" xy="516,668" size="396,36" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" input="true" prompt="名称，/ 表示下一层">
+    <text id="n11_wtag1" name="inputName" xy="516,668" size="396,36" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" singleLine="true" input="true" prompt="名称，/ 表示下一层">
       <relation target="n1_wtag1" sidePair="left-left,top-top"/>
     </text>
     <component id="n14_wtag1" name="btnCreate" src="g8bt3" fileName="ButtonPrimary.xml" pkg="m5lrgzhj" xy="936,668" size="160,36">

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="216,96">
+  <displayList>
+    <graph id="n2_uinf" name="bg" xy="0,0" size="216,96" type="rect" lineSize="1" lineColor="#ff6a7280" fillColor="#c01a1e26" corner="6">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <list id="n0_uinf" name="tags" xy="8,8" size="200,22" layout="flow_hz" overflow="hidden" lineGap="4" colGap="4" defaultItem="ui://skl4p8n2itag1" autoClearItems="true" selectionMode="none"/>
+    <list id="n1_uinf" name="attrs" xy="8,36" size="200,48" overflow="hidden" lineGap="4" defaultItem="ui://skl4p8n2iatr1" autoClearItems="true" selectionMode="none"/>
+  </displayList>
+</component>

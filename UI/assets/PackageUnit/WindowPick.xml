@@ -13,7 +13,7 @@
     <graph id="n3_mnu06" name="bgSearch" xy="456,224" size="688,36" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4">
       <relation target="n1_mnu06" sidePair="left-left,top-top"/>
     </graph>
-    <text id="n4_mnu06" name="search" xy="468,224" size="664,36" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" input="true" prompt="搜索">
+    <text id="n4_mnu06" name="search" xy="468,224" size="664,36" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" singleLine="true" input="true" prompt="搜索">
       <relation target="n1_mnu06" sidePair="left-left,top-top"/>
     </text>
     <list id="n5_mnu06" name="choices" xy="456,272" size="688,380" overflow="scroll" scrollBar="hidden" lineGap="4" defaultItem="ui://unt4p8n2mnu07" autoClearItems="true" selectionMode="none">

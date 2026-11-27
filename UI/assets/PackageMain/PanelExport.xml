@@ -16,25 +16,25 @@
     </text>
     <text id="n10_mne01" name="labelLocation" xy="400,140" size="200,24" group="n30_mne01" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="导出位置"/>
     <graph id="n11_mne01" name="bgLocation" xy="400,168" size="640,36" group="n30_mne01" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
-    <text id="n12_mne01" name="inputLocation" xy="412,168" size="616,36" group="n30_mne01" fontSize="15" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" input="true" prompt="选择要写出数据包的文件夹"/>
+    <text id="n12_mne01" name="inputLocation" xy="412,168" size="616,36" group="n30_mne01" fontSize="15" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" singleLine="true" input="true" prompt="选择要写出数据包的文件夹"/>
     <component id="n13_mne01" name="btnLocation" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="1052,166" size="148,40" group="n30_mne01">
       <Button title="选择文件夹"/>
     </component>
     <text id="n14_mne01" name="labelModDir" xy="400,220" size="200,24" group="n30_mne01" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="模组目录"/>
     <graph id="n15_mne01" name="bgModDir" xy="400,248" size="800,36" group="n30_mne01" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
-    <text id="n16_mne01" name="inputModDir" xy="412,248" size="776,36" group="n30_mne01" fontSize="15" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" input="true" prompt="模组将放在这个目录下"/>
+    <text id="n16_mne01" name="inputModDir" xy="412,248" size="776,36" group="n30_mne01" fontSize="15" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" singleLine="true" input="true" prompt="模组将放在这个目录下"/>
     <group id="n30_mne01" name="gameFields" xy="400,140" size="800,144" advanced="true">
       <gearDisplay controller="cRole" pages="0"/>
     </group>
     <text id="n20_mne01" name="labelName" xy="400,140" size="200,24" group="n31_mne01" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="模组名"/>
     <graph id="n21_mne01" name="bgName" xy="400,168" size="800,36" group="n31_mne01" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
-    <text id="n22_mne01" name="inputName" xy="412,168" size="776,36" group="n31_mne01" fontSize="15" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" input="true"/>
+    <text id="n22_mne01" name="inputName" xy="412,168" size="776,36" group="n31_mne01" fontSize="15" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" singleLine="true" input="true"/>
     <text id="n23_mne01" name="labelIntro" xy="400,220" size="200,24" group="n31_mne01" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="模组介绍"/>
     <graph id="n24_mne01" name="bgIntro" xy="400,248" size="800,96" group="n31_mne01" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
     <text id="n25_mne01" name="inputIntro" xy="412,256" size="776,80" group="n31_mne01" fontSize="15" color="#ffe8e6e3" autoSize="none" text="" input="true"/>
     <text id="n26_mne01" name="labelDir" xy="400,360" size="240,24" group="n31_mne01" fontSize="14" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="模组目录名"/>
     <graph id="n27_mne01" name="bgDir" xy="400,388" size="800,36" group="n31_mne01" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
-    <text id="n28_mne01" name="inputDir" xy="412,388" size="776,36" group="n31_mne01" fontSize="15" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" input="true" prompt="仅英语，例如 RunePack" restrict="[a-zA-Z0-9_\-]"/>
+    <text id="n28_mne01" name="inputDir" xy="412,388" size="776,36" group="n31_mne01" fontSize="15" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" singleLine="true" input="true" prompt="仅英语，例如 RunePack" restrict="[a-zA-Z0-9_\-]"/>
     <group id="n31_mne01" name="modFields" xy="400,140" size="800,284" advanced="true">
       <gearDisplay controller="cRole" pages="1"/>
     </group>

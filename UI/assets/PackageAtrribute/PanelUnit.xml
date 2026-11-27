@@ -38,7 +38,7 @@
     <graph id="n175_g8btc" name="cardName" xy="332,68" size="1252,108" group="n221_g8btc" type="rect" lineSize="0" fillColor="#ff1e2128" corner="8"/>
     <text id="n159_g8btc" name="pgNameLabel" xy="348,84" size="120,22" group="n221_g8btc" fontSize="14" color="#ffe8e6e3" autoSize="none" bold="true" singleLine="true" text="名称"/>
     <graph id="n160_g8btc" name="pgNameBg" xy="348,112" size="480,36" group="n221_g8btc" type="rect" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
-    <text id="n161_g8btc" name="pgName" xy="360,112" size="456,36" group="n221_g8btc" fontSize="15" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="英雄" input="true"/>
+    <text id="n161_g8btc" name="pgName" xy="360,112" size="456,36" group="n221_g8btc" fontSize="15" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="英雄" singleLine="true" input="true"/>
     <graph id="n176_g8btc" name="cardAttrs" xy="332,192" size="1252,692" group="n221_g8btc" type="rect" lineSize="0" fillColor="#ff1e2128" corner="8"/>
     <text id="n164_g8btc" name="pgHead" xy="348,208" size="240,28" group="n221_g8btc" fontSize="16" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="属性"/>
     <component id="n166_g8btc" name="btnAddAttribute" src="g8bt5" fileName="ButtonSecondary.xml" xy="1424,204" size="140,36" group="n221_g8btc">

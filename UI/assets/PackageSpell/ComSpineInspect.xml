@@ -18,7 +18,7 @@
     <graph id="n42_mns01" name="bgAnim" xy="8,118" size="288,32" type="rect" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4">
       <gearDisplay controller="cClipName" pages="0"/>
     </graph>
-    <text id="n43_mns01" name="inputAnim" xy="20,118" size="264,32" fontSize="14" color="#e8e6e3" vAlign="middle" autoSize="none" text="attack" input="true" prompt="要播放的动画">
+    <text id="n43_mns01" name="inputAnim" xy="20,118" size="264,32" fontSize="14" color="#e8e6e3" vAlign="middle" autoSize="none" text="attack" singleLine="true" input="true" prompt="要播放的动画">
       <gearDisplay controller="cClipName" pages="0"/>
     </text>
     <text id="n81_mns01" name="labelTrigger" xy="8,96" size="288,18" fontSize="13" color="#b7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="触发器名">
@@ -27,13 +27,13 @@
     <graph id="n82_mns01" name="bgTrigger" xy="8,118" size="288,32" type="rect" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4">
       <gearDisplay controller="cClipName" pages="1"/>
     </graph>
-    <text id="n83_mns01" name="inputTrigger" xy="20,118" size="264,32" fontSize="14" color="#e8e6e3" vAlign="middle" autoSize="none" text="" input="true" prompt="要匹配的触发器">
+    <text id="n83_mns01" name="inputTrigger" xy="20,118" size="264,32" fontSize="14" color="#e8e6e3" vAlign="middle" autoSize="none" text="" singleLine="true" input="true" prompt="要匹配的触发器">
       <gearDisplay controller="cClipName" pages="1"/>
     </text>
     <graph id="n44b_mns01" name="cardSpeed" xy="0,168" size="304,80" type="rect" lineSize="0" fillColor="#ff32363f" corner="8"/>
     <text id="n44_mns01" name="labelSpeed" xy="8,176" size="288,18" fontSize="13" color="#b7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="播放速度"/>
     <graph id="n45_mns01" name="bgSpeed" xy="8,198" size="288,32" type="rect" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
-    <text id="n46_mns01" name="inputSpeed" xy="20,198" size="264,32" fontSize="14" color="#e8e6e3" vAlign="middle" autoSize="none" text="1" input="true" restrict="[0-9.]"/>
+    <text id="n46_mns01" name="inputSpeed" xy="20,198" size="264,32" fontSize="14" color="#e8e6e3" vAlign="middle" autoSize="none" text="1" singleLine="true" input="true" restrict="[0-9.]"/>
     <graph id="n47b_mns01" name="cardEnd" xy="0,256" size="304,176" type="rect" lineSize="0" fillColor="#ff32363f" corner="8"/>
     <text id="n47_mns01" name="labelEnd" xy="8,264" size="288,18" fontSize="13" color="#b7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="片段结束后"/>
     <component id="n48_mns01" name="endPause" src="g8bt4" fileName="ButtonRadio.xml" pkg="m5lrgzhj" xy="8,290" size="288,28" group="n72_mns01">

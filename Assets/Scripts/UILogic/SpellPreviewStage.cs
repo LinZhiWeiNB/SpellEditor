@@ -158,6 +158,7 @@ namespace UILogic
 
         void OnDestroy()
         {
+            _onSelect = null;
             if (_stage == this)
                 _stage = null;
             ReleaseCaster();
@@ -234,13 +235,6 @@ namespace UILogic
                 actor.HasSample = false;
                 actor.ShowFrameMarks(false);
                 actor.SetPick(0);
-                var dummy = actor.GetComponent<PreviewDummy>();
-                if (dummy == null)
-                    continue;
-                var names = new List<string>(actor.DefaultTags.Count);
-                for (var t = 0; t < actor.DefaultTags.Count; t++)
-                    names.Add(TagPath(actor.DefaultTags[t]));
-                dummy.SetTags(names);
             }
         }
 
@@ -251,6 +245,15 @@ namespace UILogic
             if (_stage == null)
                 return;
             _stage.SpawnDummy(0, new Vector3(1.5f * _stage.NextDummyIndex(), 0f, 0f), true);
+        }
+
+        public static void ClearDummies()
+        {
+            if (_stage == null)
+                _stage = FindAnyObjectByType<SpellPreviewStage>();
+            if (_stage == null)
+                return;
+            _stage.RemoveDummies();
         }
 
         public static PreviewActor SpawnDummy(ulong stableId, Vector3 position)
@@ -278,21 +281,38 @@ namespace UILogic
                     StableId = actor.StableId,
                     Position = actor.HomePosition,
                 };
+                seed.PresetId = actor.Unit == null ? actor.PresetId : 0UL;
+                seed.HiddenAttributes.AddRange(actor.HiddenAttributes);
+                seed.TrackedAttributes.AddRange(actor.TrackedAttributes);
                 seed.Tags.AddRange(actor.DefaultTags);
                 seed.CastTags.AddRange(actor.CastTags);
                 if (actor.InitialValues.Count > 0)
                 {
                     for (var v = 0; v < actor.InitialValues.Count; v++)
-                        seed.Values.Add(actor.InitialValues[v]);
+                    {
+                        seed.Values.Add(CopyValue(actor.InitialValues[v]));
+                        seed.PreviewValues.Add(CopyValue(actor.InitialValues[v]));
+                    }
                 }
                 else if (actor.Unit != null)
                 {
                     for (var v = 0; v < actor.Unit.Values.Count; v++)
-                        seed.Values.Add(actor.Unit.Values[v]);
+                        seed.Values.Add(CopyValue(actor.Unit.Values[v]));
                 }
 
                 into.Add(seed);
             }
+        }
+
+        static EditorUnitValue CopyValue(EditorUnitValue value)
+        {
+            return new EditorUnitValue
+            {
+                AttributeId = value.AttributeId,
+                Raw = value.Raw,
+                Max = value.Max,
+                HasMax = value.HasMax,
+            };
         }
 
         public static void ApplyFrame(SpellPreviewSim.Frame frame)
@@ -325,14 +345,6 @@ namespace UILogic
                 actor.Sampled.Clear();
                 actor.Sampled.AddRange(unit.Attributes);
                 actor.HasSample = true;
-                var dummy = actor.GetComponent<PreviewDummy>();
-                if (dummy != null)
-                {
-                    var names = new List<string>(unit.Tags.Count);
-                    for (var t = 0; t < unit.Tags.Count; t++)
-                        names.Add(TagPath(unit.Tags[t]));
-                    dummy.SetTags(names);
-                }
             }
 
             for (var a = 0; a < actors.Length; a++)
@@ -427,21 +439,29 @@ namespace UILogic
             _gesture = GestureNone;
             Select(null, false);
             ReleaseCaster();
+            RemoveDummies();
             _camera = null;
             PreviewOutline.Clear();
+            PreviewUnitInfo.Clear();
         }
 
         void LateUpdate()
         {
             PreviewOutline.Clear();
             if (_camera == null)
+            {
+                PreviewUnitInfo.Clear();
                 return;
+            }
+
             var actors = GetComponentsInChildren<PreviewActor>(true);
             for (var i = 0; i < actors.Length; i++)
             {
                 if (actors[i] != null)
                     actors[i].CollectOutline();
             }
+
+            PreviewUnitInfo.Follow(actors, _hit, _camera, AllowDrag);
         }
 
         void Bind(GObject hit)
@@ -658,6 +678,39 @@ namespace UILogic
             return max + 1;
         }
 
+        public static bool RemoveDummy(PreviewActor actor)
+        {
+            if (_stage == null)
+                _stage = FindAnyObjectByType<SpellPreviewStage>();
+            if (_stage == null || actor == null || actor.Unit != null || actor.Locked)
+                return false;
+            _stage.DestroyDummy(actor);
+            return true;
+        }
+
+        void DestroyDummy(PreviewActor actor)
+        {
+            if (_selected == actor)
+                Select(null, true);
+            DestroyImmediate(actor.gameObject);
+            if (Changed != null)
+                Changed();
+        }
+
+        void RemoveDummies()
+        {
+            var actors = GetComponentsInChildren<PreviewActor>(true);
+            for (var i = actors.Length - 1; i >= 0; i--)
+            {
+                var actor = actors[i];
+                if (actor == null || actor.Unit != null || actor.Locked)
+                    continue;
+                if (_selected == actor)
+                    Select(null, false);
+                DestroyImmediate(actor.gameObject);
+            }
+        }
+
         PreviewActor SpawnDummy(ulong stableId, Vector3 position, bool notify)
         {
             var prefab = Resources.Load<GameObject>("Prefabs/TrainingDummy");
@@ -808,12 +861,6 @@ namespace UILogic
             }
 
             return source;
-        }
-
-        static string TagPath(ulong id)
-        {
-            var path = ComTagEditor.Path(id);
-            return string.IsNullOrEmpty(path) ? id.ToString() : path;
         }
 
         static bool GroundAt(Ray ray, float y, out Vector3 point)

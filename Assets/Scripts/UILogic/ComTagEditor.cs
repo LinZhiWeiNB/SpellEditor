@@ -904,6 +904,13 @@ namespace UILogic
             return leaf;
         }
 
+        public void DeleteCurrent()
+        {
+            if (_selectedId == 0 || _draft)
+                return;
+            AskDelete(FindIn(ProjectSession.OwnModule, _selectedId));
+        }
+
         void AskDelete(TagDefinitionConfig tag)
         {
             if (tag == null || FindIn(ProjectSession.OwnModule, tag.Id) == null)

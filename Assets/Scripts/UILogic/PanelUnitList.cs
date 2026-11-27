@@ -26,6 +26,7 @@ namespace UILogic
             view.m_units.onClickItem.Add(OnClick);
             view.m_btnAdd.onClick.Set(AddUnit);
             view.m_btnDelete.onClick.Set(DeleteUnit);
+            DeleteGesture.Bind(this, DeleteFromKey);
             view.m_btnCopy.onClick.Set(CopyUnit);
             view.m_btnEdit.onClick.Set(EditUnit);
             view.m_btnOpenResource.onClick.Set(OpenResource);
@@ -39,6 +40,7 @@ namespace UILogic
 
         public override void OnShow()
         {
+            DeleteGesture.Bind(this, DeleteFromKey);
             if (view != null)
             {
                 Refresh();
@@ -249,8 +251,16 @@ namespace UILogic
 
         public override void OnClose()
         {
+            DeleteGesture.Unbind(this);
             _spine.Clear();
             _spineKey = "";
+        }
+
+        void DeleteFromKey()
+        {
+            if (view.m_btnDelete == null || !view.m_btnDelete.touchable || view.m_btnDelete.grayed)
+                return;
+            DeleteUnit();
         }
 
         void AddUnit()

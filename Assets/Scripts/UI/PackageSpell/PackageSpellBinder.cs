@@ -9,7 +9,9 @@ namespace PackageSpell
         public static void BindAll()
         {
             UIObjectFactory.SetPackageItemExtension(UI_ComFunc.URL, typeof(UI_ComFunc));
+            UIObjectFactory.SetPackageItemExtension(UI_ItemInfoAttr.URL, typeof(UI_ItemInfoAttr));
             UIObjectFactory.SetPackageItemExtension(UI_ComInspect.URL, typeof(UI_ComInspect));
+            UIObjectFactory.SetPackageItemExtension(UI_ItemInfoTag.URL, typeof(UI_ItemInfoTag));
             UIObjectFactory.SetPackageItemExtension(UI_ItemSpellLine.URL, typeof(UI_ItemSpellLine));
             UIObjectFactory.SetPackageItemExtension(UI_ItemKey.URL, typeof(UI_ItemKey));
             UIObjectFactory.SetPackageItemExtension(UI_ItemTrack.URL, typeof(UI_ItemTrack));
@@ -35,8 +37,10 @@ namespace PackageSpell
             UIObjectFactory.SetPackageItemExtension(UI_ItemSpellTag.URL, typeof(UI_ItemSpellTag));
             UIObjectFactory.SetPackageItemExtension(UI_ComTimeline.URL, typeof(UI_ComTimeline));
             UIObjectFactory.SetPackageItemExtension(UI_ButtonTip.URL, typeof(UI_ButtonTip));
+            UIObjectFactory.SetPackageItemExtension(UI_ComUnitInfo.URL, typeof(UI_ComUnitInfo));
             UIObjectFactory.SetPackageItemExtension(UI_ComUnitInspect.URL, typeof(UI_ComUnitInspect));
             UIObjectFactory.SetPackageItemExtension(UI_ItemUnitTag.URL, typeof(UI_ItemUnitTag));
+            UIObjectFactory.SetPackageItemExtension(UI_ItemUnitValue.URL, typeof(UI_ItemUnitValue));
         }
     }
 }
