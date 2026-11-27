@@ -66,7 +66,7 @@
         "com.unity.entities": "1.5.0",
         "com.unity.burst": "1.8.29"
       },
-      "hash": "192728a917e5bd30f53f3fba0e561c6398b3b027"
+      "hash": "c24ee1b990310f9705f5d86aef6ff3fc7b81b2ff"
     },
     "com.reborn.spell.animation": {
       "version": "git@github.com:LinZhiWeiNB/RebornFrameSpellAnimation.git",
