@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1600,270">
+  <displayList>
+    <graph id="n3_mns01" name="timePane" xy="0,0" size="1600,270" type="rect" lineSize="0" fillColor="#ff1e2128">
+      <relation target="" sidePair="rightext-right,bottomext-bottom"/>
+    </graph>
+    <component id="n61_mns01" name="marks" src="s0uwc" fileName="ComMarks.xml" xy="176,8" size="1416,261">
+      <relation target="" sidePair="right-right,bottomext-bottom"/>
+    </component>
+    <component id="n68_mns01" name="tracks" src="s0uwe" fileName="ComTracks.xml" xy="0,44">
+      <relation target="" sidePair="right-right,bottomext-bottom"/>
+    </component>
+    <component id="n87_mns01" name="progress" src="s0uwd" fileName="ComProgress.xml" xy="168,28" size="1432,241">
+      <relation target="" sidePair="rightext-right,bottomext-bottom"/>
+    </component>
+    <component id="n88_s0uw" name="scrollH" src="s0uwg" fileName="ScrollBarH.xml" xy="176,258" size="1423,10">
+      <relation target="" sidePair="bottom-bottom,rightext-right"/>
+    </component>
+    <component id="n89_s0uw" name="scrollV" src="s0uwh" fileName="ScrollBarV.xml" xy="163,44" size="10,225"/>
+  </displayList>
+</component>

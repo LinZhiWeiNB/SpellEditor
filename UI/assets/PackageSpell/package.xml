@@ -18,6 +18,9 @@
     <component id="s0uwh" name="ScrollBarV.xml" path="/" exported="true"/>
     <component id="mode01" name="ModeHit.xml" path="/" exported="true"/>
     <component id="mode02" name="ModeToggle.xml" path="/" exported="true"/>
+    <component id="func01" name="ComFunc.xml" path="/" exported="true"/>
+    <component id="insp01" name="ComInspect.xml" path="/" exported="true"/>
+    <component id="time01" name="ComTimeline.xml" path="/" exported="true"/>
   </resources>
   <publish name="" genCode="true"/>
 </packageDescription>

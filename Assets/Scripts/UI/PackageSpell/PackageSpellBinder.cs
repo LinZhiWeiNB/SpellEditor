@@ -8,6 +8,8 @@ namespace PackageSpell
     {
         public static void BindAll()
         {
+            UIObjectFactory.SetPackageItemExtension(UI_ComFunc.URL, typeof(UI_ComFunc));
+            UIObjectFactory.SetPackageItemExtension(UI_ComInspect.URL, typeof(UI_ComInspect));
             UIObjectFactory.SetPackageItemExtension(UI_ItemKey.URL, typeof(UI_ItemKey));
             UIObjectFactory.SetPackageItemExtension(UI_ItemTrack.URL, typeof(UI_ItemTrack));
             UIObjectFactory.SetPackageItemExtension(UI_ItemSpell.URL, typeof(UI_ItemSpell));
@@ -25,6 +27,7 @@ namespace PackageSpell
             UIObjectFactory.SetPackageItemExtension(UI_ComKeys.URL, typeof(UI_ComKeys));
             UIObjectFactory.SetPackageItemExtension(UI_ScrollBarH.URL, typeof(UI_ScrollBarH));
             UIObjectFactory.SetPackageItemExtension(UI_ScrollBarV.URL, typeof(UI_ScrollBarV));
+            UIObjectFactory.SetPackageItemExtension(UI_ComTimeline.URL, typeof(UI_ComTimeline));
         }
     }
 }

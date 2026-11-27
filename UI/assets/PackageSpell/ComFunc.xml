@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="320,630">
+  <controller name="cSpine" pages="0,关,1,开" selected="0"/>
+  <controller name="cUnits" pages="0,关,1,开" selected="0"/>
+  <displayList>
+    <graph id="n0_mns01" name="funcPane" xy="0,0" size="320,630" type="rect" lineSize="0" fillColor="#ff1e2128"/>
+    <component id="n7_mns01" name="btnBack" src="lpb03" fileName="ButtonGhost.xml" pkg="mskevjh6" xy="16,12" size="88,36">
+      <Button title="返回"/>
+    </component>
+    <text id="n8_mns01" name="title" xy="112,16" size="188,28" fontSize="18" color="#e8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="技能"/>
+    <text id="n9_mns01" name="funcUnit" xy="16,60" size="288,20" fontSize="13" color="#8d887e" vAlign="middle" autoSize="none" singleLine="true" text="预览单位"/>
+    <graph id="n10_mns01" name="bgUnit" xy="16,84" size="288,32" type="rect" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
+    <text id="n11_mns01" name="unitName" xy="28,84" size="264,32" fontSize="14" color="#e8e6e3" vAlign="middle" autoSize="none" singleLine="true" text="未选择"/>
+    <component id="n12_mns01" name="btnSwitchUnit" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="16,124" size="288,36">
+      <Button title="切换预览单位"/>
+    </component>
+    <component id="n93_view" name="btnAddDummy" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="16,168" size="288,36">
+      <Button title="添加木桩"/>
+    </component>
+    <text id="n13_mns01" name="funcSkill" xy="16,224" size="288,20" fontSize="13" color="#8d887e" vAlign="middle" autoSize="none" singleLine="true" text="技能"/>
+    <component id="n15_mns01" name="btnAddKey" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="16,252" size="288,36">
+      <Button title="增加关键帧"/>
+    </component>
+    <component id="n90_s0uw" name="btnDeleteKey" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="16,296" size="288,36">
+      <Button title="删除关键帧"/>
+    </component>
+    <text id="n16_mns01" name="funcSpine" xy="16,392" size="288,20" group="n18_mns01" fontSize="13" color="#8d887e" vAlign="middle" autoSize="none" singleLine="true" text="Spine"/>
+    <component id="n17_mns01" name="btnAddClip" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="16,420" size="288,36" group="n18_mns01">
+      <Button title="创建动画片段"/>
+    </component>
+    <group id="n18_mns01" name="spineBlock" xy="16,392" size="288,64" advanced="true">
+      <gearDisplay controller="cSpine" pages="1"/>
+    </group>
+    <list id="n73_mns01" name="units" xy="16,212" size="288,180" overflow="scroll" scrollBar="hidden" lineGap="4" defaultItem="ui://m5lrgzhjg8bt5" autoClearItems="true">
+      <gearDisplay controller="cUnits" pages="1"/>
+    </list>
+  </displayList>
+</component>
