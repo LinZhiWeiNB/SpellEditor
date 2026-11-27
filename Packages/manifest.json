@@ -1,5 +1,7 @@
 {
   "dependencies": {
+    "com.esotericsoftware.spine.spine-csharp": "https://github.com/EsotericSoftware/spine-runtimes.git?path=spine-csharp/src#80fc67fa18f33422fc08d13212194f97583807c5",
+    "com.esotericsoftware.spine.spine-unity": "https://github.com/EsotericSoftware/spine-runtimes.git?path=spine-unity/Assets/Spine#80fc67fa18f33422fc08d13212194f97583807c5",
     "com.reborn.fgui": "git@github.com:LinZhiWeiNB/RebornFrameFGUI.git",
     "com.reborn.gamedata": "git@github.com:LinZhiWeiNB/RebornFrameGameData.git",
     "com.reborn.protobuf": "git@github.com:LinZhiWeiNB/RebornFrameProtobuf.git",

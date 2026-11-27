@@ -1,16 +1,25 @@
 {
   "dependencies": {
-    "com.esotericsoftware.spine.spine-unity": {
-      "version": "file:spine-unity",
+    "com.esotericsoftware.spine.spine-csharp": {
+      "version": "https://github.com/EsotericSoftware/spine-runtimes.git?path=/spine-csharp/src#80fc67fa18f33422fc08d13212194f97583807c5",
       "depth": 0,
-      "source": "embedded",
+      "source": "git",
+      "dependencies": {},
+      "hash": "80fc67fa18f33422fc08d13212194f97583807c5"
+    },
+    "com.esotericsoftware.spine.spine-unity": {
+      "version": "https://github.com/EsotericSoftware/spine-runtimes.git?path=/spine-unity/Assets/Spine#80fc67fa18f33422fc08d13212194f97583807c5",
+      "depth": 0,
+      "source": "git",
       "dependencies": {
         "com.unity.ugui": "1.0.0",
         "com.unity.modules.animation": "1.0.0",
         "com.unity.modules.physics": "1.0.0",
         "com.unity.modules.physics2d": "1.0.0",
+        "com.esotericsoftware.spine.spine-csharp": "4.3.44",
         "com.unity.2d.sprite": "1.0.0"
-      }
+      },
+      "hash": "80fc67fa18f33422fc08d13212194f97583807c5"
     },
     "com.reborn.fgui": {
       "version": "git@github.com:LinZhiWeiNB/RebornFrameFGUI.git",
