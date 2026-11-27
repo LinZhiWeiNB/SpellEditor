@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1600,900">
+  <displayList>
+    <graph id="n0_rpth1" name="mask" xy="0,0" size="1600,900" type="rect" lineSize="0" fillColor="#8c000000">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <graph id="n1_rpth1" name="card" xy="590,330" size="420,240" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff1e2128" corner="8">
+      <relation target="" sidePair="center-center,middle-middle"/>
+    </graph>
+    <text id="n2_rpth1" name="title" xy="614,354" size="372,28" fontSize="18" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="目录">
+      <relation target="n1_rpth1" sidePair="left-left,top-top"/>
+    </text>
+    <text id="n3_rpth1" name="hint" xy="614,390" size="372,22" fontSize="13" color="#ff8d887e" vAlign="middle" autoSize="none" singleLine="true" text="">
+      <relation target="n1_rpth1" sidePair="left-left,top-top"/>
+    </text>
+    <graph id="n4_rpth1" name="pathBg" xy="614,426" size="372,36" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4">
+      <relation target="n1_rpth1" sidePair="left-left,top-top"/>
+    </graph>
+    <text id="n5_rpth1" name="inputPath" xy="626,426" size="348,36" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" input="true" prompt="目录名">
+      <relation target="n1_rpth1" sidePair="left-left,top-top"/>
+    </text>
+    <component id="n6_rpth1" name="btnPlace" src="g8bt3" fileName="ButtonPrimary.xml" pkg="m5lrgzhj" xy="614,470" size="180,36">
+      <relation target="n1_rpth1" sidePair="left-left,top-top"/>
+      <Button title="确定"/>
+    </component>
+    <component id="n7_rpth1" name="btnCancel" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="806,470" size="180,36">
+      <relation target="n1_rpth1" sidePair="left-left,top-top"/>
+      <Button title="取消"/>
+    </component>
+  </displayList>
+</component>

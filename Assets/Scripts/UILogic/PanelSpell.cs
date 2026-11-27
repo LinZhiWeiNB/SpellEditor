@@ -4,7 +4,6 @@ using System.Text;
 using FairyGUI;
 using Google.Protobuf;
 using PackageAtrribute;
-using PackageResource;
 using PackageSpell;
 using RebornFrame.GameData;
 using RebornFrame.Spell;
@@ -33,14 +32,14 @@ namespace UILogic
         sealed class KeyFrame
         {
             public int Frame;
-            public int Pick = 1;
-            public int Condition;
+            public int Match;
+            public bool LinkCast = true;
+            public bool Cooldown;
             public readonly List<ulong> Tags = new List<ulong>();
             public readonly List<ulong> Buffs = new List<ulong>();
             public string Anim = "";
             public string Trigger = "";
             public int ClipSource;
-            public int Span;
             public float StartSeconds;
             public float DurationSeconds;
             public byte[] Parameters = Array.Empty<byte>();
@@ -70,8 +69,6 @@ namespace UILogic
         readonly List<SpellPreviewStage.SpineClipChoice> _triggers = new List<SpellPreviewStage.SpineClipChoice>();
         GComboBox _comboAnim;
         GComboBox _comboTrigger;
-        readonly List<ulong> _tags = new List<ulong>();
-        readonly List<ulong> _buffs = new List<ulong>();
         readonly List<EditorUnit> _owners = new List<EditorUnit>();
         ulong _spellId;
         bool _hasPrefer;
@@ -104,6 +101,8 @@ namespace UILogic
         readonly List<SpellPreviewSim.Seed> _seeds = new List<SpellPreviewSim.Seed>();
         GComponent _func;
         GComponent _inspect;
+        GComponent _skillInspect;
+        GComponent _spineInspect;
         GComponent _timeline;
         Controller _cInspect;
         Controller _cSpine;
@@ -117,11 +116,23 @@ namespace UILogic
         {
             _func = view.GetChild("func") as GComponent;
             _inspect = view.GetChild("inspect") as GComponent;
+            _skillInspect = _inspect == null ? null : _inspect.GetChild("skillInspect") as GComponent;
+            _spineInspect = _inspect == null ? null : _inspect.GetChild("spineInspect") as GComponent;
             _timeline = view.GetChild("timeline") as GComponent;
             _cInspect = Control(_inspect, "cInspect");
             _cSpine = Control(_func, "cSpine");
-            _cClipName = Control(_inspect, "cClipName");
-            _cSpineEnd = Control(_inspect, "cSpineEnd");
+            _cClipName = Control(_spineInspect, "cClipName") ?? Control(_inspect, "cClipName");
+            _cSpineEnd = Control(_spineInspect, "cSpineEnd") ?? Control(_inspect, "cSpineEnd");
+        }
+
+        GComponent SkillRoot()
+        {
+            return _skillInspect ?? _inspect;
+        }
+
+        GComponent SpineRoot()
+        {
+            return _spineInspect ?? _inspect;
         }
 
         GObject Part(GComponent part, string name)
@@ -170,7 +181,11 @@ namespace UILogic
         {
             view = (UI_PanelSpell)FGUIComponent;
             BindRegions();
-            Btn(_func, "btnBack").onClick.Set(() => FGUIPanelManager.Instance.Back());
+            Btn(_func, "btnBack").onClick.Set(() =>
+            {
+                CloseDialogs();
+                FGUIPanelManager.Instance.Back();
+            });
             if (data != null && data.Length > 0 && data[0] is ulong spellId)
             {
                 _spellId = spellId;
@@ -187,38 +202,19 @@ namespace UILogic
             Btn(_func, "btnSwitchUnit").onClick.Set(ToggleUnits);
             Label(_func, "unitName").text = "未选择";
             Btn(_func, "btnAddKey").onClick.Set(AddSkillKey);
-            var addDummy = Btn(_func, "btnAddDummy");
-            if (addDummy == null)
-            {
-                ShiftForDummyButton();
-                addDummy = UI_ButtonSecondary.CreateInstance();
-                addDummy.name = "btnAddDummy";
-                addDummy.title = "添加木桩";
-                addDummy.SetSize(288, 36);
-                addDummy.SetXY(16, 168);
-                (_func ?? view).AddChild(addDummy);
-            }
-
-            addDummy.onClick.Set(() => SpellPreviewStage.AddDummy());
+            Btn(_func, "btnAddDummy").onClick.Set(() => SpellPreviewStage.AddDummy());
             var deleteKey = Btn(_func, "btnDeleteKey");
             if (deleteKey != null)
                 deleteKey.onClick.Set(DeleteSkillKey);
             _onDeleteKey = OnDeleteKey;
             Stage.inst.onKeyDown.Add(_onDeleteKey);
             Btn(_func, "btnAddClip").onClick.Set(AddSpineClip);
-            BindPick(Radio(_inspect, "pickOwner"), 0);
-            BindPick(Radio(_inspect, "pickPrimary"), 1);
-            BindPick(Radio(_inspect, "pickSubject"), 2);
-            BindPick(Radio(_inspect, "pickSource"), 3);
-            BindPick(Radio(_inspect, "pickExplicit"), 4);
-            BindCondition(Radio(_inspect, "condAll"), 0);
-            BindCondition(Radio(_inspect, "condAny"), 1);
-            BindCondition(Radio(_inspect, "condNotAny"), 2);
-            Radio(_inspect, "endPause").onChanged.Add(() => SaveEnd(0, Radio(_inspect, "endPause").selected));
-            Radio(_inspect, "endLoop").onChanged.Add(() => SaveEnd(1, Radio(_inspect, "endLoop").selected));
-            Radio(_inspect, "pauseFirst").onChanged.Add(() => SavePause(0, Radio(_inspect, "pauseFirst").selected));
-            Radio(_inspect, "pauseLast").onChanged.Add(() => SavePause(1, Radio(_inspect, "pauseLast").selected));
-            var pingpong = Part(_inspect, "pingpong") as UI_ButtonCheck;
+            BindSkillFrame();
+            Radio(SpineRoot(), "endPause").onChanged.Add(() => SaveEnd(0, Radio(SpineRoot(), "endPause").selected));
+            Radio(SpineRoot(), "endLoop").onChanged.Add(() => SaveEnd(1, Radio(SpineRoot(), "endLoop").selected));
+            Radio(SpineRoot(), "pauseFirst").onChanged.Add(() => SavePause(0, Radio(SpineRoot(), "pauseFirst").selected));
+            Radio(SpineRoot(), "pauseLast").onChanged.Add(() => SavePause(1, Radio(SpineRoot(), "pauseLast").selected));
+            var pingpong = Part(SpineRoot(), "pingpong") as UI_ButtonCheck;
             pingpong.onChanged.Add(() =>
             {
                 if (_applying || _key < 0) return;
@@ -233,15 +229,14 @@ namespace UILogic
                 Current().ClipSource = _cClipName.selectedIndex;
                 FitLength(Current());
             });
-            Input(_inspect, "inputSpeed").onChanged.Add(() =>
+            Input(SpineRoot(), "inputSpeed").onChanged.Add(() =>
             {
                 if (_applying || _key < 0) return;
                 if (_tracks[_track].Kind != TrackKind.Spine) return;
-                Current().Speed = Input(_inspect, "inputSpeed").text;
+                Current().Speed = Input(SpineRoot(), "inputSpeed").text;
                 FitLength(Current());
             });
 
-            CollectCatalogs();
             BuildTracks();
             RenderMarks();
             CollectOwners();
@@ -254,8 +249,15 @@ namespace UILogic
             PoseAll();
         }
 
+        public override void OnShow()
+        {
+            if (!_entered || !SkillSelected()) return;
+            ApplyInspector();
+        }
+
         public override void OnClose()
         {
+            CloseDialogs();
             SpellPreviewStage.Changed -= OnStageChanged;
             SaveLayout();
             if (ProjectSession.IsOpen)
@@ -266,31 +268,9 @@ namespace UILogic
                 Stage.inst.onKeyDown.Remove(_onDeleteKey);
         }
 
-        void ShiftForDummyButton()
-        {
-            const float drop = 48f;
-            Label(_func, "funcSkill").y += drop;
-            Btn(_func, "btnAddKey").y += drop;
-            var deleteKey = Part(_func, "btnDeleteKey");
-            if (deleteKey != null)
-                deleteKey.y += drop;
-            Label(_func, "funcSpine").y += drop;
-            Btn(_func, "btnAddClip").y += drop;
-            var units = ListOf(_func, "units");
-            if (units != null)
-                units.y += drop;
-        }
-
         void OpenPreview()
         {
-            HideLeftover("preview");
-            HideLeftover("previewLabel");
-            HideLeftover("floor");
-            HideLeftover("previewCast");
-            HideLeftover("dummies");
             var hit = view.GetChild("previewHit");
-            if (hit == null)
-                hit = view.GetChild("preview");
             if (hit != null)
             {
                 hit.alpha = 0f;
@@ -299,19 +279,7 @@ namespace UILogic
             }
 
             PaintPreviewBorder();
-
-            var reset = view.GetChild("btnResetCamera") as GButton;
-            if (reset == null)
-            {
-                reset = UI_ButtonSecondary.CreateInstance();
-                reset.name = "btnResetCamera";
-                reset.title = "重置摄像机";
-                reset.SetSize(128, 32);
-                reset.SetXY(332, 586);
-                view.AddChild(reset);
-            }
-
-            reset.onClick.Set(() => SpellPreviewStage.ResetCamera());
+            (view.GetChild("btnResetCamera") as GButton).onClick.Set(() => SpellPreviewStage.ResetCamera());
             BindPreviewMode();
             SpellPreviewStage.SetPlacement(true);
             SpellPreviewStage.Open(hit, OnPreviewUnit);
@@ -320,33 +288,10 @@ namespace UILogic
 
         void BindPreviewMode()
         {
-            var host = view.GetChild("modeToggle") as GComponent;
-            var mode = host == null ? null : host.GetController("cMode");
-            if (mode != null)
-            {
-                var legacy = view.GetChild("btnPreviewMode");
-                if (legacy != null)
-                    legacy.visible = false;
-                _editing = true;
-                mode.selectedIndex = 0;
-                mode.onChanged.Add(() => ApplyMode(mode.selectedIndex == 0));
-                return;
-            }
-
-            var button = view.GetChild("btnPreviewMode") as GButton;
-            if (button == null)
-            {
-                button = UI_ButtonSecondary.CreateInstance();
-                button.name = "btnPreviewMode";
-                button.title = "编辑";
-                button.SetSize(96, 32);
-                button.SetXY(468, 586);
-                view.AddChild(button);
-            }
-
+            var mode = (view.GetChild("modeToggle") as GComponent).GetController("cMode");
             _editing = true;
-            button.title = "编辑";
-            button.onClick.Set(() => ApplyMode(!_editing));
+            mode.selectedIndex = 0;
+            mode.onChanged.Add(() => ApplyMode(mode.selectedIndex == 0));
         }
 
         void ApplyMode(bool editing)
@@ -354,9 +299,6 @@ namespace UILogic
             if (_editing == editing)
                 return;
             _editing = editing;
-            var button = view.GetChild("btnPreviewMode") as GButton;
-            if (button != null && button.visible)
-                button.title = _editing ? "编辑" : "预览";
             SpellPreviewStage.SetPlacement(_editing);
             PaintPreviewBorder();
             if (_editing)
@@ -371,26 +313,13 @@ namespace UILogic
         void PaintPreviewBorder()
         {
             var border = view.GetChild("previewBorder") as GGraph;
+            if (border == null) return;
             var line = _editing
                 ? (Color)new Color32(0x3d, 0xb8, 0x6a, 0xff)
                 : (Color)new Color32(0xf0, 0x8a, 0x2a, 0xff);
-            var fill = new Color(0f, 0f, 0f, 0f);
-            if (border != null)
-            {
-                border.touchable = false;
-                border.alpha = 1f;
-                border.DrawRect(border.width, border.height, 3, line, fill);
-                return;
-            }
-
-            var hit = view.GetChild("previewHit") as GGraph;
-            if (hit == null)
-                hit = view.GetChild("previewHit") as GGraph;
-            if (hit == null)
-                return;
-            hit.alpha = 1f;
-            hit.touchable = true;
-            hit.DrawRect(hit.width, hit.height, 3, line, fill);
+            border.touchable = false;
+            border.alpha = 1f;
+            border.DrawRect(border.width, border.height, 3, line, new Color(0f, 0f, 0f, 0f));
         }
 
         void OnPreviewUnit(PreviewActor actor)
@@ -421,7 +350,7 @@ namespace UILogic
                 : new SpellId(actor.Unit.Id).ToString();
             var empty = Label(_inspect, "inspectEmpty");
             empty.singleLine = false;
-            empty.SetSize(288, 520);
+            FitEmpty(empty, 496);
             empty.text = UnitReport(actor);
             _applying = false;
         }
@@ -429,8 +358,16 @@ namespace UILogic
         void RestoreInspectEmpty()
         {
             var empty = Label(_inspect, "inspectEmpty");
-            empty.SetSize(288, 48);
+            FitEmpty(empty, 40);
             empty.text = "选中技能或 Spine 的关键帧后在这里配置。";
+        }
+
+        void FitEmpty(GTextField empty, float textHeight)
+        {
+            empty.SetSize(288, textHeight);
+            var card = Part(_inspect, "emptyCard");
+            if (card != null)
+                card.SetSize(304, textHeight + 24);
         }
 
         static string UnitReport(PreviewActor actor)
@@ -526,6 +463,7 @@ namespace UILogic
             AddPlugin(mask, GameDataRenderPlugins.Spine, TrackKind.Spine, "Spine");
             AddPlugin(mask, GameDataRenderPlugins.Animation, TrackKind.Animation, "动画");
             LoadTracks();
+            EnsureStartKey();
             RenderTracks();
         }
 
@@ -593,6 +531,22 @@ namespace UILogic
             var track = new Track { Kind = TrackKind.Skill, Title = "技能" };
             _tracks.Insert(0, track);
             return track;
+        }
+
+        bool EnsureStartKey()
+        {
+            for (var i = 0; i < _tracks.Count; i++)
+            {
+                if (_tracks[i].Kind != TrackKind.Skill) continue;
+                var keys = _tracks[i].Keys;
+                for (var k = 0; k < keys.Count; k++)
+                {
+                    if (keys[k].Frame <= 0) return false;
+                }
+            }
+
+            SkillTrack().Keys.Insert(0, new KeyFrame { Frame = 0 });
+            return true;
         }
 
         int PreviewFrame()
@@ -734,9 +688,18 @@ namespace UILogic
             var moved = false;
             var home = key.Frame;
             var edge = 0;
+            var locked = skill && key.Frame <= 0 && !key.Cooldown;
             var row = new List<PlacedClip>();
+            if (skill && (key.Cooldown || key.Frame <= 0))
+            {
+                var page = button.GetController("button");
+                if (page != null)
+                    page.onChanged.Add(() => PaintSkillKey(button, key));
+                PaintSkillKey(button, key);
+            }
             button.onTouchBegin.Add(context =>
             {
+                if (locked) return;
                 context.CaptureTouch();
                 moved = false;
                 originX = button.x;
@@ -756,6 +719,7 @@ namespace UILogic
             });
             button.onTouchMove.Add(context =>
             {
+                if (locked) return;
                 var parent = button.parent as GComponent;
                 if (parent == null) return;
                 var dx = LocalDelta(parent, context.inputEvent.x - pointerX, 0f).x;
@@ -787,7 +751,7 @@ namespace UILogic
                 if (!moved) return;
                 if (skill)
                 {
-                    key.Frame = Mathf.Max(0, Mathf.RoundToInt(button.x / px));
+                    key.Frame = Mathf.Max(key.Cooldown ? 1 : 0, Mathf.RoundToInt(button.x / px));
                     RecordLogic();
                 }
                 else
@@ -818,6 +782,44 @@ namespace UILogic
                 if (moved) return;
                 SelectKey(key);
             });
+        }
+
+        static string SkillKindLabel(KeyFrame key)
+        {
+            if (key.Cooldown) return "冷却帧";
+            if (key.Frame <= 0) return "开始帧";
+            return "事件帧";
+        }
+
+        static void PaintSkillKey(GButton button, KeyFrame key)
+        {
+            var bg = (button as UI_ItemKey)?.m_bg;
+            if (bg == null || (!key.Cooldown && key.Frame > 0)) return;
+            var page = button.GetController("button");
+            var index = page == null ? 0 : page.selectedIndex;
+            bg.color = key.Cooldown ? CooldownColor(index) : StartColor(index);
+        }
+
+        static Color32 StartColor(int page)
+        {
+            switch (page)
+            {
+                case 2: return new Color32(206, 132, 64, 255);
+                case 1: return new Color32(224, 160, 90, 255);
+                case 3: return new Color32(236, 178, 112, 255);
+                default: return new Color32(184, 106, 47, 255);
+            }
+        }
+
+        static Color32 CooldownColor(int page)
+        {
+            switch (page)
+            {
+                case 2: return new Color32(114, 80, 148, 255);
+                case 1: return new Color32(140, 102, 184, 255);
+                case 3: return new Color32(158, 122, 204, 255);
+                default: return new Color32(92, 61, 120, 255);
+            }
         }
 
         void AddSpineClip()
@@ -861,27 +863,32 @@ namespace UILogic
             if (track.Kind == TrackKind.Skill)
             {
                 _cInspect.selectedIndex = InspectSkill;
-                Label(_inspect, "inspectKind").text = "技能关键帧";
-                Pick(key.Pick).selected = true;
-                Condition(key.Condition).selected = true;
-                RenderChoices(ListOf(_inspect, "tags"), _tags, key.Tags, Label(_inspect, "tagHint"), "载入的数据里还没有标签。");
-                RenderChoices(ListOf(_inspect, "buffs"), _buffs, key.Buffs, Label(_inspect, "buffHint"), "载入的数据里还没有 Buff。");
+                Label(_inspect, "inspectKind").text = SkillKindLabel(key);
+                var cast = Part(SkillRoot(), "castLink") as UI_ButtonCheck;
+                if (cast != null)
+                    cast.selected = key.LinkCast;
+                var match = Part(SkillRoot(), "comboMatch") as GComboBox;
+                if (match != null)
+                    match.value = key.Match >= 1 && key.Match <= 4 ? key.Match.ToString() : "3";
+                RenderTagRows();
+                RenderLineRows(ListOf(SkillRoot(), "conditions"), null);
+                RenderLineRows(ListOf(SkillRoot(), "buffs"), key.Buffs);
             }
             else if (track.Kind == TrackKind.Spine)
             {
                 _cInspect.selectedIndex = InspectSpine;
                 Label(_inspect, "inspectKind").text = "Spine 关键帧";
                 _cClipName.selectedIndex = key.ClipSource == 1 ? 1 : 0;
-                Radio(_inspect, "clipByName").selected = key.ClipSource != 1;
-                Radio(_inspect, "clipByTrigger").selected = key.ClipSource == 1;
+                Radio(SpineRoot(), "clipByName").selected = key.ClipSource != 1;
+                Radio(SpineRoot(), "clipByTrigger").selected = key.ClipSource == 1;
                 FillClipCombos(key);
-                Input(_inspect, "inputSpeed").text = key.Speed;
+                Input(SpineRoot(), "inputSpeed").text = key.Speed;
                 _cSpineEnd.selectedIndex = key.EndMode;
-                Radio(_inspect, "endPause").selected = key.EndMode == 0;
-                Radio(_inspect, "endLoop").selected = key.EndMode == 1;
-                Radio(_inspect, "pauseFirst").selected = key.PauseAt == 0;
-                Radio(_inspect, "pauseLast").selected = key.PauseAt == 1;
-                (Part(_inspect, "pingpong") as UI_ButtonCheck).selected = key.Pingpong;
+                Radio(SpineRoot(), "endPause").selected = key.EndMode == 0;
+                Radio(SpineRoot(), "endLoop").selected = key.EndMode == 1;
+                Radio(SpineRoot(), "pauseFirst").selected = key.PauseAt == 0;
+                Radio(SpineRoot(), "pauseLast").selected = key.PauseAt == 1;
+                (Part(SpineRoot(), "pingpong") as UI_ButtonCheck).selected = key.Pingpong;
             }
             else
             {
@@ -1282,15 +1289,6 @@ namespace UILogic
             return Mathf.Max(1, Mathf.CeilToInt(64f / Mathf.Max(px, 1f)));
         }
 
-        int ClipFrames(KeyFrame key)
-        {
-            if (key.Span > 0) return key.Span;
-            var keys = KeysPane();
-            var px = keys == null ? 8f : PaneView(keys, true) / 60f;
-            if (px < 1f) px = 1f;
-            return ClipSpan(px);
-        }
-
         void RefreshCasterClips()
         {
             SpellPreviewStage.CopyCasterAnimations(_animations);
@@ -1400,30 +1398,9 @@ namespace UILogic
 
         void EnsureClipBoxes()
         {
-            _comboAnim = ClipBox("comboAnim");
-            _comboTrigger = ClipBox("comboTrigger");
+            _comboAnim = Part(SpineRoot(), "comboAnim") as GComboBox;
+            _comboTrigger = Part(SpineRoot(), "comboTrigger") as GComboBox;
             SyncClipBoxes();
-        }
-
-        GComboBox ClipBox(string name)
-        {
-            var existing = Part(_inspect, name) as GComboBox;
-            if (existing != null) return existing;
-            var box = UI_ComboValue.CreateInstance();
-            box.name = name;
-            box.SetSize(264, 32);
-            if (_inspect != null)
-            {
-                box.SetXY(28, 192);
-                _inspect.AddChild(box);
-            }
-            else
-            {
-                box.SetXY(1308, 192);
-                view.AddChild(box);
-            }
-
-            return box;
         }
 
         void SyncClipBoxes()
@@ -1440,7 +1417,7 @@ namespace UILogic
 
         void HideClipField(string name)
         {
-            var child = Part(_inspect, name);
+            var child = Part(SpineRoot(), name);
             if (child != null)
                 child.visible = false;
         }
@@ -1657,79 +1634,6 @@ namespace UILogic
             }
         }
 
-        int BlockedStart(GButton button, int home, int desired, int span, float px)
-        {
-            desired = Mathf.Max(0, desired);
-            if (span < 1) span = 1;
-            var parent = button.parent;
-            if (parent == null || px < 1f) return desired;
-
-            var occupied = new List<int>();
-            for (var i = 0; i < parent.numChildren; i++)
-            {
-                var other = parent.GetChildAt(i);
-                if (other == button || other.name == "extent") continue;
-                if (Mathf.Abs(other.y - button.y) > 2f) continue;
-                var otherStart = Mathf.RoundToInt(other.x / px);
-                var otherSpan = Mathf.Max(1, Mathf.RoundToInt(other.width / px));
-                occupied.Add(otherStart);
-                occupied.Add(otherStart + otherSpan);
-            }
-
-            if (occupied.Count == 0) return desired;
-            for (var i = 2; i < occupied.Count; i += 2)
-            {
-                var start = occupied[i];
-                var end = occupied[i + 1];
-                var j = i;
-                while (j > 0 && occupied[j - 2] > start)
-                {
-                    occupied[j] = occupied[j - 2];
-                    occupied[j + 1] = occupied[j - 1];
-                    j -= 2;
-                }
-
-                occupied[j] = start;
-                occupied[j + 1] = end;
-            }
-
-            var merged = new List<int>();
-            for (var i = 0; i < occupied.Count; i += 2)
-            {
-                if (merged.Count == 0 || occupied[i] > merged[merged.Count - 1])
-                {
-                    merged.Add(occupied[i]);
-                    merged.Add(occupied[i + 1]);
-                }
-                else if (occupied[i + 1] > merged[merged.Count - 1])
-                {
-                    merged[merged.Count - 1] = occupied[i + 1];
-                }
-            }
-
-            var best = desired;
-            var bestDist = int.MaxValue;
-            var found = false;
-            Consider(0, merged[0] - span);
-            for (var i = 0; i < merged.Count - 2; i += 2)
-                Consider(merged[i + 1], merged[i + 2] - span);
-            Consider(merged[merged.Count - 1], int.MaxValue);
-            return found ? best : desired;
-
-            void Consider(int lo, int hi)
-            {
-                if (hi < 0 || hi < lo) return;
-                if (lo < 0) lo = 0;
-                var candidate = desired < lo ? lo : desired > hi ? hi : desired;
-                var dist = Mathf.Abs(candidate - desired);
-                if (found && dist > bestDist) return;
-                if (found && dist == bestDist && Mathf.Abs(candidate - home) >= Mathf.Abs(best - home)) return;
-                best = candidate;
-                bestDist = dist;
-                found = true;
-            }
-        }
-
         int ContentFrames()
         {
             var frames = 0;
@@ -1739,6 +1643,8 @@ namespace UILogic
                 var skill = _tracks[i].Kind == TrackKind.Skill;
                 for (var k = 0; k < keys.Count; k++)
                 {
+                    if (skill && keys[k].Cooldown)
+                        continue;
                     var end = skill
                         ? keys[k].Frame
                         : Mathf.CeilToInt((keys[k].StartSeconds + ClipLengthSeconds(keys[k], false)) * LogicRate());
@@ -1769,72 +1675,187 @@ namespace UILogic
             return ((span + step - 1) / step) * step;
         }
 
-        void RenderChoices(GList list, List<ulong> catalog, List<ulong> chosen, GTextField hint, string empty)
+        void BindSkillFrame()
         {
-            hint.text = catalog.Count == 0 ? empty : "";
-            list.itemRenderer = (index, obj) =>
+            var match = Part(SkillRoot(), "comboMatch") as GComboBox;
+            if (match != null)
             {
-                var button = (UI_ButtonCheck)obj;
-                var id = catalog[index];
-                button.title = FormatId(id);
-                button.SetSize(list.width, button.height);
-                button.selected = chosen.Contains(id);
-                button.onChanged.Set(() =>
+                match.items = new[] { "精确", "向上", "向下", "任意" };
+                match.values = new[] { "1", "2", "3", "4" };
+                match.onChanged.Add(() =>
                 {
-                    if (_applying) return;
-                    if (button.selected)
-                    {
-                        if (!chosen.Contains(id)) chosen.Add(id);
-                    }
-                    else
-                    {
-                        chosen.Remove(id);
-                    }
-
-                    if (list == ListOf(_inspect, "tags")) RefreshPreview();
-                    if (_track >= 0 && _track < _tracks.Count && _tracks[_track].Kind == TrackKind.Skill)
-                        RecordLogic();
+                    if (_applying || !SkillSelected()) return;
+                    if (!int.TryParse(match.value, out var mode)) return;
+                    Current().Match = mode;
+                    RecordLogic();
                 });
-            };
-            list.numItems = catalog.Count;
-        }
-
-        void CollectCatalogs()
-        {
-            var tags = new HashSet<ulong>();
-            var buffs = new HashSet<ulong>();
-            for (var i = 0; i < ProjectSession.Sources.Count; i++)
-            {
-                var module = ProjectSession.Sources[i].Module;
-                if (module == null) continue;
-                for (var t = 0; t < module.Tags.Count; t++) tags.Add(module.Tags[t].Id);
-                for (var b = 0; b < module.Buffs.Count; b++) buffs.Add(module.Buffs[b].Id);
             }
 
-            _tags.AddRange(tags);
-            _buffs.AddRange(buffs);
+            var cast = Part(SkillRoot(), "castLink") as UI_ButtonCheck;
+            if (cast != null)
+            {
+                cast.onChanged.Add(() =>
+                {
+                    if (_applying || !SkillSelected()) return;
+                    Current().LinkCast = cast.selected;
+                    RecordLogic();
+                });
+            }
+
+            var castTip = Btn(SkillRoot(), "btnCastTip");
+            if (castTip != null)
+                castTip.onClick.Set(() => PanelBlank.Show(
+                    "与本次施法相关",
+                    "每次施法会分配一个唯一施法识别码。目标标签中可能存储有施法识别码，勾选后只匹配识别码相同的标签。"));
+            var addTag = Btn(SkillRoot(), "btnAddTag");
+            if (addTag != null)
+                addTag.onClick.Set(() => OpenTagPick(-1));
+            var addCondition = Btn(SkillRoot(), "btnAddCondition");
+            if (addCondition != null)
+                addCondition.onClick.Set(() => PanelBlank.Show("添加条件", "条件功能还没定。"));
+            var addBuff = Btn(SkillRoot(), "btnAddBuff");
+            if (addBuff != null)
+                addBuff.onClick.Set(() => PanelBlank.Show("添加 Buff", "Buff 选择还没定。"));
         }
 
-        void BindPick(UI_ButtonRadio radio, int index)
+        bool SkillSelected()
         {
-            radio.onChanged.Add(() =>
-            {
-                if (_applying || _key < 0 || !radio.selected) return;
-                if (_tracks[_track].Kind != TrackKind.Skill) return;
-                Current().Pick = index;
-                RecordLogic();
-            });
+            return _track >= 0
+                   && _key >= 0
+                   && _track < _tracks.Count
+                   && _key < _tracks[_track].Keys.Count
+                   && _tracks[_track].Kind == TrackKind.Skill;
         }
 
-        void BindCondition(UI_ButtonRadio radio, int index)
+        void RenderTagRows()
         {
-            radio.onChanged.Add(() =>
+            var list = ListOf(SkillRoot(), "tags");
+            if (list == null || !SkillSelected()) return;
+            var tags = Current().Tags;
+            list.itemRenderer = (index, obj) =>
             {
-                if (_applying || _key < 0 || !radio.selected) return;
-                if (_tracks[_track].Kind != TrackKind.Skill) return;
-                Current().Condition = index;
-                RecordLogic();
-            });
+                var row = obj.asCom;
+                var id = tags[index];
+                var captured = index;
+                var title = row.GetChild("title") as GTextField;
+                if (title != null)
+                    title.text = ComTagEditor.Path(id);
+                row.SetSize(list.width, row.height);
+                var search = row.GetChild("btnSearch");
+                if (search != null)
+                    search.visible = false;
+                if (title != null)
+                    title.SetSize(188f, title.height);
+                var edit = row.GetChild("btnEdit") as GButton;
+                if (edit != null)
+                {
+                    edit.x = 196f;
+                    edit.onClick.Set(() => EditTag(id));
+                }
+                var remove = row.GetChild("btnRemove") as GButton;
+                if (remove != null)
+                {
+                    remove.x = 244f;
+                    remove.onClick.Set(() => RemoveTag(captured));
+                }
+            };
+            list.numItems = tags.Count;
+        }
+
+        void RenderLineRows(GList list, List<ulong> ids)
+        {
+            if (list == null) return;
+            if (ids == null)
+            {
+                list.numItems = 0;
+                return;
+            }
+
+            list.itemRenderer = (index, obj) =>
+            {
+                var row = obj.asCom;
+                var captured = index;
+                var title = row.GetChild("title") as GTextField;
+                if (title != null)
+                    title.text = FormatId(ids[index]);
+                row.SetSize(list.width, row.height);
+                var remove = row.GetChild("btnRemove") as GButton;
+                if (remove != null)
+                    remove.onClick.Set(() => RemoveBuff(captured));
+            };
+            list.numItems = ids.Count;
+        }
+
+        void OpenTagPick(int index)
+        {
+            if (!SkillSelected()) return;
+            PanelLayer.Dismiss<PanelBlank>();
+            PanelTagPick.Show(id => UseTag(index, id));
+        }
+
+        void UseTag(int index, ulong id)
+        {
+            if (!SkillSelected() || id == 0) return;
+            var tags = Current().Tags;
+            if (index >= 0 && index < tags.Count)
+            {
+                if (tags[index] == id) return;
+                for (var i = 0; i < tags.Count; i++)
+                {
+                    if (i != index && tags[i] == id) return;
+                }
+
+                tags[index] = id;
+            }
+            else if (!tags.Contains(id))
+            {
+                tags.Add(id);
+            }
+            else
+            {
+                return;
+            }
+
+            ApplyInspector();
+            RecordLogic();
+        }
+
+        void RemoveTag(int index)
+        {
+            if (!SkillSelected()) return;
+            var tags = Current().Tags;
+            if (index < 0 || index >= tags.Count) return;
+            tags.RemoveAt(index);
+            ApplyInspector();
+            RecordLogic();
+        }
+
+        void RemoveBuff(int index)
+        {
+            if (!SkillSelected()) return;
+            var buffs = Current().Buffs;
+            if (index < 0 || index >= buffs.Count) return;
+            buffs.RemoveAt(index);
+            ApplyInspector();
+            RecordLogic();
+        }
+
+        void EditTag(ulong id)
+        {
+            if (id == 0) return;
+            CloseDialogs();
+            RecordLogic();
+            FGUIPanelManager.Instance.ShowPanel<PanelTag>(
+                UI_PanelTag.PackageName,
+                UI_PanelTag.ResName,
+                new object[] { id },
+                ShowTypeEnum.HideCurrent);
+        }
+
+        void CloseDialogs()
+        {
+            PanelLayer.Dismiss<PanelTagPick>();
+            PanelLayer.Dismiss<PanelBlank>();
         }
 
         void SaveEnd(int mode, bool selected)
@@ -1851,28 +1872,6 @@ namespace UILogic
             if (_applying || _key < 0 || !selected) return;
             if (_tracks[_track].Kind != TrackKind.Spine) return;
             Current().PauseAt = at;
-        }
-
-        UI_ButtonRadio Pick(int index)
-        {
-            switch (index)
-            {
-                case 0: return Radio(_inspect, "pickOwner");
-                case 2: return Radio(_inspect, "pickSubject");
-                case 3: return Radio(_inspect, "pickSource");
-                case 4: return Radio(_inspect, "pickExplicit");
-                default: return Radio(_inspect, "pickPrimary");
-            }
-        }
-
-        UI_ButtonRadio Condition(int index)
-        {
-            switch (index)
-            {
-                case 1: return Radio(_inspect, "condAny");
-                case 2: return Radio(_inspect, "condNotAny");
-                default: return Radio(_inspect, "condAll");
-            }
         }
 
         KeyFrame Current()
@@ -2204,6 +2203,8 @@ namespace UILogic
         void RecordLogic()
         {
             if (!_entered || _spellId == 0) return;
+            if (EnsureStartKey())
+                RenderTracks();
             WriteLogic();
             SpellPreviewStage.CopySeeds(_seeds);
             var frames = ContentFrames();
@@ -2233,13 +2234,24 @@ namespace UILogic
             if (spell.Activation != (int)SpellActivation.Passive && frames > 0)
                 spell.DurationFrames = frames;
             spell.Events.Clear();
+            var cooldownFrame = 0;
             for (var i = 0; i < _tracks.Count; i++)
             {
                 if (_tracks[i].Kind != TrackKind.Skill) continue;
                 var keys = _tracks[i].Keys;
                 for (var k = 0; k < keys.Count; k++)
+                {
+                    if (keys[k].Cooldown)
+                    {
+                        cooldownFrame = keys[k].Frame;
+                        continue;
+                    }
+
                     spell.Events.Add(ToEvent(keys[k]));
+                }
             }
+
+            spell.CooldownFrames = cooldownFrame;
 
             for (var i = 0; i < _extraEvents.Count; i++)
                 spell.Events.Add(_extraEvents[i].Clone());
@@ -2259,6 +2271,8 @@ namespace UILogic
                 evt.Frame = key.Frame;
             }
 
+            evt.Match = key.Match;
+            evt.IgnoreCastMask = key.LinkCast ? 0 : 1;
             for (var i = 0; i < key.Tags.Count; i++) evt.Tags.Add(key.Tags[i]);
             for (var i = 0; i < key.Buffs.Count; i++) evt.BuffIds.Add(key.Buffs[i]);
             return evt;
@@ -2332,10 +2346,24 @@ namespace UILogic
                     continue;
                 }
 
-                var key = new KeyFrame { Frame = trigger == SpellEventTrigger.OnStart ? 0 : evt.Frame };
+                var key = new KeyFrame
+                {
+                    Frame = trigger == SpellEventTrigger.OnStart ? 0 : evt.Frame,
+                    Match = evt.Match,
+                    LinkCast = evt.IgnoreCastMask == 0,
+                };
                 key.Tags.AddRange(evt.Tags);
                 key.Buffs.AddRange(evt.BuffIds);
                 skill.Keys.Add(key);
+            }
+
+            if (spell.CooldownFrames > 0)
+            {
+                skill.Keys.Add(new KeyFrame
+                {
+                    Frame = spell.CooldownFrames,
+                    Cooldown = true,
+                });
             }
 
             if (skill.Keys.Count > 1)
@@ -2502,46 +2530,26 @@ namespace UILogic
 
         void ToggleUnits()
         {
-            var controller = Control(_func, "cUnits");
-            var list = ListOf(_func, "units");
-            if (controller == null || list == null)
+            if (_owners.Count == 0) return;
+            var keys = new List<string>();
+            var titles = new List<string>();
+            for (var i = 0; i < _owners.Count; i++)
             {
-                if (_owners.Count == 0) return;
-                _owner = (_owner + 1) % _owners.Count;
-                ShowOwner();
-                return;
+                keys.Add(i.ToString());
+                titles.Add(new SpellId(_owners[i].Id).ToString());
             }
 
-            var open = controller.selectedIndex != 1;
-            controller.selectedIndex = open ? 1 : 0;
-            if (!open) return;
-
-            list.itemRenderer = (index, obj) =>
+            PanelUnitPick.Show("预览单位", keys, titles, key =>
             {
-                var button = (GButton)obj;
-                var captured = index;
-                button.title = new SpellId(_owners[captured].Id).ToString();
-                button.selected = captured == _owner;
-                button.onClick.Set(() =>
-                {
-                    _owner = captured;
-                    controller.selectedIndex = 0;
-                    ShowOwner();
-                });
-            };
-            list.numItems = _owners.Count;
+                if (!int.TryParse(key, out var index) || index < 0 || index >= _owners.Count) return;
+                _owner = index;
+                ShowOwner();
+            });
         }
 
         void RefreshPreview()
         {
             ShowOwner();
-        }
-
-        void HideLeftover(string name)
-        {
-            var child = view.GetChild(name);
-            if (child != null)
-                child.visible = false;
         }
 
         static string FormatId(ulong id)

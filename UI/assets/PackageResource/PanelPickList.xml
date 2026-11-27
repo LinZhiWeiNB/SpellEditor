@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1600,900">
+  <displayList>
+    <graph id="n0_rlst1" name="mask" xy="0,0" size="1600,900" type="rect" lineSize="0" fillColor="#8c000000">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <graph id="n1_rlst1" name="card" xy="590,270" size="420,360" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff1e2128" corner="8">
+      <relation target="" sidePair="center-center,middle-middle"/>
+    </graph>
+    <text id="n2_rlst1" name="title" xy="614,294" size="372,28" fontSize="18" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="导入资源">
+      <relation target="n1_rlst1" sidePair="left-left,top-top"/>
+    </text>
+    <text id="n3_rlst1" name="hint" xy="614,330" size="372,22" fontSize="13" color="#ff8d887e" vAlign="middle" autoSize="none" singleLine="true" text="">
+      <relation target="n1_rlst1" sidePair="left-left,top-top"/>
+    </text>
+    <list id="n4_rlst1" name="choices" xy="614,366" size="372,200" overflow="scroll" scrollBar="hidden" lineGap="8" defaultItem="ui://res4p8n2mnr05" autoClearItems="true" selectionMode="none">
+      <relation target="n1_rlst1" sidePair="left-left,top-top"/>
+    </list>
+    <component id="n5_rlst1" name="btnCancel" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="614,582" size="372,36">
+      <relation target="n1_rlst1" sidePair="left-left,top-top"/>
+      <Button title="取消"/>
+    </component>
+  </displayList>
+</component>

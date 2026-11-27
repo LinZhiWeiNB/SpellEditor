@@ -28,25 +28,6 @@ namespace PackageSpell
             return (EcSpine)m_cSpine.selectedIndex;
         }
 
-        public Controller m_cUnits;
-
-        public enum EcUnits
-        {
-            /// <summary>
-            /// null
-            /// <summary>
-            关 = 0,
-            /// <summary>
-            /// null
-            /// <summary>
-            开 = 1,
-        }
-
-        public EcUnits GetSelectedIndexEcUnits()
-        {
-            return (EcUnits)m_cUnits.selectedIndex;
-        }
-
         public GGraph m_funcPane;
         public PackageLaunch.UI_ButtonGhost m_btnBack;
         public GTextField m_title;
@@ -61,7 +42,6 @@ namespace PackageSpell
         public GTextField m_funcSpine;
         public PackageAtrribute.UI_ButtonSecondary m_btnAddClip;
         public GGroup m_spineBlock;
-        public GList m_units;
         public const string URL = "ui://skl4p8n2func01";
 
         public static UI_ComFunc CreateInstance()
@@ -74,7 +54,6 @@ namespace PackageSpell
             base.ConstructFromXML(xml);
 
             m_cSpine = GetControllerAt(0);
-            m_cUnits = GetControllerAt(1);
             m_funcPane = (GGraph)GetChildAt(0);
             m_btnBack = (PackageLaunch.UI_ButtonGhost)GetChildAt(1);
             m_title = (GTextField)GetChildAt(2);
@@ -89,7 +68,6 @@ namespace PackageSpell
             m_funcSpine = (GTextField)GetChildAt(11);
             m_btnAddClip = (PackageAtrribute.UI_ButtonSecondary)GetChildAt(12);
             m_spineBlock = (GGroup)GetChildAt(13);
-            m_units = (GList)GetChildAt(14);
         }
     }
 }

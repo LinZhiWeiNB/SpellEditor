@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="304,542">
+  <displayList>
+    <graph id="n24b_mns01" name="cardTags" xy="0,0" size="304,242" type="rect" lineSize="0" fillColor="#ff32363f" corner="8"/>
+    <text id="n24_mns01" name="labelTags" xy="8,8" size="176,18" fontSize="13" color="#b7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="收集标签"/>
+    <component id="n25_mns01" name="btnAddTag" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="192,4" size="104,28">
+      <Button title="添加"/>
+    </component>
+    <component id="n26_mns01" name="castLink" src="g8bt0" fileName="ButtonCheck.xml" pkg="m5lrgzhj" xy="8,36" size="136,28">
+      <Button checked="true" title="与本次施法相关"/>
+    </component>
+    <component id="n26b_mns01" name="btnCastTip" src="tip01" fileName="ButtonTip.xml" xy="135,36" size="18,28"/>
+    <text id="n30_mns01" name="labelMatch" xy="8,72" size="288,18" fontSize="13" color="#b7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="匹配方式"/>
+    <component id="n31_mns01" name="comboMatch" src="spn11" fileName="ComboValue.xml" pkg="res4p8n2" xy="8,94" size="288,32">
+      <ComboBox visibleItemCount="8"/>
+    </component>
+    <list id="n35_mns01" name="tags" xy="8,134" size="288,96" selectionMode="none" overflow="scroll" scrollBar="hidden" lineGap="4" defaultItem="ui://skl4p8n2tagr1" autoClearItems="true"/>
+    <graph id="n34b_mns01" name="cardConditions" xy="0,250" size="304,124" type="rect" lineSize="0" fillColor="#ff32363f" corner="8"/>
+    <text id="n34_mns01" name="labelConditions" xy="8,258" size="176,18" fontSize="13" color="#b7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="条件"/>
+    <component id="n32_mns01" name="btnAddCondition" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="192,254" size="104,28">
+      <Button title="添加"/>
+    </component>
+    <list id="n33_mns01" name="conditions" xy="8,290" size="288,72" selectionMode="none" overflow="scroll" scrollBar="hidden" lineGap="4" defaultItem="ui://skl4p8n2linr1" autoClearItems="true"/>
+    <graph id="n37b_mns01" name="cardBuffs" xy="0,382" size="304,160" type="rect" lineSize="0" fillColor="#ff32363f" corner="8"/>
+    <text id="n37_mns01" name="labelBuffs" xy="8,390" size="176,18" fontSize="13" color="#b7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="Buff"/>
+    <component id="n38_mns01" name="btnAddBuff" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="192,386" size="104,28">
+      <Button title="添加"/>
+    </component>
+    <list id="n39_mns01" name="buffs" xy="8,422" size="288,108" selectionMode="none" overflow="scroll" scrollBar="hidden" lineGap="4" defaultItem="ui://skl4p8n2linr1" autoClearItems="true"/>
+  </displayList>
+</component>

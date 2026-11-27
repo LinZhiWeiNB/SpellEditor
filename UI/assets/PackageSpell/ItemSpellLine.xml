@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="288,32">
+  <displayList>
+    <text id="n0_linr1" name="title" xy="0,0" size="228,32" fontSize="13" color="#e8e6e3" vAlign="middle" autoSize="none" singleLine="true" text="条目"/>
+    <component id="n1_linr1" name="btnRemove" src="g8bt1" fileName="ButtonGhost.xml" pkg="m5lrgzhj" xy="232,2" size="56,28">
+      <Button title="移除"/>
+    </component>
+  </displayList>
+</component>

@@ -13,7 +13,11 @@ namespace PackageResource
             UIObjectFactory.SetPackageItemExtension(UI_ItemResourceHead.URL, typeof(UI_ItemResourceHead));
             UIObjectFactory.SetPackageItemExtension(UI_ItemResourceLine.URL, typeof(UI_ItemResourceLine));
             UIObjectFactory.SetPackageItemExtension(UI_ItemImport.URL, typeof(UI_ItemImport));
-            UIObjectFactory.SetPackageItemExtension(UI_MenuFolder.URL, typeof(UI_MenuFolder));
+            UIObjectFactory.SetPackageItemExtension(UI_PanelPickConfirm.URL, typeof(UI_PanelPickConfirm));
+            UIObjectFactory.SetPackageItemExtension(UI_PanelFolderMenu.URL, typeof(UI_PanelFolderMenu));
+            UIObjectFactory.SetPackageItemExtension(UI_PanelPickList.URL, typeof(UI_PanelPickList));
+            UIObjectFactory.SetPackageItemExtension(UI_PanelPickName.URL, typeof(UI_PanelPickName));
+            UIObjectFactory.SetPackageItemExtension(UI_PanelPickPath.URL, typeof(UI_PanelPickPath));
             UIObjectFactory.SetPackageItemExtension(UI_ComboDropdown.URL, typeof(UI_ComboDropdown));
             UIObjectFactory.SetPackageItemExtension(UI_ComboValue.URL, typeof(UI_ComboValue));
             UIObjectFactory.SetPackageItemExtension(UI_ItemCombo.URL, typeof(UI_ItemCombo));

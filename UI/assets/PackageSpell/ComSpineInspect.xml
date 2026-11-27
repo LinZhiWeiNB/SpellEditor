@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="304,432">
+  <controller name="cSpineEnd" pages="0,暂停,1,无限循环" selected="0"/>
+  <controller name="cClipName" pages="0,动画名,1,触发器名" selected="0"/>
+  <displayList>
+    <graph id="n76b_mns01" name="cardClip" xy="0,0" size="304,160" type="rect" lineSize="0" fillColor="#ff32363f" corner="8"/>
+    <text id="n76_mns01" name="labelClip" xy="8,8" size="288,18" fontSize="13" color="#b7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="片段使用"/>
+    <component id="n77_mns01" name="clipByName" src="g8bt4" fileName="ButtonRadio.xml" pkg="m5lrgzhj" xy="8,32" size="288,28" group="n80_mns01">
+      <Button checked="true" title="动画名" controller="cClipName" page="0"/>
+    </component>
+    <component id="n78_mns01" name="clipByTrigger" src="g8bt4" fileName="ButtonRadio.xml" pkg="m5lrgzhj" xy="8,60" size="288,28" group="n80_mns01">
+      <Button title="触发器名" controller="cClipName" page="1"/>
+    </component>
+    <group id="n80_mns01" name="clipNameGroup" xy="8,32" size="288,56" advanced="true"/>
+    <text id="n41_mns01" name="labelAnim" xy="8,96" size="288,18" fontSize="13" color="#b7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="动画名">
+      <gearDisplay controller="cClipName" pages="0"/>
+    </text>
+    <graph id="n42_mns01" name="bgAnim" xy="8,118" size="288,32" type="rect" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4">
+      <gearDisplay controller="cClipName" pages="0"/>
+    </graph>
+    <text id="n43_mns01" name="inputAnim" xy="20,118" size="264,32" fontSize="14" color="#e8e6e3" vAlign="middle" autoSize="none" text="attack" input="true" prompt="要播放的动画">
+      <gearDisplay controller="cClipName" pages="0"/>
+    </text>
+    <text id="n81_mns01" name="labelTrigger" xy="8,96" size="288,18" fontSize="13" color="#b7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="触发器名">
+      <gearDisplay controller="cClipName" pages="1"/>
+    </text>
+    <graph id="n82_mns01" name="bgTrigger" xy="8,118" size="288,32" type="rect" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4">
+      <gearDisplay controller="cClipName" pages="1"/>
+    </graph>
+    <text id="n83_mns01" name="inputTrigger" xy="20,118" size="264,32" fontSize="14" color="#e8e6e3" vAlign="middle" autoSize="none" text="" input="true" prompt="要匹配的触发器">
+      <gearDisplay controller="cClipName" pages="1"/>
+    </text>
+    <graph id="n44b_mns01" name="cardSpeed" xy="0,168" size="304,80" type="rect" lineSize="0" fillColor="#ff32363f" corner="8"/>
+    <text id="n44_mns01" name="labelSpeed" xy="8,176" size="288,18" fontSize="13" color="#b7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="播放速度"/>
+    <graph id="n45_mns01" name="bgSpeed" xy="8,198" size="288,32" type="rect" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
+    <text id="n46_mns01" name="inputSpeed" xy="20,198" size="264,32" fontSize="14" color="#e8e6e3" vAlign="middle" autoSize="none" text="1" input="true" restrict="[0-9.]"/>
+    <graph id="n47b_mns01" name="cardEnd" xy="0,256" size="304,176" type="rect" lineSize="0" fillColor="#ff32363f" corner="8"/>
+    <text id="n47_mns01" name="labelEnd" xy="8,264" size="288,18" fontSize="13" color="#b7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="片段结束后"/>
+    <component id="n48_mns01" name="endPause" src="g8bt4" fileName="ButtonRadio.xml" pkg="m5lrgzhj" xy="8,290" size="288,28" group="n72_mns01">
+      <Button checked="true" title="暂停" controller="cSpineEnd" page="0"/>
+    </component>
+    <component id="n49_mns01" name="endLoop" src="g8bt4" fileName="ButtonRadio.xml" pkg="m5lrgzhj" xy="8,322" size="288,28" group="n72_mns01">
+      <Button title="无限循环" controller="cSpineEnd" page="1"/>
+    </component>
+    <group id="n72_mns01" name="endGroup" xy="8,290" size="288,60" advanced="true"/>
+    <component id="n50_mns01" name="pauseFirst" src="g8bt4" fileName="ButtonRadio.xml" pkg="m5lrgzhj" xy="20,358" size="264,28" group="n52_mns01">
+      <Button title="停到首帧"/>
+    </component>
+    <component id="n51_mns01" name="pauseLast" src="g8bt4" fileName="ButtonRadio.xml" pkg="m5lrgzhj" xy="20,390" size="264,28" group="n52_mns01">
+      <Button checked="true" title="停到最后一帧"/>
+    </component>
+    <group id="n52_mns01" name="pauseAt" xy="20,358" size="264,60" advanced="true">
+      <gearDisplay controller="cSpineEnd" pages="0"/>
+    </group>
+    <component id="n53_mns01" name="pingpong" src="g8bt0" fileName="ButtonCheck.xml" pkg="m5lrgzhj" xy="20,358" size="264,28">
+      <gearDisplay controller="cSpineEnd" pages="1"/>
+      <Button title="来回播放"/>
+    </component>
+    <component id="n94_clip" name="comboAnim" src="spn11" fileName="ComboValue.xml" pkg="res4p8n2" xy="8,118" size="288,32">
+      <gearDisplay controller="cClipName" pages="0"/>
+      <ComboBox visibleItemCount="10"/>
+    </component>
+    <component id="n95_clip" name="comboTrigger" src="spn11" fileName="ComboValue.xml" pkg="res4p8n2" xy="8,118" size="288,32">
+      <gearDisplay controller="cClipName" pages="1"/>
+      <ComboBox visibleItemCount="10"/>
+    </component>
+  </displayList>
+</component>

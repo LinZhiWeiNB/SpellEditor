@@ -54,8 +54,6 @@ namespace UILogic
         float _frameY;
         float _frameHeight;
         bool _seeded;
-        GComponent _menu;
-        Row _menuRow;
         bool _editRename;
         string _editKind = "";
         string _editDir = "";
@@ -74,14 +72,6 @@ namespace UILogic
             view.m_btnImport.onClick.Set(OpenImport);
             view.m_btnDelete.onClick.Set(DeleteSelected);
             view.m_btnMove.onClick.Set(MoveSelected);
-            view.m_btnCancel.onClick.Set(CloseImport);
-            view.m_btnPlace.onClick.Set(OnPlace);
-            view.m_pickMask.onClick.Set(CloseImport);
-            view.m_kinds.itemRenderer = RenderKind;
-            view.m_kinds.onClickItem.Add(OnPickKind);
-            view.m_cPick.selectedIndex = (int)UI_PanelResource.EcPick.关;
-            view.m_pickMask.touchable = true;
-            view.m_pickCard.touchable = true;
             _spinePreview.NoteChanged = SetPreviewNote;
             ClearStatus();
             ClearSelection();
@@ -94,11 +84,6 @@ namespace UILogic
 
         public override void OnClose()
         {
-            if (_menu != null)
-            {
-                GRoot.inst.HidePopup(_menu);
-            }
-
             ClearPreview();
         }
 
@@ -528,36 +513,23 @@ namespace UILogic
             }
 
             context.StopPropagation();
-            if (_menu == null || _menu.isDisposed)
+            if (!PanelFolderMenu.Show(new PanelFolderMenu.Request
             {
-                _menu = UIPackage.CreateObject("PackageResource", "MenuFolder") as GComponent;
-            }
-
-            if (_menu == null)
+                Rename = !row.KindRoot,
+                Create = true,
+                Remove = !row.KindRoot,
+                OnRename = () => BeginRename(row),
+                OnCreate = () => BeginCreate(row),
+                OnRemove = () => BeginDeleteFolder(row),
+            }))
             {
                 Status("请重新发布 PackageResource 后再管理目录。", true);
-                return;
             }
-
-            _menuRow = row;
-            var rename = _menu.GetChild("btnRename");
-            var create = _menu.GetChild("btnNew");
-            var remove = _menu.GetChild("btnRemove");
-            rename.visible = !row.KindRoot;
-            remove.visible = !row.KindRoot;
-            create.y = row.KindRoot ? 8f : 46f;
-            _menu.SetSize(168f, row.KindRoot ? 48f : 124f);
-            rename.onClick.Set(BeginRename);
-            create.onClick.Set(BeginCreate);
-            remove.onClick.Set(BeginDeleteFolder);
-            GRoot.inst.ShowPopup(_menu);
         }
 
-        void BeginRename()
+        void BeginRename(Row row)
         {
-            var row = _menuRow;
-            GRoot.inst.HidePopup();
-            if (row == null || row.KindRoot || !OpenPick(UI_PanelResource.EcPick.目录))
+            if (row == null || row.KindRoot)
             {
                 return;
             }
@@ -565,18 +537,23 @@ namespace UILogic
             _editRename = true;
             _editKind = row.Kind;
             _editDir = row.Directory;
-            view.m_pickTitle.text = "重命名目录";
-            view.m_pickHint.text = row.Directory;
-            view.m_inputPath.text = LeafOf(row.Directory);
-            view.m_inputPath.promptText = "新的目录名";
-            view.m_btnPlace.title = "重命名";
+            if (!PanelPickPath.Show(new PanelPickPath.Request
+            {
+                Title = "重命名目录",
+                Hint = row.Directory,
+                Text = LeafOf(row.Directory),
+                Prompt = "新的目录名",
+                Confirm = "重命名",
+                Commit = ApplyFolder,
+            }))
+            {
+                Status("请重新发布 PackageResource 后再管理目录。", true);
+            }
         }
 
-        void BeginCreate()
+        void BeginCreate(Row row)
         {
-            var row = _menuRow;
-            GRoot.inst.HidePopup();
-            if (row == null || !OpenPick(UI_PanelResource.EcPick.目录))
+            if (row == null)
             {
                 return;
             }
@@ -584,18 +561,23 @@ namespace UILogic
             _editRename = false;
             _editKind = row.Kind;
             _editDir = row.Directory ?? "";
-            view.m_pickTitle.text = "新建子目录";
-            view.m_pickHint.text = _editDir.Length == 0 ? "建在该类型的根目录下。" : "建在 " + _editDir + " 下。";
-            view.m_inputPath.text = "";
-            view.m_inputPath.promptText = "目录名";
-            view.m_btnPlace.title = "创建";
+            if (!PanelPickPath.Show(new PanelPickPath.Request
+            {
+                Title = "新建子目录",
+                Hint = _editDir.Length == 0 ? "建在该类型的根目录下。" : "建在 " + _editDir + " 下。",
+                Text = "",
+                Prompt = "目录名",
+                Confirm = "创建",
+                Commit = ApplyFolder,
+            }))
+            {
+                Status("请重新发布 PackageResource 后再管理目录。", true);
+            }
         }
 
-        void BeginDeleteFolder()
+        void BeginDeleteFolder(Row row)
         {
-            var row = _menuRow;
-            GRoot.inst.HidePopup();
-            if (row == null || row.KindRoot || !OpenPick(UI_PanelResource.EcPick.删除))
+            if (row == null || row.KindRoot)
             {
                 return;
             }
@@ -605,44 +587,24 @@ namespace UILogic
             _editDir = row.Directory;
             var count = CountUnder(row.Kind, row.Directory);
             var refs = ReferencesUnder(row.Kind, row.Directory);
-            view.m_pickTitle.text = "删除目录";
-            view.m_pickHint.text = count == 0
-                ? "这个目录是空的。"
-                : refs == 0
-                    ? "同时删除其中的 " + count + " 个资源。"
-                    : "同时删除其中的 " + count + " 个资源，还有 " + refs + " 处引用。";
-            view.m_btnPlace.title = "删除";
+            if (!PanelPickConfirm.Show(new PanelPickConfirm.Request
+            {
+                Title = "删除目录",
+                Hint = count == 0
+                    ? "这个目录是空的。"
+                    : refs == 0
+                        ? "同时删除其中的 " + count + " 个资源。"
+                        : "同时删除其中的 " + count + " 个资源，还有 " + refs + " 处引用。",
+                Confirm = "删除",
+                Commit = ConfirmDeleteFolder,
+            }))
+            {
+                Status("请重新发布 PackageResource 后再管理目录。", true);
+            }
         }
 
-        void OnPlace()
+        string ApplyFolder(string name)
         {
-            var page = view.m_cPick.selectedIndex;
-            if (page == (int)UI_PanelResource.EcPick.删除)
-            {
-                if (_pendingDelete != null)
-                {
-                    ConfirmDeleteAsset();
-                }
-                else
-                {
-                    ConfirmDeleteFolder();
-                }
-
-                return;
-            }
-
-            if (page == (int)UI_PanelResource.EcPick.目录)
-            {
-                ApplyFolder();
-                return;
-            }
-
-            PlaceSpine();
-        }
-
-        void ApplyFolder()
-        {
-            var name = view.m_inputPath.text;
             bool ok;
             string directory;
             string error;
@@ -657,8 +619,7 @@ namespace UILogic
 
             if (!ok)
             {
-                view.m_pickHint.text = error ?? "没有改成。";
-                return;
+                return error ?? "没有改成。";
             }
 
             if (_editRename)
@@ -675,17 +636,16 @@ namespace UILogic
                 _open.Add(ExpandId(true, "", _editKind, directory));
             }
 
-            view.m_cPick.selectedIndex = (int)UI_PanelResource.EcPick.关;
             Status(_editRename ? "目录已改为 " + directory + "。" : "已新建 " + directory + "。", false);
             Refresh();
+            return null;
         }
 
-        void ConfirmDeleteFolder()
+        string ConfirmDeleteFolder()
         {
             if (!ResourceLibrary.DeleteFolder(_editKind, _editDir, out var removed, out var error))
             {
-                view.m_pickHint.text = error ?? "没有删掉。";
-                return;
+                return error ?? "没有删掉。";
             }
 
             ForgetOpen(_editKind, _editDir);
@@ -696,21 +656,9 @@ namespace UILogic
                 _selectedSource = "";
             }
 
-            view.m_cPick.selectedIndex = (int)UI_PanelResource.EcPick.关;
             Status(removed == 0 ? "已删除目录。" : "已删除目录，其中 " + removed + " 个资源。", false);
             Refresh();
-        }
-
-        bool OpenPick(UI_PanelResource.EcPick page)
-        {
-            if (view.m_cPick.pageCount <= (int)page)
-            {
-                Status("请重新发布 PackageResource 后再管理目录。", true);
-                return false;
-            }
-
-            view.m_cPick.selectedIndex = (int)page;
-            return true;
+            return null;
         }
 
         int CountUnder(string kind, string directory)
@@ -906,7 +854,7 @@ namespace UILogic
             }
 
             ApplySpineLayout();
-            if (!_spinePreview.Show(view, view.m_pickMask, view.m_previewFrame, asset, document, out error))
+            if (!_spinePreview.Show(view, null, view.m_previewFrame, asset, document, out error))
             {
                 RestoreLayout();
                 Hint(error ?? "这份 Spine 没有读出来。");
@@ -1029,58 +977,20 @@ namespace UILogic
             }
 
             _kinds.Add("音频");
-            view.m_pickTitle.text = "导入资源";
-            view.m_pickHint.text = "按当前项目设置列出。";
-            view.m_kinds.numItems = _kinds.Count;
-            view.m_cPick.selectedIndex = (int)UI_PanelResource.EcPick.类型;
+            if (!PanelPickList.Show(new PanelPickList.Request
+            {
+                Title = "导入资源",
+                Hint = "按当前项目设置列出。",
+                Items = new List<string>(_kinds),
+                OnPick = ImportKind,
+            }))
+            {
+                Status("请重新发布 PackageResource 后再导入。", true);
+            }
         }
 
-        void CloseImport()
+        void ImportKind(string kind)
         {
-            var naming = view.m_cPick.selectedIndex == (int)UI_PanelResource.EcPick.同名;
-            _pendingDelete = null;
-            view.m_cPick.selectedIndex = (int)UI_PanelResource.EcPick.关;
-            if (!naming)
-            {
-                return;
-            }
-
-            _spineQueue.Clear();
-            if (_spineNotes.Count == 0)
-            {
-                Status("已取消导入。", false);
-                return;
-            }
-
-            Status(SpineSummary() + " 其余已取消。", false);
-            Refresh();
-        }
-
-        void RenderKind(int index, GObject item)
-        {
-            ((GButton)item).title = _kinds[index];
-        }
-
-        void OnPickKind(EventContext context)
-        {
-            var index = view.m_kinds.GetChildIndex((GObject)context.data);
-            if (index < 0 || index >= _kinds.Count)
-            {
-                return;
-            }
-
-            var kind = _kinds[index];
-            if (view.m_cPick.selectedIndex == (int)UI_PanelResource.EcPick.同名)
-            {
-                if (AcceptSpine(kind, true))
-                {
-                    ContinueSpine();
-                }
-
-                return;
-            }
-
-            CloseImport();
             if (kind == "Spine")
             {
                 ImportSpine();
@@ -1097,6 +1007,20 @@ namespace UILogic
             {
                 ImportAudio();
             }
+        }
+
+        void CancelSpineImport()
+        {
+            _pendingDelete = null;
+            _spineQueue.Clear();
+            if (_spineNotes.Count == 0)
+            {
+                Status("已取消导入。", false);
+                return;
+            }
+
+            Status(SpineSummary() + " 其余已取消。", false);
+            Refresh();
         }
 
         void ImportSpine()
@@ -1155,30 +1079,41 @@ namespace UILogic
 
         void ShowSameName(ResourceLibrary.SpineImportItem item, List<string> existing)
         {
-            _kinds.Clear();
-            _kinds.AddRange(existing);
             var slash = item.SuggestedKey.LastIndexOf('/');
-            view.m_inputPath.text = slash < 0 ? "" : item.SuggestedKey.Substring(0, slash);
-            view.m_inputPath.promptText = "新路径，例如 heroes/player";
-            view.m_btnPlace.title = "使用新路径";
-            view.m_pickTitle.text = "同名骨骼 " + item.Stem;
-            view.m_pickHint.text = "点一条覆盖该路径。填写新路径则另外保留一份。";
-            view.m_kinds.numItems = _kinds.Count;
-            view.m_cPick.selectedIndex = (int)UI_PanelResource.EcPick.同名;
+            var request = new PanelPickName.Request
+            {
+                Title = "同名骨骼 " + item.Stem,
+                Hint = "点一条覆盖该路径。填写新路径则另外保留一份。",
+                Items = new List<string>(existing),
+                Path = slash < 0 ? "" : item.SuggestedKey.Substring(0, slash),
+                Prompt = "新路径，例如 heroes/player",
+                Confirm = "使用新路径",
+                OnPick = key =>
+                {
+                    if (AcceptSpine(key, true))
+                    {
+                        ContinueSpine();
+                    }
+                },
+                OnCancel = CancelSpineImport,
+            };
+            request.OnPlace = path => PlaceSpine(request, path);
+            if (!PanelPickName.Show(request))
+            {
+                Status("请重新发布 PackageResource 后再导入。", true);
+            }
         }
 
-        void PlaceSpine()
+        string PlaceSpine(PanelPickName.Request request, string path)
         {
             if (_spineIndex < 0 || _spineIndex >= _spineQueue.Count)
             {
-                CloseImport();
-                return;
+                return "这一份已经不在导入队列里。";
             }
 
-            if (!ResourceLibrary.TrySpineKey(_spineQueue[_spineIndex].Stem, view.m_inputPath.text, out var key, out var error))
+            if (!ResourceLibrary.TrySpineKey(_spineQueue[_spineIndex].Stem, path, out var key, out var error))
             {
-                view.m_pickHint.text = error ?? "路径没有生效。";
-                return;
+                return error ?? "路径没有生效。";
             }
 
             var existed = false;
@@ -1194,8 +1129,10 @@ namespace UILogic
 
             if (AcceptSpine(key, existed))
             {
-                ContinueSpine();
+                request.After = ContinueSpine;
             }
+
+            return null;
         }
 
         bool AcceptSpine(string key, bool overwrite)
@@ -1209,7 +1146,6 @@ namespace UILogic
             var asset = ResourceLibrary.CommitSpine(item, key, out var reused, out var error);
             if (asset == null)
             {
-                view.m_cPick.selectedIndex = (int)UI_PanelResource.EcPick.关;
                 Status(error ?? "没有导入。", true);
                 _spineQueue.Clear();
                 return false;
@@ -1230,7 +1166,6 @@ namespace UILogic
 
             _spineNotes.Add(recorded);
             _spineIndex++;
-            view.m_cPick.selectedIndex = (int)UI_PanelResource.EcPick.关;
             return true;
         }
 
@@ -1319,35 +1254,36 @@ namespace UILogic
                 return;
             }
 
-            if (!OpenPick(UI_PanelResource.EcPick.删除))
-            {
-                return;
-            }
-
             _pendingDelete = asset;
-            view.m_pickTitle.text = "删除资源";
-            view.m_pickHint.text = "还有 " + refs + " 处引用，删除后仍指向原来的键。";
-            view.m_btnPlace.title = "删除";
+            if (!PanelPickConfirm.Show(new PanelPickConfirm.Request
+            {
+                Title = "删除资源",
+                Hint = "还有 " + refs + " 处引用，删除后仍指向原来的键。",
+                Confirm = "删除",
+                Commit = ConfirmDeleteAsset,
+            }))
+            {
+                Status("请重新发布 PackageResource 后再删除。", true);
+            }
         }
 
-        void ConfirmDeleteAsset()
+        string ConfirmDeleteAsset()
         {
             var asset = _pendingDelete;
             if (asset == null)
             {
-                return;
+                return null;
             }
 
             var refs = ResourceLibrary.ReferenceCount(asset);
             if (!ResourceLibrary.Delete(asset, out var error))
             {
-                view.m_pickHint.text = error ?? "没有删掉。";
-                return;
+                return error ?? "没有删掉。";
             }
 
             _pendingDelete = null;
-            view.m_cPick.selectedIndex = (int)UI_PanelResource.EcPick.关;
             NoteDeleted(asset, refs);
+            return null;
         }
 
         void NoteDeleted(ResourceAsset asset, int refs)

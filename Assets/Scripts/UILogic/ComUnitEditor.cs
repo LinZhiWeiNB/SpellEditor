@@ -16,7 +16,6 @@ namespace UILogic
         readonly List<UnitPreset> _ownShown = new List<UnitPreset>();
         readonly List<UnitPreset> _otherShown = new List<UnitPreset>();
         readonly List<UnitPreset> _foreign = new List<UnitPreset>();
-        readonly UnitPickDialog _pick = new UnitPickDialog();
         UnitPreset _selected;
         bool _selectedOwned;
         bool _suppress;
@@ -26,7 +25,7 @@ namespace UILogic
             this.view = view;
             view.m_btnBack.onClick.Set(() =>
             {
-                _pick.Close();
+                PanelLayer.Dismiss<PanelUnitPick>();
                 FGUIPanelManager.Instance.Back();
             });
             view.m_toggleOthers.onChanged.Add(OnToggleOthers);
@@ -42,7 +41,7 @@ namespace UILogic
 
         public void Close()
         {
-            _pick.Close();
+            PanelLayer.Dismiss<PanelUnitPick>();
         }
 
         public void Refresh()
@@ -301,7 +300,7 @@ namespace UILogic
                 titles.Add(UnitCatalogs.AttributeLabel(catalog[i]));
             }
 
-            _pick.Open("新增属性", keys, titles, key =>
+            PanelUnitPick.Show("新增属性", keys, titles, key =>
             {
                 if (_selected == null || !ulong.TryParse(key, out var id) || _selected.Attributes.Contains(id) || !EnsureOwned())
                 {
@@ -316,7 +315,7 @@ namespace UILogic
 
         void OpenAttribute(ulong id)
         {
-            _pick.Close();
+            PanelLayer.Dismiss<PanelUnitPick>();
             FGUIPanelManager.Instance.ShowPanel<PanelAttribute>(
                 UI_PanelAttribute.PackageName,
                 UI_PanelAttribute.ResName,

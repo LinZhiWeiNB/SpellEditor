@@ -236,6 +236,91 @@ namespace UILogic
             Warn("");
         }
 
+        public void SelectId(ulong id)
+        {
+            var tag = Find(id);
+            if (tag == null)
+            {
+                ClearSelection();
+                return;
+            }
+
+            _selected = tag;
+            _selectedOwned = FindIn(ProjectSession.OwnModule, id) != null;
+            BindInspector();
+            view.m_tags.numItems = _ownShown.Count;
+            view.m_others.numItems = _otherShown.Count;
+            if (_selectedOwned)
+            {
+                var index = IndexOf(_ownShown, id);
+                if (index >= 0)
+                {
+                    view.m_tags.ScrollToView(index);
+                }
+
+                return;
+            }
+
+            for (var i = 0; i < _otherShown.Count; i++)
+            {
+                if (_otherShown[i].Definition.Id != id)
+                {
+                    continue;
+                }
+
+                view.m_others.ScrollToView(i);
+                return;
+            }
+        }
+
+        public static ulong CreateRoot(string name)
+        {
+            if (!ProjectSession.IsOpen || ProjectSession.OwnModule == null)
+            {
+                return 0;
+            }
+
+            name = (name ?? "").Trim();
+            if (name.Length == 0)
+            {
+                return 0;
+            }
+
+            var id = TagId.Combine(ProjectSession.AuthorId, NextLocalId());
+            if (!LibraryTags.CanBeCreatedByConfiguration(id))
+            {
+                return 0;
+            }
+
+            ProjectSession.OwnModule.Tags.Add(new TagDefinitionConfig
+            {
+                Id = id.Value,
+                ParentId = 0,
+            });
+            ProjectSession.SetTagName(id.Value, name);
+            return id.Value;
+        }
+
+        public static string Path(ulong id)
+        {
+            var names = new List<string>();
+            var current = id;
+            for (var depth = 0; depth <= TagCatalog.MaxHierarchyDepth && current != 0; depth++)
+            {
+                var parsed = new TagId(current);
+                names.Add(ProjectSession.TagName(current, parsed.LocalId));
+                if (!TryParent(current, out var parent))
+                {
+                    break;
+                }
+
+                current = parent;
+            }
+
+            names.Reverse();
+            return names.Count == 0 ? "根" : string.Join(" / ", names);
+        }
+
         void BindInspector()
         {
             var definition = _selected;
@@ -248,7 +333,7 @@ namespace UILogic
             view.m_mTitle.text = ProjectSession.TagName(definition.Id, id.LocalId);
             view.m_mNameInput.text = view.m_mTitle.text;
             view.m_mIdInput.text = id.LocalId.ToString();
-            view.m_mPath.text = PathOf(definition.Id);
+            view.m_mPath.text = Path(definition.Id);
             BuildParents(definition);
             view.m_parents.numItems = _parents.Count;
             _suppress = false;
@@ -714,26 +799,6 @@ namespace UILogic
             }
 
             return "父 " + ProjectSession.TagName(definition.ParentId, new TagId(definition.ParentId).LocalId);
-        }
-
-        string PathOf(ulong id)
-        {
-            var names = new List<string>();
-            var current = id;
-            for (var depth = 0; depth <= TagCatalog.MaxHierarchyDepth && current != 0; depth++)
-            {
-                var parsed = new TagId(current);
-                names.Add(ProjectSession.TagName(current, parsed.LocalId));
-                if (!TryParent(current, out var parent))
-                {
-                    break;
-                }
-
-                current = parent;
-            }
-
-            names.Reverse();
-            return names.Count == 0 ? "根" : string.Join(" / ", names);
         }
 
         void Warn(string text)

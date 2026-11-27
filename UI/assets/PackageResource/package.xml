@@ -6,7 +6,6 @@
     <component id="mnr03" name="ItemResourceHead.xml" path="/" exported="true"/>
     <component id="mnr04" name="ItemResourceLine.xml" path="/" exported="true"/>
     <component id="mnr05" name="ItemImport.xml" path="/" exported="true"/>
-    <component id="mnr06" name="MenuFolder.xml" path="/" exported="true"/>
     <component id="spn10" name="ComboDropdown.xml" path="/" exported="true"/>
     <component id="spn11" name="ComboValue.xml" path="/" exported="true"/>
     <component id="spn12" name="ItemCombo.xml" path="/" exported="true"/>
@@ -16,6 +15,11 @@
     <component id="spn16" name="ItemChoiceRow.xml" path="/" exported="true"/>
     <component id="spn17" name="SpinePreview.xml" path="/" exported="true"/>
     <component id="spn18" name="WindowSpineDetail.xml" path="/" exported="true"/>
+    <component id="rlst1" name="PanelPickList.xml" path="/" exported="true"/>
+    <component id="rnam1" name="PanelPickName.xml" path="/" exported="true"/>
+    <component id="rpth1" name="PanelPickPath.xml" path="/" exported="true"/>
+    <component id="rcfm1" name="PanelPickConfirm.xml" path="/" exported="true"/>
+    <component id="rfmn1" name="PanelFolderMenu.xml" path="/" exported="true"/>
   </resources>
   <publish name="" genCode="true"/>
 </packageDescription>

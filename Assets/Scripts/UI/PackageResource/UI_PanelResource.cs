@@ -89,37 +89,6 @@ namespace PackageResource
             return (EcPreview)m_cPreview.selectedIndex;
         }
 
-        public Controller m_cPick;
-
-        public enum EcPick
-        {
-            /// <summary>
-            /// null
-            /// <summary>
-            关 = 0,
-            /// <summary>
-            /// null
-            /// <summary>
-            类型 = 1,
-            /// <summary>
-            /// null
-            /// <summary>
-            同名 = 2,
-            /// <summary>
-            /// null
-            /// <summary>
-            目录 = 3,
-            /// <summary>
-            /// null
-            /// <summary>
-            删除 = 4,
-        }
-
-        public EcPick GetSelectedIndexEcPick()
-        {
-            return (EcPick)m_cPick.selectedIndex;
-        }
-
         public GGraph m_bg;
         public GGraph m_listPane;
         public GGraph m_split;
@@ -156,16 +125,6 @@ namespace PackageResource
         public GLoader m_preview;
         public GTextField m_previewNote;
         public GGroup m_detail;
-        public GGraph m_pickMask;
-        public GGraph m_pickCard;
-        public GTextField m_pickTitle;
-        public GTextField m_pickHint;
-        public GList m_kinds;
-        public PackageAtrribute.UI_ButtonSecondary m_btnCancel;
-        public GGraph m_pathBg;
-        public GTextInput m_inputPath;
-        public PackageAtrribute.UI_ButtonPrimary m_btnPlace;
-        public GGroup m_pick;
         public const string URL = "ui://res4p8n2mnr01";
 
         public static UI_PanelResource CreateInstance()
@@ -181,7 +140,6 @@ namespace PackageResource
             m_cOwn = GetControllerAt(1);
             m_cMessage = GetControllerAt(2);
             m_cPreview = GetControllerAt(3);
-            m_cPick = GetControllerAt(4);
             m_bg = (GGraph)GetChildAt(0);
             m_listPane = (GGraph)GetChildAt(1);
             m_split = (GGraph)GetChildAt(2);
@@ -218,16 +176,6 @@ namespace PackageResource
             m_preview = (GLoader)GetChildAt(33);
             m_previewNote = (GTextField)GetChildAt(34);
             m_detail = (GGroup)GetChildAt(35);
-            m_pickMask = (GGraph)GetChildAt(36);
-            m_pickCard = (GGraph)GetChildAt(37);
-            m_pickTitle = (GTextField)GetChildAt(38);
-            m_pickHint = (GTextField)GetChildAt(39);
-            m_kinds = (GList)GetChildAt(40);
-            m_btnCancel = (PackageAtrribute.UI_ButtonSecondary)GetChildAt(41);
-            m_pathBg = (GGraph)GetChildAt(42);
-            m_inputPath = (GTextInput)GetChildAt(43);
-            m_btnPlace = (PackageAtrribute.UI_ButtonPrimary)GetChildAt(44);
-            m_pick = (GGroup)GetChildAt(45);
         }
     }
 }

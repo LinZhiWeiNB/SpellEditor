@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component size="320,630">
   <controller name="cSpine" pages="0,关,1,开" selected="0"/>
-  <controller name="cUnits" pages="0,关,1,开" selected="0"/>
   <displayList>
     <graph id="n0_mns01" name="funcPane" xy="0,0" size="320,630" type="rect" lineSize="0" fillColor="#ff1e2128"/>
     <component id="n7_mns01" name="btnBack" src="lpb03" fileName="ButtonGhost.xml" pkg="mskevjh6" xy="16,12" size="88,36">
@@ -31,8 +30,5 @@
     <group id="n18_mns01" name="spineBlock" xy="16,392" size="288,64" advanced="true">
       <gearDisplay controller="cSpine" pages="1"/>
     </group>
-    <list id="n73_mns01" name="units" xy="16,212" size="288,180" overflow="scroll" scrollBar="hidden" lineGap="4" defaultItem="ui://m5lrgzhjg8bt5" autoClearItems="true">
-      <gearDisplay controller="cUnits" pages="1"/>
-    </list>
   </displayList>
 </component>

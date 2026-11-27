@@ -1,0 +1,18 @@
+---
+description: 弹窗做成独立面板，用 FGUIPanelManager.ShowPanel 打开
+alwaysApply: true
+---
+
+# 弹窗用 ShowPanel
+
+选择、确认、说明、目录操作这些弹窗做成全屏面板，用 `FGUIPanelManager.ShowPanel` 打开。盖在当前界面上时用 `ShowTypeEnum.OverCurrent`，关闭时 `Back`。要离开当前界面去另一页时用 `HideCurrent`。
+
+```csharp
+FGUIPanelManager.Instance.ShowPanel<PanelTagPick>(
+    "PackageSpell",
+    "PanelTagPick",
+    new object[] { onPick },
+    ShowTypeEnum.OverCurrent);
+```
+
+弹窗不要做成当前界面里用控制器翻出来的一页，也不要 `AddChild` 到 `GRoot`，也不要 `ShowPopup`。页面本身的筛选、选中、按钮状态仍然用控制器。

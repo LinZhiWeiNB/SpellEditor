@@ -1,0 +1,37 @@
+/** This is an automatically generated class by FairyGUI. Please do not modify it. **/
+
+using FairyGUI;
+using FairyGUI.Utils;
+
+namespace PackageResource
+{
+    public partial class UI_PanelPickConfirm : GComponent
+    {
+        public const string PackageName = "PackageResource";
+        public const string ResName = "PanelPickConfirm";
+        public GGraph m_mask;
+        public GGraph m_card;
+        public GTextField m_title;
+        public GTextField m_hint;
+        public PackageAtrribute.UI_ButtonPrimary m_btnPlace;
+        public PackageAtrribute.UI_ButtonSecondary m_btnCancel;
+        public const string URL = "ui://res4p8n2rcfm1";
+
+        public static UI_PanelPickConfirm CreateInstance()
+        {
+            return (UI_PanelPickConfirm)UIPackage.CreateObject(PackageName, ResName);
+        }
+
+        public override void ConstructFromXML(XML xml)
+        {
+            base.ConstructFromXML(xml);
+
+            m_mask = (GGraph)GetChildAt(0);
+            m_card = (GGraph)GetChildAt(1);
+            m_title = (GTextField)GetChildAt(2);
+            m_hint = (GTextField)GetChildAt(3);
+            m_btnPlace = (PackageAtrribute.UI_ButtonPrimary)GetChildAt(4);
+            m_btnCancel = (PackageAtrribute.UI_ButtonSecondary)GetChildAt(5);
+        }
+    }
+}

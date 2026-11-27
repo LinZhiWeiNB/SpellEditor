@@ -14,7 +14,6 @@ namespace UILogic
         readonly List<ulong> _attributes = new List<ulong>();
         readonly List<ulong> _active = new List<ulong>();
         readonly List<ulong> _passive = new List<ulong>();
-        readonly UnitPickDialog _pick = new UnitPickDialog();
         bool _applying;
 
         public override void Start(object[] data)
@@ -22,7 +21,7 @@ namespace UILogic
             view = (UI_PanelUnitEdit)FGUIComponent;
             view.m_btnBack.onClick.Set(() =>
             {
-                _pick.Close();
+                PanelLayer.Dismiss<PanelUnitPick>();
                 FGUIPanelManager.Instance.Back();
             });
             view.m_btnAddActive.onClick.Set(() => PickSpell(_active, Unit().ActiveSpells, view.m_activeSpells));
@@ -55,7 +54,7 @@ namespace UILogic
 
         public override void OnClose()
         {
-            _pick.Close();
+            PanelLayer.Dismiss<PanelUnitPick>();
         }
 
         void RenderAll()
@@ -155,7 +154,7 @@ namespace UILogic
                 titles.Add(UnitCatalogs.AttributeLabel(_attributes[i]));
             }
 
-            _pick.Open("选择属性预设", keys, titles, key =>
+            PanelUnitPick.Show("选择属性预设", keys, titles, key =>
             {
                 if (!ulong.TryParse(key, out var id))
                 {
@@ -245,7 +244,7 @@ namespace UILogic
                 titles.Add(UnitCatalogs.SpellLabel(catalog[i]));
             }
 
-            _pick.Open("新增技能", keys, titles, key =>
+            PanelUnitPick.Show("新增技能", keys, titles, key =>
             {
                 if (!ulong.TryParse(key, out var id) || chosen.Contains(id))
                 {
@@ -266,7 +265,7 @@ namespace UILogic
                 return;
             }
 
-            _pick.Close();
+            PanelLayer.Dismiss<PanelUnitPick>();
             FGUIPanelManager.Instance.ShowPanel<PanelSpell>(
                 UI_PanelSpell.PackageName,
                 UI_PanelSpell.ResName,
@@ -289,7 +288,7 @@ namespace UILogic
             }
 
             var keys = UnitCatalogs.SpineKeys();
-            _pick.Open("选择 Spine 骨骼", keys, keys, key =>
+            PanelUnitPick.Show("选择 Spine 骨骼", keys, keys, key =>
             {
                 unit.SpineKey = key ?? "";
                 ResourceReferences.BindUnitSpine(unit.Id, unit.SpineKey);

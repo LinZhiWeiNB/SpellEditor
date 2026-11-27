@@ -482,7 +482,7 @@ namespace UILogic
     }
 
     /// <summary>编辑详情。窗口、下拉框和行都是 FairyGUI 工程里的组件。</summary>
-    sealed class SpineDetailDialog
+    public class PanelSpineDetail : FguiPanelBase
     {
         readonly List<string> _clips = new List<string>();
         readonly List<string> _skins = new List<string>();
@@ -495,11 +495,29 @@ namespace UILogic
         bool _fillPosted;
         TimerCallback _later;
 
-        public bool Open(SpinePreviewSetup setup, IReadOnlyList<string> clips, IReadOnlyList<string> skins, string defaultSkin, Action onApply)
+        internal static bool Show(SpinePreviewSetup setup, IReadOnlyList<string> clips, IReadOnlyList<string> skins, string defaultSkin, Action onApply)
         {
-            Close();
-            _window = UI_WindowSpineDetail.CreateInstance();
-            if (_window == null) return false;
+            if (!PanelLayer.Published(UI_WindowSpineDetail.PackageName, UI_WindowSpineDetail.ResName))
+            {
+                return false;
+            }
+
+            FGUIPanelManager.Instance.ShowPanel<PanelSpineDetail>(
+                UI_WindowSpineDetail.PackageName,
+                UI_WindowSpineDetail.ResName,
+                new object[] { setup, clips, skins, defaultSkin, onApply },
+                ShowTypeEnum.OverCurrent);
+            return true;
+        }
+
+        public override void Start(object[] data)
+        {
+            var setup = data != null && data.Length > 0 ? data[0] as SpinePreviewSetup : null;
+            var clips = data != null && data.Length > 1 ? data[1] as IReadOnlyList<string> : null;
+            var skins = data != null && data.Length > 2 ? data[2] as IReadOnlyList<string> : null;
+            var defaultSkin = data != null && data.Length > 3 ? data[3] as string : null;
+            var onApply = data != null && data.Length > 4 ? data[4] as Action : null;
+            _window = (UI_WindowSpineDetail)FGUIComponent;
             _live = setup ?? new SpinePreviewSetup();
             _draft = _live.Clone();
             _onApply = onApply;
@@ -511,13 +529,9 @@ namespace UILogic
                 _skins.RemoveAll(name => string.Equals(name, defaultSkin, StringComparison.OrdinalIgnoreCase));
             _slotId = _draft.Slots.Count > 0 ? _draft.Slots[0].Id : "";
 
-            var root = GRoot.inst;
-            _window.SetSize(root.width, root.height);
-            _window.AddRelation(root, RelationType.Size);
-            _window.sortingOrder = 1000;
-            root.AddChild(_window);
-            _window.m_mask.onClick.Set(Close);
-            _window.m_btnCancel.onClick.Set(Close);
+            _window.m_mask.touchable = true;
+            _window.m_mask.onClick.Set(Leave);
+            _window.m_btnCancel.onClick.Set(Leave);
             _window.m_btnDone.onClick.Set(Apply);
             _window.m_btnAddTrigger.onClick.Set(() =>
             {
@@ -544,20 +558,19 @@ namespace UILogic
             });
             _window.m_cPage.onChanged.Set(Fill);
             Fill();
-            return true;
         }
 
-        public void Close()
+        void Leave()
+        {
+            FGUIPanelManager.Instance.Back();
+        }
+
+        public override void OnClose()
         {
             if (_later != null) Timers.inst.Remove(_later);
             _fillPosted = false;
             if (GRoot.inst != null) GRoot.inst.HidePopup();
-            if (_window != null)
-            {
-                _window.Dispose();
-                _window = null;
-            }
-
+            _window = null;
             _live = null;
             _draft = null;
             _onApply = null;
@@ -569,7 +582,7 @@ namespace UILogic
             var draft = _draft;
             var apply = _onApply;
             if (live != null && draft != null) live.ApplyDraft(draft);
-            Close();
+            FGUIPanelManager.Instance.Back();
             if (apply != null) apply();
         }
 

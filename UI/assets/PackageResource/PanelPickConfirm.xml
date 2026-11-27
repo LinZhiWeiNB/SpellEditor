@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1600,900">
+  <displayList>
+    <graph id="n0_rcfm1" name="mask" xy="0,0" size="1600,900" type="rect" lineSize="0" fillColor="#8c000000">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <graph id="n1_rcfm1" name="card" xy="590,320" size="420,220" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff1e2128" corner="8">
+      <relation target="" sidePair="center-center,middle-middle"/>
+    </graph>
+    <text id="n2_rcfm1" name="title" xy="614,344" size="372,28" fontSize="18" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="删除">
+      <relation target="n1_rcfm1" sidePair="left-left,top-top"/>
+    </text>
+    <text id="n3_rcfm1" name="hint" xy="614,380" size="372,64" fontSize="13" color="#ff8d887e" autoSize="none" text="">
+      <relation target="n1_rcfm1" sidePair="left-left,top-top"/>
+    </text>
+    <component id="n4_rcfm1" name="btnPlace" src="g8bt3" fileName="ButtonPrimary.xml" pkg="m5lrgzhj" xy="614,456" size="180,36">
+      <relation target="n1_rcfm1" sidePair="left-left,top-top"/>
+      <Button title="删除"/>
+    </component>
+    <component id="n5_rcfm1" name="btnCancel" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="806,456" size="180,36">
+      <relation target="n1_rcfm1" sidePair="left-left,top-top"/>
+      <Button title="取消"/>
+    </component>
+  </displayList>
+</component>

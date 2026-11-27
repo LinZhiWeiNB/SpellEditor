@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1600,900">
+  <displayList>
+    <graph id="n0_rnam1" name="mask" xy="0,0" size="1600,900" type="rect" lineSize="0" fillColor="#8c000000">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <graph id="n1_rnam1" name="card" xy="590,226" size="420,448" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff1e2128" corner="8">
+      <relation target="" sidePair="center-center,middle-middle"/>
+    </graph>
+    <text id="n2_rnam1" name="title" xy="614,250" size="372,28" fontSize="18" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="同名骨骼">
+      <relation target="n1_rnam1" sidePair="left-left,top-top"/>
+    </text>
+    <text id="n3_rnam1" name="hint" xy="614,286" size="372,44" fontSize="13" color="#ff8d887e" autoSize="none" text="">
+      <relation target="n1_rnam1" sidePair="left-left,top-top"/>
+    </text>
+    <list id="n4_rnam1" name="choices" xy="614,338" size="372,200" overflow="scroll" scrollBar="hidden" lineGap="8" defaultItem="ui://res4p8n2mnr05" autoClearItems="true" selectionMode="none">
+      <relation target="n1_rnam1" sidePair="left-left,top-top"/>
+    </list>
+    <graph id="n5_rnam1" name="pathBg" xy="614,550" size="372,36" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4">
+      <relation target="n1_rnam1" sidePair="left-left,top-top"/>
+    </graph>
+    <text id="n6_rnam1" name="inputPath" xy="626,550" size="348,36" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" input="true" prompt="新路径，例如 heroes/player">
+      <relation target="n1_rnam1" sidePair="left-left,top-top"/>
+    </text>
+    <component id="n7_rnam1" name="btnPlace" src="g8bt3" fileName="ButtonPrimary.xml" pkg="m5lrgzhj" xy="614,594" size="372,36">
+      <relation target="n1_rnam1" sidePair="left-left,top-top"/>
+      <Button title="使用新路径"/>
+    </component>
+    <component id="n8_rnam1" name="btnCancel" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="614,638" size="372,36">
+      <relation target="n1_rnam1" sidePair="left-left,top-top"/>
+      <Button title="取消"/>
+    </component>
+  </displayList>
+</component>

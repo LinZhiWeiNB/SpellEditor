@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1600,900">
+  <displayList>
+    <graph id="n0_rfmn1" name="mask" xy="0,0" size="1600,900" type="rect" lineSize="0" fillColor="#8c000000">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <graph id="n1_rfmn1" name="card" xy="716,370" size="168,160" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff1e2128" corner="8">
+      <relation target="" sidePair="center-center,middle-middle"/>
+    </graph>
+    <component id="n2_rfmn1" name="btnRename" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="724,386" size="152,36">
+      <relation target="n1_rfmn1" sidePair="left-left,top-top"/>
+      <Button title="重命名"/>
+    </component>
+    <component id="n3_rfmn1" name="btnNew" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="724,430" size="152,36">
+      <relation target="n1_rfmn1" sidePair="left-left,top-top"/>
+      <Button title="新建子目录"/>
+    </component>
+    <component id="n4_rfmn1" name="btnRemove" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="724,474" size="152,36">
+      <relation target="n1_rfmn1" sidePair="left-left,top-top"/>
+      <Button title="删除"/>
+    </component>
+  </displayList>
+</component>

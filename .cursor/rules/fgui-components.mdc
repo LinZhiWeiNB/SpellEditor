@@ -1,0 +1,18 @@
+---
+description: 复杂功能组做成独立的 FairyGUI 组件
+alwaysApply: true
+---
+
+# 复杂功能组用独立组件
+
+一块界面自己有标题、列表、按钮和状态，就做成 `UI/assets` 里单独的组件。父界面只放这个组件，再按数据填它的文本和列表。
+
+技能关键帧、Spine 关键帧这种成组的检视内容都是组件。父界面用控制器决定当前显示哪一块，例如检视区的空、技能、Spine。筛选、选中和按钮状态也留在各自的组件上。
+
+```xml
+<component id="n40_skin" name="skillInspect" src="skin1" fileName="ComSkillInspect.xml" xy="8,76">
+  <gearDisplay controller="cInspect" pages="1"/>
+</component>
+```
+
+列表行、按钮、下拉框继续用已经发布的组件。不要在父界面里把一整块功能摊成一长串控件。

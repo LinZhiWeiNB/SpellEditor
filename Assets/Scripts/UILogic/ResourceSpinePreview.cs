@@ -15,7 +15,6 @@ namespace UILogic
     {
         readonly SpineLoadSettings _settings = new SpineLoadSettings();
         readonly SpinePreviewSetup _setup = new SpinePreviewSetup();
-        readonly SpineDetailDialog _dialog = new SpineDetailDialog();
         ResourceAsset _asset;
         UI_SpinePreview _preview;
         GGraph _holder;
@@ -29,7 +28,7 @@ namespace UILogic
         {
             Timers.inst.Remove(RefitLater);
             _frame = null;
-            _dialog.Close();
+            PanelLayer.Dismiss<PanelSpineDetail>();
             if (_wrapper != null)
                 _wrapper.SetWrapTarget(null, false);
             if (_view != null)
@@ -154,7 +153,7 @@ namespace UILogic
         void OpenDetails()
         {
             if (_view == null) return;
-            if (!_dialog.Open(_setup, _view.Animations, _view.SkinNames, _view.DefaultSkinName, ApplyDetails))
+            if (!PanelSpineDetail.Show(_setup, _view.Animations, _view.SkinNames, _view.DefaultSkinName, ApplyDetails))
                 Report("编辑详情没有打开。");
         }
 

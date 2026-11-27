@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1600,900">
+  <displayList>
+    <graph id="n0_wblk1" name="mask" xy="0,0" size="1600,900" type="rect" lineSize="0" fillColor="#8c000000">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <graph id="n1_wblk1" name="card" xy="520,310" size="560,260" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff1a1a1a" corner="8">
+      <relation target="" sidePair="center-center,middle-middle"/>
+    </graph>
+    <text id="n2_wblk1" name="title" xy="544,330" size="400,28" fontSize="18" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="添加">
+      <relation target="n1_wblk1" sidePair="left-left,top-top"/>
+    </text>
+    <text id="n3_wblk1" name="hint" xy="544,378" size="512,96" fontSize="14" color="#ffb7b2a8" autoSize="none" text="">
+      <relation target="n1_wblk1" sidePair="left-left,top-top"/>
+    </text>
+    <component id="n4_wblk1" name="btnCancel" src="g8bt1" fileName="ButtonGhost.xml" pkg="m5lrgzhj" xy="944,518" size="88,32">
+      <relation target="n1_wblk1" sidePair="right-right,bottom-bottom"/>
+      <Button title="关闭"/>
+    </component>
+  </displayList>
+</component>
