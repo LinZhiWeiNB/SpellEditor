@@ -16,6 +16,8 @@ namespace PackageSpell
             UIObjectFactory.SetPackageItemExtension(UI_GripPlayhead.URL, typeof(UI_GripPlayhead));
             UIObjectFactory.SetPackageItemExtension(UI_SliderFrame.URL, typeof(UI_SliderFrame));
             UIObjectFactory.SetPackageItemExtension(UI_ItemClip.URL, typeof(UI_ItemClip));
+            UIObjectFactory.SetPackageItemExtension(UI_ModeHit.URL, typeof(UI_ModeHit));
+            UIObjectFactory.SetPackageItemExtension(UI_ModeToggle.URL, typeof(UI_ModeToggle));
             UIObjectFactory.SetPackageItemExtension(UI_ItemMark.URL, typeof(UI_ItemMark));
             UIObjectFactory.SetPackageItemExtension(UI_ComMarks.URL, typeof(UI_ComMarks));
             UIObjectFactory.SetPackageItemExtension(UI_ComProgress.URL, typeof(UI_ComProgress));

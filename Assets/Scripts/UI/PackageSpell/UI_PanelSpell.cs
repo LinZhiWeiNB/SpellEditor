@@ -179,6 +179,11 @@ namespace PackageSpell
         public GGraph m_previewHit;
         public PackageAtrribute.UI_ButtonSecondary m_btnResetCamera;
         public PackageAtrribute.UI_ButtonSecondary m_btnAddDummy;
+        public PackageResource.UI_ComboValue m_comboAnim;
+        public PackageResource.UI_ComboValue m_comboTrigger;
+        public PackageAtrribute.UI_ButtonSecondary m_btnPreviewMode;
+        public UI_ModeToggle m_modeToggle;
+        public GGraph m_previewBorder;
         public const string URL = "ui://skl4p8n2mns01";
 
         public static UI_PanelSpell CreateInstance()
@@ -266,6 +271,11 @@ namespace PackageSpell
             m_previewHit = (GGraph)GetChildAt(68);
             m_btnResetCamera = (PackageAtrribute.UI_ButtonSecondary)GetChildAt(69);
             m_btnAddDummy = (PackageAtrribute.UI_ButtonSecondary)GetChildAt(70);
+            m_comboAnim = (PackageResource.UI_ComboValue)GetChildAt(71);
+            m_comboTrigger = (PackageResource.UI_ComboValue)GetChildAt(72);
+            m_btnPreviewMode = (PackageAtrribute.UI_ButtonSecondary)GetChildAt(73);
+            m_modeToggle = (UI_ModeToggle)GetChildAt(74);
+            m_previewBorder = (GGraph)GetChildAt(75);
         }
     }
 }

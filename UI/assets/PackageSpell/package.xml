@@ -16,6 +16,8 @@
     <component id="s0uwf" name="ComKeys.xml" path="/" exported="true"/>
     <component id="s0uwg" name="ScrollBarH.xml" path="/" exported="true"/>
     <component id="s0uwh" name="ScrollBarV.xml" path="/" exported="true"/>
+    <component id="mode01" name="ModeHit.xml" path="/" exported="true"/>
+    <component id="mode02" name="ModeToggle.xml" path="/" exported="true"/>
   </resources>
   <publish name="" genCode="true"/>
 </packageDescription>

@@ -57,58 +57,58 @@
         "com.unity.entities": "1.5.0",
         "com.unity.burst": "1.8.29"
       },
-      "hash": "b54875a7f309a8f63bda30f10a8a924fc5a7ed2e"
+      "hash": "873484c400d18a649f6caf0d7fa7cb8a355f67ff"
     },
     "com.reborn.spell.animation": {
       "version": "git@github.com:LinZhiWeiNB/RebornFrameSpellAnimation.git",
       "depth": 0,
       "source": "git",
       "dependencies": {
-        "com.reborn.spell": "1.3.0",
+        "com.reborn.spell": "1.4.0",
         "com.reborn.protobuf": "1.0.0"
       },
-      "hash": "1ed5d209dfaa38240c6c4ed41a58e4d865ee0d82"
+      "hash": "8393f4d8b7917fd1d2a2c6d11ebfd949497cee78"
     },
     "com.reborn.spell.audio": {
       "version": "git@github.com:LinZhiWeiNB/RebornFrameSpellAudio.git",
       "depth": 0,
       "source": "git",
       "dependencies": {
-        "com.reborn.spell": "1.3.0",
+        "com.reborn.spell": "1.4.0",
         "com.reborn.protobuf": "1.0.0"
       },
-      "hash": "d00cba52f17153209d34a085ea27eee90439de44"
+      "hash": "c54e7a4806226ab042d300ed059c5b68667d54d7"
     },
     "com.reborn.spell.particles": {
       "version": "git@github.com:LinZhiWeiNB/RebornFrameSpellParticles.git",
       "depth": 0,
       "source": "git",
       "dependencies": {
-        "com.reborn.spell": "1.3.0",
+        "com.reborn.spell": "1.4.0",
         "com.reborn.protobuf": "1.0.0"
       },
-      "hash": "1114d5f7d20ea54f7b62384698ea44e423ba1a8a"
+      "hash": "5de47a10d9a0e5fee500b9ba1cea22abc7ed5f78"
     },
     "com.reborn.spell.spine": {
       "version": "git@github.com:LinZhiWeiNB/RebornFrameSpellSpine.git",
       "depth": 0,
       "source": "git",
       "dependencies": {
-        "com.reborn.spell": "1.3.0",
+        "com.reborn.spell": "1.4.0",
         "com.reborn.protobuf": "1.0.0"
       },
-      "hash": "fba6567e6c93dac32fdedeb07d1d39eed3a5529d"
+      "hash": "0a9efc6c0f17949195cd55352efc881f684339dd"
     },
     "com.reborn.spell.vfxgraph": {
       "version": "git@github.com:LinZhiWeiNB/RebornFrameSpellVfxGraph.git",
       "depth": 0,
       "source": "git",
       "dependencies": {
-        "com.reborn.spell": "1.3.0",
+        "com.reborn.spell": "1.4.0",
         "com.reborn.protobuf": "1.0.0",
         "com.unity.visualeffectgraph": "17.6.0"
       },
-      "hash": "08b1d717ab04c719c403ee79313c5f5dd08e54cd"
+      "hash": "753a1e1fb1b57bc49297a1c76f2295ce195d5631"
     },
     "com.reborn.utils": {
       "version": "git@github.com:LinZhiWeiNB/RebornFrameUtils.git",

@@ -51,6 +51,9 @@ message ProjectArchive {
 
   // 逻辑帧目标帧率。时间轴和动画片段按它把秒换算成逻辑帧。0 表示还没写过，编辑器按 30 使用。
   uint32 logic_frame_rate = 17;
+
+  // 每个技能一份预览布置。只留在编辑器项目里，不进导出的技能模块。
+  repeated SpellPreviewLayout spell_previews = 18;
 }
 
 // 一条单位预设。纳入的属性按属性标识记录。
@@ -74,6 +77,24 @@ message EditorUnit {
 message EditorUnitValue {
   uint64 attribute_id = 1;
   int64 raw = 2;
+}
+
+// 一个技能的预览场。施法者和木桩都记在这里。
+message SpellPreviewLayout {
+  uint64 spell_id = 1;
+  repeated SpellPreviewActor actors = 2;
+}
+
+// 预览场上的一个单位。位置、标签、属性预设和初始值都不导出。
+message SpellPreviewActor {
+  uint64 stable_id = 1;
+  uint64 unit_id = 2;
+  float x = 3;
+  float y = 4;
+  float z = 5;
+  uint64 preset_id = 6;
+  repeated uint64 tags = 7;
+  repeated EditorUnitValue values = 8;
 }
 
 // 对其他数据源单位的本地覆盖。和项目存档分开存放。

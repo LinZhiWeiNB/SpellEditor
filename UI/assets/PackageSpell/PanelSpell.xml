@@ -9,7 +9,7 @@
     <graph id="n0_mns01" name="funcPane" xy="0,0" size="320,630" type="rect" lineSize="0" fillColor="#ff1e2128"/>
     <graph id="n2_mns01" name="inspectPane" xy="1280,0" size="320,630" type="rect" lineSize="0" fillColor="#ff1e2128"/>
     <graph id="n3_mns01" name="timePane" xy="0,630" size="1600,270" type="rect" lineSize="0" fillColor="#ff1e2128">
-      <relation target="" sidePair="bottomext-bottom"/>
+      <relation target="" sidePair="rightext-right,bottomext-bottom"/>
     </graph>
     <graph id="n4_mns01" name="vSplitL" xy="320,0" size="1,630" type="rect" lineSize="0" fillColor="#ff3a3e48"/>
     <graph id="n5_mns01" name="vSplitR" xy="1279,0" size="1,630" type="rect" lineSize="0" fillColor="#ff3a3e48"/>
@@ -137,15 +137,17 @@
       <gearDisplay controller="cUnits" pages="1"/>
     </list>
     <component id="n61_mns01" name="marks" src="s0uwc" fileName="ComMarks.xml" xy="176,638" size="1416,261">
-      <relation target="" sidePair="bottomext-bottom"/>
+      <relation target="" sidePair="right-right,bottomext-bottom"/>
     </component>
     <component id="n68_mns01" name="tracks" src="s0uwe" fileName="ComTracks.xml" xy="0,674">
-      <relation target="" sidePair="bottomext-bottom"/>
+      <relation target="" sidePair="right-right,bottomext-bottom"/>
     </component>
     <component id="n87_mns01" name="progress" src="s0uwd" fileName="ComProgress.xml" xy="168,658" size="1432,241">
-      <relation target="" sidePair="bottomext-bottom"/>
+      <relation target="" sidePair="rightext-right,bottomext-bottom"/>
     </component>
-    <component id="n88_s0uw" name="scrollH" src="s0uwg" fileName="ScrollBarH.xml" xy="176,888" size="1423,10"/>
+    <component id="n88_s0uw" name="scrollH" src="s0uwg" fileName="ScrollBarH.xml" xy="176,888" size="1423,10">
+      <relation target="" sidePair="bottom-bottom,rightext-right"/>
+    </component>
     <component id="n89_s0uw" name="scrollV" src="s0uwh" fileName="ScrollBarV.xml" xy="163,674" size="10,225"/>
     <graph id="n91_view" name="previewHit" xy="320,0" size="960,630" type="rect" lineSize="0" fillColor="#00ffffff"/>
     <component id="n92_view" name="btnResetCamera" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="332,586" size="128,32">
@@ -154,5 +156,18 @@
     <component id="n93_view" name="btnAddDummy" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="16,168" size="288,36">
       <Button title="添加木桩"/>
     </component>
+    <component id="n94_clip" name="comboAnim" src="spn11" fileName="ComboValue.xml" pkg="res4p8n2" xy="1308,192" size="264,32" group="n60_mns01">
+      <gearDisplay controller="cClipName" pages="0"/>
+      <ComboBox visibleItemCount="10"/>
+    </component>
+    <component id="n95_clip" name="comboTrigger" src="spn11" fileName="ComboValue.xml" pkg="res4p8n2" xy="1308,192" size="264,32" group="n60_mns01">
+      <gearDisplay controller="cClipName" pages="1"/>
+      <ComboBox visibleItemCount="10"/>
+    </component>
+    <component id="n96_mode" name="btnPreviewMode" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="468,586" size="96,32" visible="false">
+      <Button title="编辑"/>
+    </component>
+    <component id="n98_mode" name="modeToggle" src="mode02" fileName="ModeToggle.xml" xy="468,586" size="196,32"/>
+    <graph id="n97_mode" name="previewBorder" xy="320,0" size="960,630" touchable="false" type="rect" lineSize="3" lineColor="#ff3db86a" fillColor="#00ffffff"/>
   </displayList>
 </component>

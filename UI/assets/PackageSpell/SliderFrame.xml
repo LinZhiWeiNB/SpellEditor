@@ -12,5 +12,5 @@
       <relation target="n1_mns04" sidePair="right-right"/>
     </component>
   </displayList>
-  <Slider wholeNumbers="true"/>
+  <Slider/>
 </component>

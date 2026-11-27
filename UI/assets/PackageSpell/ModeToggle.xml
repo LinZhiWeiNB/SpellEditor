@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="196,32">
+  <controller name="cMode" pages="0,编辑,1,预览" selected="0"/>
+  <displayList>
+    <graph id="n0_mode" name="bg" xy="0,0" size="196,32" type="rect" lineSize="0" fillColor="#ff121417" corner="6">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <graph id="n1_mode" name="editOn" xy="2,2" size="96,28" type="rect" lineSize="0" fillColor="#ff1e3a28" corner="4">
+      <gearDisplay controller="cMode" pages="0"/>
+    </graph>
+    <graph id="n2_mode" name="previewOn" xy="98,2" size="96,28" type="rect" lineSize="0" fillColor="#ff3a2814" corner="4">
+      <gearDisplay controller="cMode" pages="1"/>
+    </graph>
+    <component id="n3_mode" name="edit" src="mode01" fileName="ModeHit.xml" xy="2,2" size="96,28">
+      <Button checked="true" controller="cMode" page="0"/>
+    </component>
+    <component id="n4_mode" name="preview" src="mode01" fileName="ModeHit.xml" xy="98,2" size="96,28">
+      <Button controller="cMode" page="1"/>
+    </component>
+    <graph id="n5_mode" name="dotEdit" xy="12,12" size="8,8" touchable="false" type="eclipse" lineSize="0" fillColor="#ff3db86a"/>
+    <text id="n6_mode" name="editLabel" xy="24,2" size="68,28" fontSize="14" color="#e8e6e3" vAlign="middle" autoSize="none" singleLine="true" text="编辑"/>
+    <graph id="n7_mode" name="dotPreview" xy="108,12" size="8,8" touchable="false" type="eclipse" lineSize="0" fillColor="#fff08a2a"/>
+    <text id="n8_mode" name="previewLabel" xy="120,2" size="68,28" fontSize="14" color="#e8e6e3" vAlign="middle" autoSize="none" singleLine="true" text="预览"/>
+  </displayList>
+</component>

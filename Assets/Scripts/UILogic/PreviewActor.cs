@@ -11,12 +11,30 @@ namespace UILogic
     {
         public bool Locked;
 
+        [System.NonSerialized] public ulong StableId;
+        [System.NonSerialized] public ulong PresetId;
         [System.NonSerialized] public EditorUnit Unit;
+        [System.NonSerialized] public bool HasSample;
+        [System.NonSerialized] public Vector3 HomePosition;
+        [System.NonSerialized] public readonly List<ulong> DefaultTags = new List<ulong>();
         [System.NonSerialized] public readonly List<ulong> Tags = new List<ulong>();
         [System.NonSerialized] public readonly List<ulong> Buffs = new List<ulong>();
+        [System.NonSerialized] public readonly List<EditorUnitValue> InitialValues = new List<EditorUnitValue>();
+        [System.NonSerialized] public readonly List<EditorUnitValue> Sampled = new List<EditorUnitValue>();
 
         PreviewDummy _highlight;
         int _fit;
+
+        public void RememberHome()
+        {
+            HomePosition = transform.position;
+        }
+
+        public void RememberTags()
+        {
+            DefaultTags.Clear();
+            DefaultTags.AddRange(Tags);
+        }
 
         public void BindOutline(Material material)
         {

@@ -1,11 +1,20 @@
+using System;
 using System.Collections.Generic;
 using System.Text;
 using FairyGUI;
+using Google.Protobuf;
 using PackageAtrribute;
+using PackageResource;
 using PackageSpell;
 using RebornFrame.GameData;
 using RebornFrame.Spell;
+using RebornFrame.Spell.Animation;
+using RebornFrame.Spell.Particles;
+using RebornFrame.Spell.Spine;
+using RebornFrame.Spell.Vfx;
 using SpellEditor;
+using Unity.Collections;
+using Unity.Entities;
 using UnityEngine;
 
 namespace UILogic
@@ -29,6 +38,12 @@ namespace UILogic
             public readonly List<ulong> Tags = new List<ulong>();
             public readonly List<ulong> Buffs = new List<ulong>();
             public string Anim = "";
+            public string Trigger = "";
+            public int ClipSource;
+            public int Span;
+            public float StartSeconds;
+            public float DurationSeconds;
+            public byte[] Parameters = Array.Empty<byte>();
             public string Speed = "1";
             public int EndMode;
             public int PauseAt = 1;
@@ -42,8 +57,19 @@ namespace UILogic
             public readonly List<KeyFrame> Keys = new List<KeyFrame>();
         }
 
+        struct PlacedClip
+        {
+            public GObject View;
+            public float X;
+            public float Width;
+        }
+
         UI_PanelSpell view;
         readonly List<Track> _tracks = new List<Track>();
+        readonly List<SpellPreviewStage.SpineClipChoice> _animations = new List<SpellPreviewStage.SpineClipChoice>();
+        readonly List<SpellPreviewStage.SpineClipChoice> _triggers = new List<SpellPreviewStage.SpineClipChoice>();
+        GComboBox _comboAnim;
+        GComboBox _comboTrigger;
         readonly List<ulong> _tags = new List<ulong>();
         readonly List<ulong> _buffs = new List<ulong>();
         readonly List<EditorUnit> _owners = new List<EditorUnit>();
@@ -65,6 +91,17 @@ namespace UILogic
         GComponent _scrollV;
         float _scrollable;
         EventCallback1 _onDeleteKey;
+        BlobAssetReference<SpellCatalogBlob> _previewCatalog;
+        bool _ignoreProgress;
+        bool _progressBound;
+        bool _showingPreview;
+        bool _entered;
+        bool _editing = true;
+        ulong _shownOwner;
+        readonly List<SpellEventConfig> _extraEvents = new List<SpellEventConfig>();
+        readonly List<SpellPresentationTrack> _extraTracks = new List<SpellPresentationTrack>();
+        readonly List<SpellPreviewSim.Frame> _samples = new List<SpellPreviewSim.Frame>();
+        readonly List<SpellPreviewSim.Seed> _seeds = new List<SpellPreviewSim.Seed>();
 
         public override void Start(object[] data)
         {
@@ -122,15 +159,21 @@ namespace UILogic
                 if (_applying || _key < 0) return;
                 Current().Pingpong = view.m_pingpong.selected;
             });
-            view.m_inputAnim.onChanged.Add(() =>
+            EnsureClipBoxes();
+            view.m_cClipName.onChanged.Add(() =>
             {
+                SyncClipBoxes();
                 if (_applying || _key < 0) return;
-                Current().Anim = view.m_inputAnim.text;
+                if (_tracks[_track].Kind != TrackKind.Spine) return;
+                Current().ClipSource = view.m_cClipName.selectedIndex;
+                FitLength(Current());
             });
             view.m_inputSpeed.onChanged.Add(() =>
             {
                 if (_applying || _key < 0) return;
+                if (_tracks[_track].Kind != TrackKind.Spine) return;
                 Current().Speed = view.m_inputSpeed.text;
+                FitLength(Current());
             });
 
             CollectCatalogs();
@@ -139,10 +182,20 @@ namespace UILogic
             CollectOwners();
             ClearSelection();
             OpenPreview();
+            SpellPreviewStage.Changed += OnStageChanged;
+            RestoreLayout();
+            _entered = true;
+            RecordLogic();
+            PoseAll();
         }
 
         public override void OnClose()
         {
+            SpellPreviewStage.Changed -= OnStageChanged;
+            SaveLayout();
+            if (ProjectSession.IsOpen)
+                ProjectSession.Save();
+            ReleasePreview();
             SpellPreviewStage.Close();
             if (_onDeleteKey != null)
                 Stage.inst.onKeyDown.Remove(_onDeleteKey);
@@ -179,6 +232,8 @@ namespace UILogic
                 hit.touchable = true;
             }
 
+            PaintPreviewBorder();
+
             var reset = view.GetChild("btnResetCamera") as GButton;
             if (reset == null)
             {
@@ -191,8 +246,85 @@ namespace UILogic
             }
 
             reset.onClick.Set(() => SpellPreviewStage.ResetCamera());
+            BindPreviewMode();
+            SpellPreviewStage.SetPlacement(true);
             SpellPreviewStage.Open(hit, OnPreviewUnit);
             SpellPreviewStage.SetCaster(CurrentOwner());
+        }
+
+        void BindPreviewMode()
+        {
+            var host = view.GetChild("modeToggle") as GComponent;
+            var mode = host == null ? null : host.GetController("cMode");
+            if (mode != null)
+            {
+                var legacy = view.GetChild("btnPreviewMode");
+                if (legacy != null)
+                    legacy.visible = false;
+                _editing = true;
+                mode.selectedIndex = 0;
+                mode.onChanged.Add(() => ApplyMode(mode.selectedIndex == 0));
+                return;
+            }
+
+            var button = view.GetChild("btnPreviewMode") as GButton;
+            if (button == null)
+            {
+                button = UI_ButtonSecondary.CreateInstance();
+                button.name = "btnPreviewMode";
+                button.title = "编辑";
+                button.SetSize(96, 32);
+                button.SetXY(468, 586);
+                view.AddChild(button);
+            }
+
+            _editing = true;
+            button.title = "编辑";
+            button.onClick.Set(() => ApplyMode(!_editing));
+        }
+
+        void ApplyMode(bool editing)
+        {
+            if (_editing == editing)
+                return;
+            _editing = editing;
+            var button = view.GetChild("btnPreviewMode") as GButton;
+            if (button != null && button.visible)
+                button.title = _editing ? "编辑" : "预览";
+            SpellPreviewStage.SetPlacement(_editing);
+            PaintPreviewBorder();
+            if (_editing)
+                SpellPreviewStage.RestoreDefaults();
+            else
+                ApplyWorld();
+            var actor = SpellPreviewStage.Selected;
+            if (actor != null && _key < 0)
+                ShowUnitInspect(actor);
+        }
+
+        void PaintPreviewBorder()
+        {
+            var border = view.GetChild("previewBorder") as GGraph;
+            var line = _editing
+                ? (Color)new Color32(0x3d, 0xb8, 0x6a, 0xff)
+                : (Color)new Color32(0xf0, 0x8a, 0x2a, 0xff);
+            var fill = new Color(0f, 0f, 0f, 0f);
+            if (border != null)
+            {
+                border.touchable = false;
+                border.alpha = 1f;
+                border.DrawRect(border.width, border.height, 3, line, fill);
+                return;
+            }
+
+            var hit = view.GetChild("previewHit") as GGraph;
+            if (hit == null)
+                hit = view.m_previewHit;
+            if (hit == null)
+                return;
+            hit.alpha = 1f;
+            hit.touchable = true;
+            hit.DrawRect(hit.width, hit.height, 3, line, fill);
         }
 
         void OnPreviewUnit(PreviewActor actor)
@@ -238,7 +370,22 @@ namespace UILogic
             var text = new StringBuilder();
             text.Append("属性\n");
             var any = false;
-            if (actor.Unit != null)
+            if (actor.HasSample)
+            {
+                var seen = new HashSet<ulong>();
+                for (var i = 0; i < actor.Sampled.Count; i++)
+                {
+                    var value = actor.Sampled[i];
+                    if (!seen.Add(value.AttributeId)) continue;
+                    var parsed = new AttributeId(value.AttributeId);
+                    text.Append(ProjectSession.AttributeName(value.AttributeId, parsed.LocalId));
+                    text.Append("  ");
+                    text.Append(value.Raw);
+                    text.Append('\n');
+                    any = true;
+                }
+            }
+            else if (actor.Unit != null)
             {
                 var seen = new HashSet<ulong>();
                 var unit = actor.Unit;
@@ -312,6 +459,7 @@ namespace UILogic
             AddPlugin(mask, GameDataRenderPlugins.Vfx, TrackKind.Vfx, "新版粒子");
             AddPlugin(mask, GameDataRenderPlugins.Spine, TrackKind.Spine, "Spine");
             AddPlugin(mask, GameDataRenderPlugins.Animation, TrackKind.Animation, "动画");
+            LoadTracks();
             RenderTracks();
         }
 
@@ -333,9 +481,16 @@ namespace UILogic
 
             if (index < 0) return;
             var keys = _tracks[index].Keys;
-            var frame = keys.Count == 0 ? 0 : keys[keys.Count - 1].Frame + 12;
-            keys.Add(new KeyFrame { Frame = frame });
+            var start = 0f;
+            if (keys.Count > 0)
+            {
+                var last = keys[keys.Count - 1];
+                start = last.StartSeconds + Mathf.Max(last.DurationSeconds, 1f / LogicRate());
+            }
+
+            keys.Add(new KeyFrame { StartSeconds = start, DurationSeconds = 12f / LogicRate() });
             Select(index, keys.Count - 1);
+            RecordRender(_tracks[index].Kind);
         }
 
         void AddSkillKey()
@@ -344,6 +499,7 @@ namespace UILogic
             SkillTrack().Keys.Add(key);
             PackSkillTracks();
             SelectKey(key);
+            RecordLogic();
         }
 
         void DeleteSkillKey()
@@ -357,6 +513,7 @@ namespace UILogic
             PackSkillTracks();
             ClearSelection();
             RenderTracks();
+            RecordLogic();
         }
 
         Track SkillTrack()
@@ -377,7 +534,7 @@ namespace UILogic
             var host = view.GetChild("progress");
             var slider = host as GSlider ?? (host as GComponent)?.GetChild("progress") as GSlider;
             if (slider == null) return 0;
-            return Mathf.Max(0, Mathf.RoundToInt((float)slider.value));
+            return Mathf.Max(0, Mathf.FloorToInt((float)slider.value * LogicRate() + 0.0001f));
         }
 
         void PackSkillTracks()
@@ -506,16 +663,30 @@ namespace UILogic
         void BindKey(GButton button, KeyFrame key, float px, bool skill)
         {
             var originX = 0f;
+            var originW = 0f;
             var pointerX = 0f;
             var moved = false;
             var home = key.Frame;
+            var edge = 0;
+            var row = new List<PlacedClip>();
             button.onTouchBegin.Add(context =>
             {
                 context.CaptureTouch();
                 moved = false;
                 originX = button.x;
+                originW = button.width;
                 pointerX = context.inputEvent.x;
-                home = key.Frame;
+                home = skill ? key.Frame : Mathf.RoundToInt(key.StartSeconds * LogicRate());
+                edge = 0;
+                row.Clear();
+                if (skill) return;
+                var parent = button.parent as GComponent;
+                if (parent == null) return;
+                var local = parent.GlobalToLocal(context.inputEvent.position);
+                var grip = Mathf.Min(8f, button.width * 0.25f);
+                if (local.x <= button.x + grip) edge = 1;
+                else if (local.x >= button.x + button.width - grip) edge = 2;
+                CaptureRow(button, row);
             });
             button.onTouchMove.Add(context =>
             {
@@ -524,26 +695,54 @@ namespace UILogic
                 var dx = LocalDelta(parent, context.inputEvent.x - pointerX, 0f).x;
                 if (!moved && Mathf.Abs(dx) < 4f) return;
                 moved = true;
-                var x = Mathf.Max(0f, originX + dx);
-                if (!skill)
+                if (edge == 1)
                 {
-                    var frame = BlockedStart(button, home, Mathf.RoundToInt(x / px), ClipSpan(px), px);
-                    x = frame * px;
+                    ResizeLeft(button, originX, originW, dx, px, home, key);
+                    return;
                 }
 
+                if (edge == 2)
+                {
+                    ResizeRight(button, originX, originW, dx, px, row);
+                    return;
+                }
+
+                var x = Mathf.Max(0f, originX + dx);
+                x = SnapToProgress(x, px);
+                if (!skill)
+                    x = BlockedX(button, originX, x, button.width);
+
                 button.x = x;
-                button.title = Mathf.Max(0, Mathf.RoundToInt(x / px)).ToString();
+                if (skill)
+                    button.title = Mathf.Max(0, Mathf.RoundToInt(x / px)).ToString();
             });
             button.onTouchEnd.Add(() =>
             {
                 if (!moved) return;
-                var frame = Mathf.Max(0, Mathf.RoundToInt(button.x / px));
-                if (!skill)
-                    frame = BlockedStart(button, home, frame, ClipSpan(px), px);
-                key.Frame = frame;
+                if (skill)
+                {
+                    key.Frame = Mathf.Max(0, Mathf.RoundToInt(button.x / px));
+                    RecordLogic();
+                }
+                else
+                {
+                    if (edge == 0)
+                        button.x = BlockedX(button, originX, button.x, button.width);
+                    key.StartSeconds = ToSeconds(button.x, px);
+                    key.DurationSeconds = Mathf.Max(ToSeconds(8f, px), ToSeconds(button.width, px));
+                    if (edge != 0)
+                    {
+                        var track = TrackOf(key);
+                        if (track != null)
+                            PushTail(track, key);
+                    }
+
+                    RecordRender(TrackOf(key) == null ? TrackKind.Spine : TrackOf(key).Kind);
+                }
+
                 Timers.inst.CallLater(_ =>
                 {
-                    if (skill)
+                    if (skill && edge == 0)
                         PackSkillTracks();
                     SelectKey(key);
                 });
@@ -577,6 +776,7 @@ namespace UILogic
             view.m_cInspect.selectedIndex = (int)UI_PanelSpell.EcInspect.空;
             view.m_inspectKind.text = "";
             _applying = false;
+            SyncClipBoxes();
             var actor = SpellPreviewStage.Selected;
             if (actor != null)
                 ShowUnitInspect(actor);
@@ -605,7 +805,10 @@ namespace UILogic
             {
                 view.m_cInspect.selectedIndex = (int)UI_PanelSpell.EcInspect.Spine关键帧;
                 view.m_inspectKind.text = "Spine 关键帧";
-                view.m_inputAnim.text = key.Anim;
+                view.m_cClipName.selectedIndex = key.ClipSource == 1 ? 1 : 0;
+                view.m_clipByName.selected = key.ClipSource != 1;
+                view.m_clipByTrigger.selected = key.ClipSource == 1;
+                FillClipCombos(key);
                 view.m_inputSpeed.text = key.Speed;
                 view.m_cSpineEnd.selectedIndex = key.EndMode;
                 view.m_endPause.selected = key.EndMode == 0;
@@ -621,6 +824,7 @@ namespace UILogic
             }
 
             _applying = false;
+            SyncClipBoxes();
             RefreshDeleteKey();
         }
 
@@ -643,6 +847,7 @@ namespace UILogic
         {
             var keys = KeysPane();
             if (keys == null) return;
+            RefreshCasterClips();
 
             for (var i = keys.numChildren - 1; i >= 0; i--)
             {
@@ -656,13 +861,15 @@ namespace UILogic
                 for (var k = 0; k < track.Keys.Count; k++)
                 {
                     var frame = track.Keys[k];
-                    var button = UI_ItemKey.CreateInstance();
-                    button.title = frame.Frame.ToString();
+                    var skill = track.Kind == TrackKind.Skill;
+                    var button = skill ? (GButton)UI_ItemKey.CreateInstance() : ClipButton();
+                    button.title = skill ? frame.Frame.ToString() : ClipLabel(frame);
                     button.selected = t == _track && k == _key;
-                    button.SetXY(frame.Frame * px, t * 44f + 6f);
-                    var span = track.Kind == TrackKind.Skill ? 1 : ClipSpan(px);
-                    button.SetSize(span * px, button.height);
-                    BindKey(button, frame, px, track.Kind == TrackKind.Skill);
+                    var start = skill ? frame.Frame / LogicRate() : frame.StartSeconds;
+                    var length = ClipLengthSeconds(frame, skill);
+                    button.SetXY(ToPixels(start, px), t * 44f + 6f);
+                    button.SetSize(Mathf.Max(8f, ToPixels(length, px)), button.height);
+                    BindKey(button, frame, px, skill);
 
                     keys.AddChild(button);
                 }
@@ -732,10 +939,13 @@ namespace UILogic
             var slider = progress.GetChild("progress") as GSlider;
             if (slider != null)
             {
+                _ignoreProgress = true;
                 slider.x = 0f;
-                slider.max = span;
+                slider.max = span / LogicRate();
                 slider.SetSize(timeline, slider.height);
                 slider.opaque = true;
+                _ignoreProgress = false;
+                BindProgress(slider);
             }
 
             Pad(marks, content);
@@ -769,7 +979,9 @@ namespace UILogic
                 item.name = "tick";
                 item.touchable = false;
                 item.SetXY(frame * px, 0f);
-                item.m_mark0.text = frame.ToString();
+                item.m_mark0.SetSize(64f, 28f);
+                var seconds = frame / LogicRate();
+                item.m_mark0.text = frame + "\n" + seconds.ToString("0.00") + "s";
                 marks.AddChild(item);
             }
         }
@@ -1004,6 +1216,365 @@ namespace UILogic
             return Mathf.Max(1, Mathf.CeilToInt(64f / Mathf.Max(px, 1f)));
         }
 
+        int ClipFrames(KeyFrame key)
+        {
+            if (key.Span > 0) return key.Span;
+            var keys = KeysPane();
+            var px = keys == null ? 8f : PaneView(keys, true) / 60f;
+            if (px < 1f) px = 1f;
+            return ClipSpan(px);
+        }
+
+        void RefreshCasterClips()
+        {
+            SpellPreviewStage.CopyCasterAnimations(_animations);
+            SpellPreviewStage.CopyCasterTriggers(_triggers);
+        }
+
+        GButton ClipButton()
+        {
+            var clip = UI_ItemClip.CreateInstance();
+            return clip != null ? clip : UI_ItemKey.CreateInstance();
+        }
+
+        string ClipLabel(KeyFrame key)
+        {
+            var name = key.ClipSource == 1 ? ChoiceLabel(_triggers, key.Trigger) : ChoiceLabel(_animations, key.Anim);
+            if (string.IsNullOrEmpty(name))
+                name = key.ClipSource == 1 ? key.Trigger : key.Anim;
+            if (string.IsNullOrEmpty(name))
+                name = key.StartSeconds.ToString("0.00") + "s";
+            var length = ClipLengthSeconds(key, false);
+            return name + "  " + key.StartSeconds.ToString("0.00") + "s · " + length.ToString("0.00") + "s";
+        }
+
+        static string ChoiceLabel(List<SpellPreviewStage.SpineClipChoice> options, string id)
+        {
+            if (string.IsNullOrEmpty(id)) return "";
+            for (var i = 0; i < options.Count; i++)
+            {
+                if (options[i].Id == id) return options[i].Label;
+            }
+
+            return id;
+        }
+
+        float SecondsOf(KeyFrame key)
+        {
+            var id = key.ClipSource == 1 ? key.Trigger : key.Anim;
+            if (string.IsNullOrEmpty(id)) return -1f;
+            var options = key.ClipSource == 1 ? _triggers : _animations;
+            for (var i = 0; i < options.Count; i++)
+            {
+                if (options[i].Id == id) return options[i].Seconds;
+            }
+
+            return -1f;
+        }
+
+        static float ScaledSeconds(float seconds, string speedText)
+        {
+            var speed = 1f;
+            if (float.TryParse(speedText, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var parsed) && parsed > 0.0001f)
+                speed = parsed;
+            return Mathf.Max(0.01f, seconds / speed);
+        }
+
+        void FitLength(KeyFrame key)
+        {
+            RefreshCasterClips();
+            var seconds = SecondsOf(key);
+            if (seconds >= 0f)
+            {
+                key.DurationSeconds = ScaledSeconds(seconds, key.Speed);
+                var track = TrackOf(key);
+                if (track != null)
+                    PushTail(track, key);
+            }
+
+            RenderTracks();
+            var trackKind = TrackOf(key);
+            RecordRender(trackKind == null ? TrackKind.Spine : trackKind.Kind);
+        }
+
+        Track TrackOf(KeyFrame key)
+        {
+            for (var i = 0; i < _tracks.Count; i++)
+            {
+                if (_tracks[i].Keys.Contains(key)) return _tracks[i];
+            }
+
+            return null;
+        }
+
+        void PushTail(Track track, KeyFrame origin)
+        {
+            var keys = track.Keys;
+            var ordered = new List<KeyFrame>(keys);
+            ordered.Sort((a, b) =>
+            {
+                var time = a.StartSeconds.CompareTo(b.StartSeconds);
+                if (time != 0) return time;
+                if (a == origin) return -1;
+                if (b == origin) return 1;
+                return keys.IndexOf(a).CompareTo(keys.IndexOf(b));
+            });
+
+            var start = ordered.IndexOf(origin);
+            if (start < 0) return;
+            var end = origin.StartSeconds + ClipLengthSeconds(origin, false);
+            for (var i = start + 1; i < ordered.Count; i++)
+            {
+                var key = ordered[i];
+                if (key.StartSeconds >= end - 0.0001f) break;
+                key.StartSeconds = end;
+                end = key.StartSeconds + ClipLengthSeconds(key, false);
+            }
+        }
+
+        void EnsureClipBoxes()
+        {
+            _comboAnim = ClipBox("comboAnim");
+            _comboTrigger = ClipBox("comboTrigger");
+            SyncClipBoxes();
+        }
+
+        GComboBox ClipBox(string name)
+        {
+            var existing = view.GetChild(name) as GComboBox;
+            if (existing != null) return existing;
+            var box = UI_ComboValue.CreateInstance();
+            box.name = name;
+            box.SetSize(264, 32);
+            box.SetXY(1308, 192);
+            view.AddChild(box);
+            return box;
+        }
+
+        void SyncClipBoxes()
+        {
+            var spine = view.m_cInspect.selectedIndex == (int)UI_PanelSpell.EcInspect.Spine关键帧;
+            var byName = view.m_cClipName.selectedIndex != 1;
+            if (_comboAnim != null) _comboAnim.visible = spine && byName;
+            if (_comboTrigger != null) _comboTrigger.visible = spine && !byName;
+            view.m_inputAnim.visible = false;
+            view.m_inputTrigger.visible = false;
+            view.m_bgAnim.visible = false;
+            view.m_bgTrigger.visible = false;
+        }
+
+        void FillClipCombos(KeyFrame key)
+        {
+            RefreshCasterClips();
+            var applying = _applying;
+            _applying = true;
+            FillClipBox(_comboAnim, _animations, key.Anim, "选择动画", value => PickClip(0, value));
+            FillClipBox(_comboTrigger, _triggers, key.Trigger, "选择触发器", value => PickClip(1, value));
+            _applying = applying;
+        }
+
+        void FillClipBox(
+            GComboBox box,
+            List<SpellPreviewStage.SpineClipChoice> options,
+            string current,
+            string prompt,
+            Action<string> pick)
+        {
+            if (box == null) return;
+            var known = false;
+            for (var i = 0; i < options.Count; i++)
+            {
+                if (options[i].Id == current)
+                {
+                    known = true;
+                    break;
+                }
+            }
+
+            var extra = string.IsNullOrEmpty(current) || !known ? 1 : 0;
+            var labels = new string[options.Count + extra];
+            var values = new string[options.Count + extra];
+            var index = 0;
+            if (extra == 1)
+            {
+                labels[0] = string.IsNullOrEmpty(current) ? (options.Count == 0 ? "预览单位没有这项" : prompt) : current;
+                values[0] = current ?? "";
+                index = 1;
+            }
+
+            for (var i = 0; i < options.Count; i++)
+            {
+                labels[index] = options[i].Label;
+                values[index] = options[i].Id;
+                index++;
+            }
+
+            box.onChanged.Set(() => { });
+            box.items = labels;
+            box.values = values;
+            box.value = current ?? "";
+            box.onChanged.Set(() =>
+            {
+                if (pick != null) pick(box.value ?? "");
+            });
+        }
+
+        void PickClip(int source, string value)
+        {
+            if (_applying || _key < 0) return;
+            if (_track < 0 || _track >= _tracks.Count || _tracks[_track].Kind != TrackKind.Spine) return;
+            var key = Current();
+            key.ClipSource = source;
+            if (source == 0) key.Anim = value ?? "";
+            else key.Trigger = value ?? "";
+            view.m_cClipName.selectedIndex = source;
+            FitLength(key);
+        }
+
+        static void CaptureRow(GButton button, List<PlacedClip> into)
+        {
+            into.Clear();
+            var parent = button.parent;
+            if (parent == null) return;
+            for (var i = 0; i < parent.numChildren; i++)
+            {
+                var other = parent.GetChildAt(i);
+                if (other == button || other.name == "extent") continue;
+                if (Mathf.Abs(other.y - button.y) > 2f) continue;
+                into.Add(new PlacedClip { View = other, X = other.x, Width = other.width });
+            }
+
+            into.Sort((a, b) => a.X.CompareTo(b.X));
+        }
+
+        void ResizeLeft(GButton button, float originX, float originW, float dx, float px, int home, KeyFrame key)
+        {
+            var right = originX + originW;
+            var start = Mathf.Max(0f, originX + dx);
+            var wall = 0f;
+            var track = TrackOf(key);
+            if (track != null)
+            {
+                var homeSeconds = home / LogicRate();
+                var keys = track.Keys;
+                for (var i = 0; i < keys.Count; i++)
+                {
+                    var other = keys[i];
+                    if (other == key || other.StartSeconds >= homeSeconds - 0.0001f) continue;
+                    var otherEnd = ToPixels(other.StartSeconds + ClipLengthSeconds(other, false), px);
+                    if (otherEnd > wall) wall = otherEnd;
+                }
+            }
+
+            if (start < wall) start = wall;
+            var minWidth = 8f;
+            if (right - start < minWidth) start = right - minWidth;
+            if (start < 0f) start = 0f;
+            var progressX = ToPixels(PreviewTime(), px);
+            if (Mathf.Abs(start - progressX) <= SnapRange(px)
+                && progressX >= wall
+                && right - progressX >= minWidth)
+                start = progressX;
+            button.x = start;
+            button.SetSize(Mathf.Max(minWidth, right - start), button.height);
+        }
+
+        void ResizeRight(GButton button, float originX, float originW, float dx, float px, List<PlacedClip> row)
+        {
+            var width = Mathf.Max(8f, originW + dx);
+            var end = originX + width;
+            var progressX = ToPixels(PreviewTime(), px);
+            if (Mathf.Abs(end - progressX) <= SnapRange(px) && progressX >= originX + 8f)
+            {
+                end = progressX;
+                width = end - originX;
+            }
+
+            button.x = originX;
+            button.SetSize(width, button.height);
+            var cursor = originX + width;
+            for (var i = 0; i < row.Count; i++)
+            {
+                var other = row[i];
+                if (other.View == null || other.X + 0.5f < originX) continue;
+                var next = Mathf.Max(cursor, other.X);
+                other.View.x = next;
+                other.View.SetSize(Mathf.Max(8f, other.Width), other.View.height);
+                cursor = other.View.x + other.View.width;
+            }
+        }
+
+        float BlockedX(GButton button, float homeX, float desiredX, float width)
+        {
+            desiredX = Mathf.Max(0f, desiredX);
+            if (width < 8f) width = 8f;
+            var parent = button.parent;
+            if (parent == null) return desiredX;
+
+            var occupied = new List<float>();
+            for (var i = 0; i < parent.numChildren; i++)
+            {
+                var other = parent.GetChildAt(i);
+                if (other == button || other.name == "extent") continue;
+                if (Mathf.Abs(other.y - button.y) > 2f) continue;
+                occupied.Add(other.x);
+                occupied.Add(other.x + Mathf.Max(8f, other.width));
+            }
+
+            if (occupied.Count == 0) return desiredX;
+            for (var i = 2; i < occupied.Count; i += 2)
+            {
+                var start = occupied[i];
+                var end = occupied[i + 1];
+                var j = i;
+                while (j > 0 && occupied[j - 2] > start)
+                {
+                    occupied[j] = occupied[j - 2];
+                    occupied[j + 1] = occupied[j - 1];
+                    j -= 2;
+                }
+
+                occupied[j] = start;
+                occupied[j + 1] = end;
+            }
+
+            var merged = new List<float>();
+            for (var i = 0; i < occupied.Count; i += 2)
+            {
+                if (merged.Count == 0 || occupied[i] > merged[merged.Count - 1] + 0.5f)
+                {
+                    merged.Add(occupied[i]);
+                    merged.Add(occupied[i + 1]);
+                }
+                else if (occupied[i + 1] > merged[merged.Count - 1])
+                {
+                    merged[merged.Count - 1] = occupied[i + 1];
+                }
+            }
+
+            var best = desiredX;
+            var bestDist = float.MaxValue;
+            var found = false;
+            Consider(0f, merged[0] - width);
+            for (var i = 0; i < merged.Count - 2; i += 2)
+                Consider(merged[i + 1], merged[i + 2] - width);
+            Consider(merged[merged.Count - 1], float.MaxValue);
+            return found ? best : desiredX;
+
+            void Consider(float lo, float hi)
+            {
+                if (hi < 0f || hi < lo) return;
+                if (lo < 0f) lo = 0f;
+                var candidate = desiredX < lo ? lo : desiredX > hi ? hi : desiredX;
+                var dist = Mathf.Abs(candidate - desiredX);
+                if (found && dist > bestDist + 0.01f) return;
+                if (found && Mathf.Abs(dist - bestDist) <= 0.01f && Mathf.Abs(candidate - homeX) >= Mathf.Abs(best - homeX)) return;
+                best = candidate;
+                bestDist = dist;
+                found = true;
+            }
+        }
+
         int BlockedStart(GButton button, int home, int desired, int span, float px)
         {
             desired = Mathf.Max(0, desired);
@@ -1077,17 +1648,37 @@ namespace UILogic
             }
         }
 
-        int FrameSpan(float px)
+        int ContentFrames()
         {
-            var span = 60;
-            var clip = ClipSpan(px);
+            var frames = 0;
             for (var i = 0; i < _tracks.Count; i++)
             {
                 var keys = _tracks[i].Keys;
                 var skill = _tracks[i].Kind == TrackKind.Skill;
                 for (var k = 0; k < keys.Count; k++)
                 {
-                    var end = skill ? keys[k].Frame + 1 : keys[k].Frame + clip;
+                    var end = skill
+                        ? keys[k].Frame
+                        : Mathf.CeilToInt((keys[k].StartSeconds + ClipLengthSeconds(keys[k], false)) * LogicRate());
+                    if (end > frames) frames = end;
+                }
+            }
+
+            return frames;
+        }
+
+        int FrameSpan(float px)
+        {
+            var span = 60;
+            for (var i = 0; i < _tracks.Count; i++)
+            {
+                var keys = _tracks[i].Keys;
+                var skill = _tracks[i].Kind == TrackKind.Skill;
+                for (var k = 0; k < keys.Count; k++)
+                {
+                    var end = skill
+                        ? keys[k].Frame + 1
+                        : Mathf.CeilToInt((keys[k].StartSeconds + ClipLengthSeconds(keys[k], false)) * LogicRate());
                     if (end > span) span = end;
                 }
             }
@@ -1119,6 +1710,8 @@ namespace UILogic
                     }
 
                     if (list == view.m_tags) RefreshPreview();
+                    if (_track >= 0 && _track < _tracks.Count && _tracks[_track].Kind == TrackKind.Skill)
+                        RecordLogic();
                 });
             };
             list.numItems = catalog.Count;
@@ -1147,6 +1740,7 @@ namespace UILogic
                 if (_applying || _key < 0 || !radio.selected) return;
                 if (_tracks[_track].Kind != TrackKind.Skill) return;
                 Current().Pick = index;
+                RecordLogic();
             });
         }
 
@@ -1157,6 +1751,7 @@ namespace UILogic
                 if (_applying || _key < 0 || !radio.selected) return;
                 if (_tracks[_track].Kind != TrackKind.Skill) return;
                 Current().Condition = index;
+                RecordLogic();
             });
         }
 
@@ -1166,6 +1761,7 @@ namespace UILogic
             if (_tracks[_track].Kind != TrackKind.Spine) return;
             Current().EndMode = mode;
             view.m_cSpineEnd.selectedIndex = mode;
+            RecordRender(TrackKind.Spine);
         }
 
         void SavePause(int at, bool selected)
@@ -1251,12 +1847,575 @@ namespace UILogic
             view.m_unitName.text = _owner < 0
                 ? "没有单位拥有这个技能"
                 : new SpellId(_owners[_owner].Id).ToString();
-            SpellPreviewStage.SetCaster(CurrentOwner());
+            var owner = CurrentOwner();
+            SpellPreviewStage.SetCaster(owner);
+            if (_key >= 0 && _track >= 0 && _track < _tracks.Count && _tracks[_track].Kind == TrackKind.Spine)
+                FillClipCombos(Current());
+            var id = owner == null ? 0UL : owner.Id;
+            if (_entered && id != _shownOwner)
+                RecordLogic();
+            _shownOwner = id;
         }
 
         EditorUnit CurrentOwner()
         {
             return _owner < 0 || _owner >= _owners.Count ? null : _owners[_owner];
+        }
+
+        void BindProgress(GSlider slider)
+        {
+            if (_progressBound || slider == null) return;
+            _progressBound = true;
+            slider.onChanged.Add(() =>
+            {
+                if (_ignoreProgress) return;
+                Scrub();
+            });
+        }
+
+        void Scrub()
+        {
+            if (_editing)
+                ShowPreviewMode();
+            ApplyWorld();
+            ShowAt(PreviewTime(), false, 0);
+        }
+
+        void ShowPreviewMode()
+        {
+            var host = view.GetChild("modeToggle") as GComponent;
+            var mode = host == null ? null : host.GetController("cMode");
+            if (mode != null && mode.selectedIndex != 1)
+            {
+                mode.selectedIndex = 1;
+                return;
+            }
+
+            ApplyMode(false);
+        }
+
+        void RebuildPreview()
+        {
+            if (_previewCatalog.IsCreated)
+                _previewCatalog.Dispose();
+            _previewCatalog = default;
+            if (_spellId == 0) return;
+
+            var spell = ProjectSession.EnsureOwnSpell(_spellId);
+            var activation = SpellActivation.Active;
+            var duration = 0;
+            var cooldown = 0;
+            if (spell != null)
+            {
+                if (spell.Activation == (int)SpellActivation.Passive)
+                    activation = SpellActivation.Passive;
+                else
+                {
+                    activation = SpellActivation.Active;
+                    duration = Mathf.Max(0, spell.DurationFrames);
+                    cooldown = Mathf.Max(0, spell.CooldownFrames);
+                }
+            }
+
+            var definition = new SpellDefinitionData
+            {
+                Id = new SpellId(_spellId),
+                Activation = activation,
+                DurationFrames = duration,
+                CooldownFrames = cooldown,
+            };
+            var lane = 0;
+            for (var i = 0; i < _tracks.Count; i++)
+            {
+                var track = _tracks[i];
+                if (track.Kind != TrackKind.Spine)
+                    continue;
+                for (var k = 0; k < track.Keys.Count; k++)
+                {
+                    var key = track.Keys[k];
+                    if (!TryClipAnimation(key, out var animation)) continue;
+                    var config = new SpineSpellTrackConfig
+                    {
+                        AnimationName = animation,
+                        Loop = key.EndMode == 1,
+                        TrackIndex = lane,
+                    };
+                    definition.PresentationTracks.Add(new SpellPresentationTrackAuthoring
+                    {
+                        TypeId = SpineSpellTracks.TypeId,
+                        StartSeconds = Mathf.Max(0f, key.StartSeconds),
+                        DurationSeconds = Mathf.Max(0.01f, ClipLengthSeconds(key, false)),
+                        Parameters = config.ToByteArray(),
+                    });
+                }
+
+                lane++;
+            }
+
+            try
+            {
+                _previewCatalog = SpellCatalog.Build(
+                    new[] { definition },
+                    Array.Empty<BuffId>(),
+                    Allocator.Persistent);
+                var rate = ProjectSession.LogicFrameRate;
+                if (rate == 0) rate = ProjectSession.DefaultLogicFrameRate;
+                SpellPresentation.SetFrameDuration(1f / rate);
+                SpineSpellTracks.EnsureRegistered();
+                SpellPresentation.Prepare(_previewCatalog);
+            }
+            catch (Exception error)
+            {
+                if (_previewCatalog.IsCreated)
+                    _previewCatalog.Dispose();
+                _previewCatalog = default;
+                Debug.LogWarning(error.Message);
+            }
+        }
+
+        bool TryClipAnimation(KeyFrame key, out string animation)
+        {
+            animation = "";
+            if (key.ClipSource == 1)
+                return SpellPreviewStage.TryCasterTriggerAnimation(key.Trigger, out animation);
+            animation = key.Anim ?? "";
+            return animation.Length > 0;
+        }
+
+        void ShowAt(float time, bool play, ulong typeId)
+        {
+            if (_showingPreview || _spellId == 0) return;
+            if (!_previewCatalog.IsCreated)
+                RebuildPreview();
+            if (!_previewCatalog.IsCreated) return;
+            var owner = CurrentOwner();
+            if (owner == null || owner.Id == 0) return;
+            if (!SpellPreviewStage.TryBindCaster(owner.Id)) return;
+
+            _showingPreview = true;
+            try
+            {
+                var spell = new SpellId(_spellId);
+                if (typeId == 0)
+                    SpellPresentation.ShowTime(_previewCatalog, spell, owner.Id, Mathf.Max(0f, time), play);
+                else
+                    SpellPresentation.RefreshType(_previewCatalog, spell, owner.Id, new SpellPresentationTrackId(typeId), Mathf.Max(0f, time), play);
+            }
+            catch (Exception error)
+            {
+                Debug.LogWarning(error.Message);
+            }
+            finally
+            {
+                _showingPreview = false;
+            }
+        }
+
+        void ReleasePreview()
+        {
+            var owner = CurrentOwner();
+            if (_previewCatalog.IsCreated && owner != null && owner.Id != 0)
+            {
+                try
+                {
+                    SpellPresentation.ShowTime(_previewCatalog, new SpellId(_spellId), owner.Id, 1000000f, false);
+                }
+                catch (Exception)
+                {
+                }
+
+                try
+                {
+                    SpineSpellTracks.Bind(owner.Id, null);
+                }
+                catch (Exception)
+                {
+                }
+            }
+
+            if (_previewCatalog.IsCreated)
+                _previewCatalog.Dispose();
+            _previewCatalog = default;
+            _samples.Clear();
+        }
+
+        float LogicRate()
+        {
+            var rate = ProjectSession.LogicFrameRate;
+            if (rate == 0) rate = ProjectSession.DefaultLogicFrameRate;
+            return rate;
+        }
+
+        float ToPixels(float seconds, float px)
+        {
+            return Mathf.Max(0f, seconds) * px * LogicRate();
+        }
+
+        float SnapRange(float px)
+        {
+            var limit = ToPixels(0.08f, px);
+            var pixels = 8f;
+            if (pixels > limit)
+                pixels = limit;
+            if (pixels < 2f)
+                pixels = 2f;
+            return pixels;
+        }
+
+        float SnapToProgress(float x, float px)
+        {
+            var progressX = ToPixels(PreviewTime(), px);
+            if (Mathf.Abs(x - progressX) <= SnapRange(px))
+                return progressX;
+            return x;
+        }
+
+        float ToSeconds(float pixels, float px)
+        {
+            return Mathf.Max(0f, pixels) / (px * LogicRate());
+        }
+
+        float ClipLengthSeconds(KeyFrame key, bool skill)
+        {
+            if (skill) return 1f / LogicRate();
+            if (key.DurationSeconds > 0.0001f) return key.DurationSeconds;
+            var keys = KeysPane();
+            var px = keys == null ? 8f : PaneView(keys, true) / 60f;
+            if (px < 1f) px = 1f;
+            return ClipSpan(px) / LogicRate();
+        }
+
+        float PreviewTime()
+        {
+            var host = view.GetChild("progress");
+            var slider = host as GSlider ?? (host as GComponent)?.GetChild("progress") as GSlider;
+            if (slider == null) return 0f;
+            return Mathf.Max(0f, (float)slider.value);
+        }
+
+        void OnStageChanged()
+        {
+            if (!_entered) return;
+            SaveLayout();
+            RecordLogic();
+        }
+
+        void PoseAll()
+        {
+            RebuildPreview();
+            ShowAt(PreviewTime(), false, 0);
+            ApplyWorld();
+        }
+
+        void ApplyWorld()
+        {
+            if (_editing || _samples.Count == 0) return;
+            var frame = Mathf.FloorToInt(PreviewTime() * LogicRate() + 0.0001f);
+            if (frame < 0) frame = 0;
+            if (frame >= _samples.Count) frame = _samples.Count - 1;
+            SpellPreviewStage.ApplyFrame(_samples[frame]);
+            var actor = SpellPreviewStage.Selected;
+            if (actor != null && _key < 0)
+                ShowUnitInspect(actor);
+        }
+
+        void RecordLogic()
+        {
+            if (!_entered || _spellId == 0) return;
+            WriteLogic();
+            SpellPreviewStage.CopySeeds(_seeds);
+            var frames = ContentFrames();
+            var next = SpellPreviewSim.Run(_spellId, Mathf.Max(1, frames + 1), _seeds);
+            _samples.Clear();
+            _samples.AddRange(next);
+            ApplyWorld();
+            if (ProjectSession.IsOpen)
+                ProjectSession.Save();
+        }
+
+        void RecordRender(TrackKind kind)
+        {
+            if (!_entered || _spellId == 0) return;
+            WritePresentation();
+            RebuildPreview();
+            ShowAt(PreviewTime(), false, TypeOf(kind));
+            if (ProjectSession.IsOpen)
+                ProjectSession.Save();
+        }
+
+        void WriteLogic()
+        {
+            var spell = ProjectSession.EnsureOwnSpell(_spellId);
+            if (spell == null) return;
+            var frames = ContentFrames();
+            if (spell.Activation != (int)SpellActivation.Passive && frames > 0)
+                spell.DurationFrames = frames;
+            spell.Events.Clear();
+            for (var i = 0; i < _tracks.Count; i++)
+            {
+                if (_tracks[i].Kind != TrackKind.Skill) continue;
+                var keys = _tracks[i].Keys;
+                for (var k = 0; k < keys.Count; k++)
+                    spell.Events.Add(ToEvent(keys[k]));
+            }
+
+            for (var i = 0; i < _extraEvents.Count; i++)
+                spell.Events.Add(_extraEvents[i].Clone());
+        }
+
+        static SpellEventConfig ToEvent(KeyFrame key)
+        {
+            var evt = new SpellEventConfig();
+            if (key.Frame <= 0)
+            {
+                evt.Trigger = (int)SpellEventTrigger.OnStart;
+                evt.Frame = 0;
+            }
+            else
+            {
+                evt.Trigger = (int)SpellEventTrigger.Frame;
+                evt.Frame = key.Frame;
+            }
+
+            for (var i = 0; i < key.Tags.Count; i++) evt.Tags.Add(key.Tags[i]);
+            for (var i = 0; i < key.Buffs.Count; i++) evt.BuffIds.Add(key.Buffs[i]);
+            return evt;
+        }
+
+        void WritePresentation()
+        {
+            var spell = ProjectSession.EnsureOwnSpell(_spellId);
+            if (spell == null) return;
+            spell.PresentationTracks.Clear();
+            var lane = 0;
+            for (var i = 0; i < _tracks.Count; i++)
+            {
+                var track = _tracks[i];
+                var type = TypeOf(track.Kind);
+                if (type == 0) continue;
+                for (var k = 0; k < track.Keys.Count; k++)
+                {
+                    var key = track.Keys[k];
+                    var item = new SpellPresentationTrack
+                    {
+                        TypeId = type,
+                        StartSeconds = Mathf.Max(0f, key.StartSeconds),
+                        DurationSeconds = Mathf.Max(0.01f, ClipLengthSeconds(key, false)),
+                    };
+                    if (track.Kind == TrackKind.Spine)
+                    {
+                        if (!TryClipAnimation(key, out var animation)) continue;
+                        var config = new SpineSpellTrackConfig
+                        {
+                            AnimationName = animation,
+                            Loop = key.EndMode == 1,
+                            TrackIndex = lane,
+                        };
+                        item.Parameters = config.ToByteString();
+                    }
+                    else if (key.Parameters != null && key.Parameters.Length > 0)
+                    {
+                        item.Parameters = Google.Protobuf.ByteString.CopyFrom(key.Parameters);
+                    }
+                    else
+                    {
+                        continue;
+                    }
+
+                    spell.PresentationTracks.Add(item);
+                }
+
+                if (track.Kind == TrackKind.Spine)
+                    lane++;
+            }
+
+            for (var i = 0; i < _extraTracks.Count; i++)
+                spell.PresentationTracks.Add(_extraTracks[i].Clone());
+        }
+
+        void LoadTracks()
+        {
+            _extraEvents.Clear();
+            _extraTracks.Clear();
+            var spell = ProjectSession.EnsureOwnSpell(_spellId);
+            if (spell == null) return;
+            var skill = SkillTrack();
+            for (var i = 0; i < spell.Events.Count; i++)
+            {
+                var evt = spell.Events[i];
+                var trigger = (SpellEventTrigger)evt.Trigger;
+                if (trigger != SpellEventTrigger.OnStart && trigger != SpellEventTrigger.Frame)
+                {
+                    _extraEvents.Add(evt.Clone());
+                    continue;
+                }
+
+                var key = new KeyFrame { Frame = trigger == SpellEventTrigger.OnStart ? 0 : evt.Frame };
+                key.Tags.AddRange(evt.Tags);
+                key.Buffs.AddRange(evt.BuffIds);
+                skill.Keys.Add(key);
+            }
+
+            if (skill.Keys.Count > 1)
+                PackSkillTracks();
+
+            for (var i = 0; i < spell.PresentationTracks.Count; i++)
+            {
+                var source = spell.PresentationTracks[i];
+                var kind = KindOf(source.TypeId);
+                var row = Row(kind);
+                if (row == null)
+                {
+                    _extraTracks.Add(source.Clone());
+                    continue;
+                }
+
+                var key = new KeyFrame
+                {
+                    StartSeconds = source.StartSeconds,
+                    DurationSeconds = source.DurationSeconds,
+                    Parameters = source.Parameters == null || source.Parameters.Length == 0
+                        ? Array.Empty<byte>()
+                        : source.Parameters.ToByteArray(),
+                };
+                if (kind == TrackKind.Spine && source.Parameters != null && source.Parameters.Length > 0)
+                {
+                    var config = SpineSpellTrackConfig.Parser.ParseFrom(source.Parameters);
+                    key.Anim = config.AnimationName ?? "";
+                    key.EndMode = config.Loop ? 1 : 0;
+                }
+
+                row.Keys.Add(key);
+            }
+
+            for (var i = 0; i < _tracks.Count; i++)
+            {
+                if (_tracks[i].Kind == TrackKind.Skill || _tracks[i].Keys.Count == 0) continue;
+                PushTail(_tracks[i], _tracks[i].Keys[0]);
+            }
+        }
+
+        Track Row(TrackKind kind)
+        {
+            if (kind == TrackKind.Skill) return null;
+            for (var i = 0; i < _tracks.Count; i++)
+            {
+                if (_tracks[i].Kind == kind) return _tracks[i];
+            }
+
+            return null;
+        }
+
+        static ulong TypeOf(TrackKind kind)
+        {
+            switch (kind)
+            {
+                case TrackKind.Particles: return ParticleSpellTracks.TypeId.Value;
+                case TrackKind.Vfx: return VfxSpellTracks.TypeId.Value;
+                case TrackKind.Spine: return SpineSpellTracks.TypeId.Value;
+                case TrackKind.Animation: return AnimationSpellTracks.TypeId.Value;
+                default: return 0;
+            }
+        }
+
+        static TrackKind KindOf(ulong typeId)
+        {
+            if (typeId == ParticleSpellTracks.TypeId.Value) return TrackKind.Particles;
+            if (typeId == VfxSpellTracks.TypeId.Value) return TrackKind.Vfx;
+            if (typeId == SpineSpellTracks.TypeId.Value) return TrackKind.Spine;
+            if (typeId == AnimationSpellTracks.TypeId.Value) return TrackKind.Animation;
+            return TrackKind.Skill;
+        }
+
+        void SaveLayout()
+        {
+            var archive = ProjectSession.Archive;
+            if (archive == null || _spellId == 0) return;
+            SpellPreviewLayout layout = null;
+            for (var i = 0; i < archive.SpellPreviews.Count; i++)
+            {
+                if (archive.SpellPreviews[i].SpellId != _spellId) continue;
+                layout = archive.SpellPreviews[i];
+                break;
+            }
+
+            if (layout == null)
+            {
+                layout = new SpellPreviewLayout { SpellId = _spellId };
+                archive.SpellPreviews.Add(layout);
+            }
+
+            layout.Actors.Clear();
+            SpellPreviewStage.CopySeeds(_seeds);
+            for (var i = 0; i < _seeds.Count; i++)
+            {
+                var seed = _seeds[i];
+                var record = new SpellPreviewActorRecord
+                {
+                    StableId = seed.StableId,
+                    X = seed.Position.x,
+                    Y = seed.Position.y,
+                    Z = seed.Position.z,
+                };
+                var owner = CurrentOwner();
+                if (owner != null && owner.Id == seed.StableId)
+                {
+                    record.UnitId = owner.Id;
+                    if (owner.PresetAttributes.Count > 0)
+                        record.PresetId = owner.PresetAttributes[0];
+                }
+
+                record.Tags.AddRange(seed.Tags);
+                record.Values.AddRange(seed.Values);
+                layout.Actors.Add(record);
+            }
+        }
+
+        void RestoreLayout()
+        {
+            var archive = ProjectSession.Archive;
+            if (archive == null || _spellId == 0) return;
+            SpellPreviewLayout layout = null;
+            for (var i = 0; i < archive.SpellPreviews.Count; i++)
+            {
+                if (archive.SpellPreviews[i].SpellId != _spellId) continue;
+                layout = archive.SpellPreviews[i];
+                break;
+            }
+
+            if (layout == null) return;
+            var owner = CurrentOwner();
+            for (var i = 0; i < layout.Actors.Count; i++)
+            {
+                var record = layout.Actors[i];
+                var caster = owner != null && (record.UnitId == owner.Id || record.StableId == owner.Id);
+                if (caster)
+                {
+                    var actors = UnityEngine.Object.FindObjectsByType<PreviewActor>(FindObjectsSortMode.None);
+                    for (var a = 0; a < actors.Length; a++)
+                    {
+                        if (actors[a] == null || actors[a].StableId != owner.Id) continue;
+                        actors[a].transform.position = new Vector3(record.X, record.Y, record.Z);
+                        actors[a].Tags.Clear();
+                        actors[a].Tags.AddRange(record.Tags);
+                        actors[a].PresetId = record.PresetId;
+                        actors[a].InitialValues.Clear();
+                        actors[a].InitialValues.AddRange(record.Values);
+                        actors[a].RememberHome();
+                        actors[a].RememberTags();
+                    }
+
+                    continue;
+                }
+
+                var dummy = SpellPreviewStage.SpawnDummy(record.StableId, new Vector3(record.X, record.Y, record.Z));
+                if (dummy == null) continue;
+                dummy.Tags.AddRange(record.Tags);
+                dummy.PresetId = record.PresetId;
+                dummy.InitialValues.AddRange(record.Values);
+                dummy.RememberHome();
+                dummy.RememberTags();
+            }
         }
 
         void ToggleUnits()
