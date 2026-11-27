@@ -23,8 +23,10 @@ namespace UILogic
         [System.NonSerialized] public readonly List<EditorUnitValue> InitialValues = new List<EditorUnitValue>();
         [System.NonSerialized] public readonly List<EditorUnitValue> Sampled = new List<EditorUnitValue>();
 
-        PreviewDummy _highlight;
         int _fit;
+        bool _chosen;
+        bool _frameMarks;
+        int _pick;
 
         public void RememberHome()
         {
@@ -39,18 +41,74 @@ namespace UILogic
 
         public void BindOutline(Material material)
         {
-            _highlight = GetComponent<PreviewDummy>();
-            if (_highlight == null)
-                _highlight = gameObject.AddComponent<PreviewDummy>();
-            _highlight.BindOutline(material);
+            var highlight = GetComponent<PreviewDummy>();
+            if (highlight == null)
+                highlight = gameObject.AddComponent<PreviewDummy>();
+            highlight.BindOutline(material);
         }
 
         public void SetSelected(bool on)
         {
-            if (_highlight == null)
-                _highlight = GetComponent<PreviewDummy>();
-            if (_highlight != null)
-                _highlight.SetHighlight(on);
+            _chosen = on;
+        }
+
+        public void ShowFrameMarks(bool on)
+        {
+            _frameMarks = on;
+        }
+
+        public void SetPick(int pick)
+        {
+            _pick = pick;
+        }
+
+        public void CollectOutline()
+        {
+            var color = PreviewOutline.Yellow;
+            var show = _chosen;
+            if (!show && _frameMarks && _pick == 1)
+            {
+                color = PreviewOutline.Green;
+                show = true;
+            }
+            else if (!show && _frameMarks && _pick == 2)
+            {
+                color = PreviewOutline.Red;
+                show = true;
+            }
+
+            if (!show)
+                return;
+
+            var renderers = GetComponentsInChildren<Renderer>(true);
+            for (var i = 0; i < renderers.Length; i++)
+            {
+                var renderer = renderers[i];
+                if (!IsOutlineBody(renderer))
+                    continue;
+                PreviewOutline.Add(renderer, color);
+            }
+        }
+
+        bool IsOutlineBody(Renderer renderer)
+        {
+            if (renderer == null || !renderer.enabled || !renderer.gameObject.activeInHierarchy)
+                return false;
+            if (renderer is not MeshRenderer && renderer is not SkinnedMeshRenderer)
+                return false;
+            if (renderer.gameObject.name == "Outline")
+                return false;
+            if (renderer.GetComponent<TextMesh>() != null)
+                return false;
+            var dummy = renderer.GetComponentInParent<PreviewDummy>();
+            if (dummy != null && dummy.IsPlate(renderer))
+                return false;
+            var filter = renderer.GetComponent<MeshFilter>();
+            if (renderer is MeshRenderer && (filter == null || filter.sharedMesh == null))
+                return false;
+            if (renderer is SkinnedMeshRenderer skinned && skinned.sharedMesh == null)
+                return false;
+            return true;
         }
 
         public void ScheduleFit()

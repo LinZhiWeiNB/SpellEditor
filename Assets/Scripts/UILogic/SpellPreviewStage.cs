@@ -232,6 +232,8 @@ namespace UILogic
                 actor.Buffs.Clear();
                 actor.Sampled.Clear();
                 actor.HasSample = false;
+                actor.ShowFrameMarks(false);
+                actor.SetPick(0);
                 var dummy = actor.GetComponent<PreviewDummy>();
                 if (dummy == null)
                     continue;
@@ -313,6 +315,8 @@ namespace UILogic
 
                 if (actor == null)
                     continue;
+                actor.ShowFrameMarks(true);
+                actor.SetPick(PickOf(frame, unit.StableId));
                 actor.transform.position = unit.Position;
                 actor.Tags.Clear();
                 actor.Tags.AddRange(unit.Tags);
@@ -330,6 +334,40 @@ namespace UILogic
                     dummy.SetTags(names);
                 }
             }
+
+            for (var a = 0; a < actors.Length; a++)
+            {
+                var actor = actors[a];
+                if (actor == null)
+                    continue;
+                var listed = false;
+                for (var i = 0; i < frame.Units.Count; i++)
+                {
+                    if (frame.Units[i].StableId == actor.StableId)
+                    {
+                        listed = true;
+                        break;
+                    }
+                }
+
+                if (listed)
+                    continue;
+                actor.ShowFrameMarks(true);
+                actor.SetPick(PickOf(frame, actor.StableId));
+            }
+        }
+
+        static int PickOf(SpellPreviewSim.Frame frame, ulong stableId)
+        {
+            for (var i = 0; i < frame.Picks.Count; i++)
+            {
+                var pick = frame.Picks[i];
+                if (pick.StableId != stableId)
+                    continue;
+                return pick.Passed ? 1 : 2;
+            }
+
+            return 0;
         }
 
         public static void SetCaster(EditorUnit unit)
@@ -390,6 +428,20 @@ namespace UILogic
             Select(null, false);
             ReleaseCaster();
             _camera = null;
+            PreviewOutline.Clear();
+        }
+
+        void LateUpdate()
+        {
+            PreviewOutline.Clear();
+            if (_camera == null)
+                return;
+            var actors = GetComponentsInChildren<PreviewActor>(true);
+            for (var i = 0; i < actors.Length; i++)
+            {
+                if (actors[i] != null)
+                    actors[i].CollectOutline();
+            }
         }
 
         void Bind(GObject hit)

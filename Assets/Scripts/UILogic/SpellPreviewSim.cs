@@ -21,9 +21,16 @@ namespace UILogic
             public readonly List<EditorUnitValue> Values = new List<EditorUnitValue>();
         }
 
+        public struct Pick
+        {
+            public ulong StableId;
+            public bool Passed;
+        }
+
         public sealed class Frame
         {
             public readonly List<Unit> Units = new List<Unit>();
+            public readonly List<Pick> Picks = new List<Pick>();
         }
 
         public sealed class Unit
@@ -47,6 +54,23 @@ namespace UILogic
 
             var world = new World("SpellPreview");
             var startup = new SpellStartup();
+            var previous = SpellDebug.Listener;
+            var picks = new Dictionary<int, Dictionary<ulong, bool>>();
+            SpellDebug.Listener = notice =>
+            {
+                if (notice.Step != SpellDebugStep.TagHit || notice.TargetId == 0)
+                    return;
+                if (!picks.TryGetValue(notice.Tick, out var map))
+                {
+                    map = new Dictionary<ulong, bool>();
+                    picks[notice.Tick] = map;
+                }
+
+                if (notice.Passed != 0)
+                    map[notice.TargetId] = true;
+                else if (!map.ContainsKey(notice.TargetId))
+                    map[notice.TargetId] = false;
+            };
             try
             {
                 for (var i = 0; i < ProjectSession.Sources.Count; i++)
@@ -143,6 +167,18 @@ namespace UILogic
                         sample.Units.Add(unit);
                     }
 
+                    if (picks.TryGetValue(frame, out var map))
+                    {
+                        foreach (var pair in map)
+                        {
+                            sample.Picks.Add(new Pick
+                            {
+                                StableId = pair.Key,
+                                Passed = pair.Value,
+                            });
+                        }
+                    }
+
                     samples.Add(sample);
                 }
             }
@@ -153,6 +189,7 @@ namespace UILogic
             }
             finally
             {
+                SpellDebug.Listener = previous;
                 startup.Dispose();
                 if (world.IsCreated)
                     world.Dispose();

@@ -222,47 +222,20 @@ namespace UILogic
 
         void EnsureOutlines()
         {
-            if (_outline == null)
+            if (_outlineWidth < 0f && _outline == null)
                 return;
-            var bodies = GetComponentsInChildren<MeshRenderer>(true);
-            for (var i = 0; i < bodies.Length; i++)
+            var children = GetComponentsInChildren<Transform>(true);
+            for (var i = 0; i < children.Length; i++)
             {
-                var body = bodies[i];
-                if (!IsBody(body))
-                    continue;
-                var existing = body.transform.Find("Outline");
-                if (existing != null)
-                {
-                    _outlines.Add(existing.gameObject);
-                    continue;
-                }
-
-                var source = body.GetComponent<MeshFilter>().sharedMesh;
-                var shell = new GameObject("Outline");
-                shell.transform.SetParent(body.transform, false);
-                var filter = shell.AddComponent<MeshFilter>();
-                filter.sharedMesh = Smoothed(source);
-                var renderer = shell.AddComponent<MeshRenderer>();
-                renderer.sharedMaterial = _outline;
-                renderer.shadowCastingMode = ShadowCastingMode.Off;
-                renderer.receiveShadows = false;
-                shell.SetActive(false);
-                _outlines.Add(shell);
+                var child = children[i];
+                if (child != null && child.name == "Outline")
+                    child.gameObject.SetActive(false);
             }
         }
 
-        bool IsBody(MeshRenderer renderer)
+        public bool IsPlate(Renderer renderer)
         {
-            if (renderer == null || renderer == _plate)
-                return false;
-            if (_label != null && renderer.gameObject == _label.gameObject)
-                return false;
-            if (renderer.GetComponent<TextMesh>() != null)
-                return false;
-            if (renderer.gameObject.name == "Outline")
-                return false;
-            var filter = renderer.GetComponent<MeshFilter>();
-            return filter != null && filter.sharedMesh != null;
+            return renderer != null && renderer == _plate;
         }
 
         void ApplyHighlight()
@@ -270,18 +243,8 @@ namespace UILogic
             for (var i = 0; i < _outlines.Count; i++)
             {
                 var outline = _outlines[i];
-                if (outline == null)
-                    continue;
-                outline.SetActive(_highlighted);
-                if (!_highlighted)
-                    continue;
-                var renderer = outline.GetComponent<MeshRenderer>();
-                if (renderer == null)
-                    continue;
-                var block = new MaterialPropertyBlock();
-                block.SetColor("_Color", _highlight);
-                block.SetFloat("_Width", _outlineWidth);
-                renderer.SetPropertyBlock(block);
+                if (outline != null)
+                    outline.SetActive(false);
             }
         }
 
@@ -302,64 +265,6 @@ namespace UILogic
         }
 
         static Mesh _plateQuad;
-
-        static Mesh Smoothed(Mesh source)
-        {
-            var vertices = source.vertices;
-            if (vertices == null || vertices.Length == 0)
-                return source;
-            var normals = source.normals;
-            if (normals == null || normals.Length != vertices.Length)
-            {
-                var temp = Instantiate(source);
-                temp.RecalculateNormals();
-                normals = temp.normals;
-                if (Application.isPlaying)
-                    Destroy(temp);
-                else
-                    DestroyImmediate(temp);
-            }
-
-            var sums = new Dictionary<long, Vector3>();
-            var counts = new Dictionary<long, int>();
-            for (var i = 0; i < vertices.Length; i++)
-            {
-                var key = Quantize(vertices[i]);
-                Vector3 sum;
-                sums.TryGetValue(key, out sum);
-                sums[key] = sum + normals[i];
-                int count;
-                counts.TryGetValue(key, out count);
-                counts[key] = count + 1;
-            }
-
-            var smooth = new Vector3[vertices.Length];
-            for (var i = 0; i < vertices.Length; i++)
-            {
-                var key = Quantize(vertices[i]);
-                var averaged = sums[key] / counts[key];
-                smooth[i] = averaged.sqrMagnitude < 1e-8f ? normals[i] : averaged.normalized;
-            }
-
-            var mesh = new Mesh();
-            mesh.name = source.name + " Outline";
-            mesh.indexFormat = source.indexFormat;
-            mesh.vertices = vertices;
-            mesh.normals = smooth;
-            mesh.subMeshCount = source.subMeshCount;
-            for (var sub = 0; sub < source.subMeshCount; sub++)
-                mesh.SetTriangles(source.GetTriangles(sub), sub);
-            mesh.hideFlags = HideFlags.HideAndDontSave;
-            return mesh;
-        }
-
-        static long Quantize(Vector3 point)
-        {
-            var x = (long)Mathf.RoundToInt(point.x * 1000f);
-            var y = (long)Mathf.RoundToInt(point.y * 1000f);
-            var z = (long)Mathf.RoundToInt(point.z * 1000f);
-            return (x & 0x1fffff) | ((y & 0x1fffff) << 21) | ((z & 0x1fffff) << 42);
-        }
 
         static Mesh PlateQuad()
         {
