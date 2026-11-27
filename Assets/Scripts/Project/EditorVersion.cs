@@ -5,7 +5,7 @@ namespace GameContentEditor
     /// </summary>
     public static class EditorVersion
     {
-        public const string Current = "1.0.0";
+        public const string Current = "1.1.0";
         public const string Repository = "https://github.com/LinZhiWeiNB/GameContentEditor";
 
         public static string ReleasePage(string version)

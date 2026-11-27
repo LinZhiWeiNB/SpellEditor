@@ -29,7 +29,7 @@ namespace GameContentEditor
     /// </summary>
     public static class ProjectSession
     {
-        public const string RuntimeVersion = "1.1.0";
+        public const string RuntimeVersion = "1.5.0";
         public const uint DefaultLogicFrameRate = 30;
 
         public static uint LogicFrameRate
