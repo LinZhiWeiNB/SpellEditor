@@ -4,7 +4,7 @@ using System.IO;
 using System.Text;
 using MoonSharp.Interpreter;
 
-namespace SpellEditor
+namespace GameContentEditor
 {
     /// <summary>
     /// 资源导入之后调用已安装的 Lua 插件。

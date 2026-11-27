@@ -338,6 +338,8 @@ namespace UILogic
             public bool Rename;
             public bool Create;
             public bool Remove;
+            public string CreateTitle;
+            public string RemoveTitle;
             public Action OnRename;
             public Action OnCreate;
             public Action OnRemove;
@@ -374,6 +376,15 @@ namespace UILogic
             rename.visible = showRename;
             create.visible = showCreate;
             remove.visible = showRemove;
+            if (request != null && !string.IsNullOrEmpty(request.CreateTitle))
+            {
+                create.title = request.CreateTitle;
+            }
+
+            if (request != null && !string.IsNullOrEmpty(request.RemoveTitle))
+            {
+                remove.title = request.RemoveTitle;
+            }
             var y = card.y + 16f;
             if (showRename)
             {

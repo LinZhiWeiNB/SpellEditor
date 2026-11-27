@@ -4,7 +4,7 @@ using FairyGUI;
 using PackageResource;
 using PackageUnit;
 using RebornFrame.Spell;
-using SpellEditor;
+using GameContentEditor;
 
 namespace UILogic
 {

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using FairyGUI;
 using PackageMain;
-using SpellEditor;
+using GameContentEditor;
 using UnityEngine;
 
 namespace UILogic

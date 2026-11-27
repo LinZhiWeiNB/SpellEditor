@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using FairyGUI;
 using PackageAtrribute;
 using RebornFrame.Spell;
-using SpellEditor;
+using GameContentEditor;
 
 namespace UILogic
 {

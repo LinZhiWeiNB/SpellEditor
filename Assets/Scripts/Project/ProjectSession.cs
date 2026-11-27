@@ -5,7 +5,7 @@ using Google.Protobuf.Collections;
 using RebornFrame.GameData;
 using RebornFrame.Spell;
 
-namespace SpellEditor
+namespace GameContentEditor
 {
     public sealed class LoadedSource
     {
@@ -676,7 +676,7 @@ namespace SpellEditor
 
             if (source.AuthorKnown)
             {
-                return "模组数据源 · 作者 " + source.AuthorId;
+                return "模组数据源 · 模组 ID " + source.AuthorId;
             }
 
             return "模组数据源";

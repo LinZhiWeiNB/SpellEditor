@@ -16,6 +16,8 @@ namespace UILogic
         [SerializeField] float _outlineWidth = 0.025f;
 
         readonly List<GameObject> _outlines = new List<GameObject>();
+        TextMesh[] _strokes;
+        bool _anchored;
         bool _ready;
 
         public bool Highlighted
@@ -94,10 +96,29 @@ namespace UILogic
             if (_label == null)
                 return;
             var text = Join(_tags);
+            _label.characterSize = 0.035f;
+            _label.fontSize = 32;
+            _label.anchor = TextAnchor.LowerCenter;
+            _label.alignment = TextAlignment.Center;
+            _label.color = new Color(0.96f, 0.94f, 0.88f, 1f);
             _label.text = text;
+            EnsureStrokes();
+            for (var i = 0; i < _strokes.Length; i++)
+            {
+                var stroke = _strokes[i];
+                stroke.text = text;
+                stroke.characterSize = _label.characterSize;
+                stroke.fontSize = _label.fontSize;
+                stroke.anchor = _label.anchor;
+                stroke.alignment = _label.alignment;
+            }
+
             var show = text.Length > 0;
             var renderer = _label.GetComponent<Renderer>();
+            renderer.sortingOrder = 1;
             renderer.enabled = show;
+            for (var i = 0; i < _strokes.Length; i++)
+                _strokes[i].GetComponent<Renderer>().enabled = show;
             if (_plate != null)
                 _plate.enabled = show;
             if (show)
@@ -106,13 +127,66 @@ namespace UILogic
 
         void FaceCamera()
         {
-            var cam = Camera.main;
+            var cam = SpellPreviewStage.ViewCamera;
+            if (cam == null)
+                cam = Camera.main;
             if (cam == null)
                 return;
+            AnchorLabel();
+            _label.transform.localScale = Vector3.one;
             var toward = cam.transform.position - _label.transform.position;
             if (toward.sqrMagnitude < 0.0001f)
+                toward = -cam.transform.forward;
+            _label.transform.rotation = Quaternion.LookRotation(toward, cam.transform.up)
+                * Quaternion.Euler(0f, 0f, 180f);
+        }
+
+        void AnchorLabel()
+        {
+            if (_anchored || _label.transform.parent == transform)
+            {
+                _anchored = true;
                 return;
-            _label.transform.rotation = Quaternion.LookRotation(toward, Vector3.up);
+            }
+
+            _label.transform.SetParent(transform, true);
+            _anchored = true;
+        }
+
+        void EnsureStrokes()
+        {
+            if (_strokes != null)
+                return;
+            var offsets = new[]
+            {
+                new Vector3(-1f, 0f, 0f),
+                new Vector3(1f, 0f, 0f),
+                new Vector3(0f, -1f, 0f),
+                new Vector3(0f, 1f, 0f),
+                new Vector3(-0.7f, -0.7f, 0f),
+                new Vector3(-0.7f, 0.7f, 0f),
+                new Vector3(0.7f, -0.7f, 0f),
+                new Vector3(0.7f, 0.7f, 0f),
+            };
+            var material = _label.GetComponent<Renderer>().sharedMaterial;
+            _strokes = new TextMesh[offsets.Length];
+            for (var i = 0; i < offsets.Length; i++)
+            {
+                var body = new GameObject("TagStroke");
+                body.transform.SetParent(_label.transform, false);
+                body.transform.localPosition = offsets[i] * 0.008f + new Vector3(0f, 0f, -0.002f);
+                body.transform.localRotation = Quaternion.identity;
+                body.transform.localScale = Vector3.one;
+                var mesh = body.AddComponent<TextMesh>();
+                mesh.font = _label.font;
+                mesh.color = Color.black;
+                var renderer = mesh.GetComponent<Renderer>();
+                renderer.shadowCastingMode = ShadowCastingMode.Off;
+                renderer.receiveShadows = false;
+                renderer.sortingOrder = 0;
+                renderer.sharedMaterial = material;
+                _strokes[i] = mesh;
+            }
         }
 
         void FitPlate()

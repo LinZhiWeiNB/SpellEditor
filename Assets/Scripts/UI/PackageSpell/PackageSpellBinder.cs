@@ -35,6 +35,8 @@ namespace PackageSpell
             UIObjectFactory.SetPackageItemExtension(UI_ItemSpellTag.URL, typeof(UI_ItemSpellTag));
             UIObjectFactory.SetPackageItemExtension(UI_ComTimeline.URL, typeof(UI_ComTimeline));
             UIObjectFactory.SetPackageItemExtension(UI_ButtonTip.URL, typeof(UI_ButtonTip));
+            UIObjectFactory.SetPackageItemExtension(UI_ComUnitInspect.URL, typeof(UI_ComUnitInspect));
+            UIObjectFactory.SetPackageItemExtension(UI_ItemUnitTag.URL, typeof(UI_ItemUnitTag));
         }
     }
 }

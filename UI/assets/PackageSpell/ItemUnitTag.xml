@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="280,76">
+  <controller name="cMode" pages="0,编辑,1,预览" selected="0"/>
+  <displayList>
+    <text id="n0_utag" name="title" xy="0,0" size="280,40" fontSize="13" color="#e8e6e3" autoSize="none" text="标签"/>
+    <component id="n1_utag" name="castLink" src="g8bt0" fileName="ButtonCheck.xml" pkg="m5lrgzhj" xy="0,44" size="164,28">
+      <gearDisplay controller="cMode" pages="0"/>
+      <Button title="与本次施法相关"/>
+    </component>
+    <component id="n2_utag" name="btnEdit" src="g8bt1" fileName="ButtonGhost.xml" pkg="m5lrgzhj" xy="168,44" size="52,28">
+      <gearDisplay controller="cMode" pages="0"/>
+      <Button title="编辑"/>
+    </component>
+    <component id="n3_utag" name="btnRemove" src="g8bt1" fileName="ButtonGhost.xml" pkg="m5lrgzhj" xy="224,44" size="56,28">
+      <gearDisplay controller="cMode" pages="0"/>
+      <Button title="删除"/>
+    </component>
+  </displayList>
+</component>

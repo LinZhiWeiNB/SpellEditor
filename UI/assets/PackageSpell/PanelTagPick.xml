@@ -4,50 +4,38 @@
     <graph id="n0_wtag1" name="mask" xy="0,0" size="1600,900" type="rect" lineSize="0" fillColor="#8c000000">
       <relation target="" sidePair="width-width,height-height"/>
     </graph>
-    <graph id="n1_wtag1" name="card" xy="280,150" size="1040,600" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff1a1a1a" corner="8">
+    <graph id="n1_wtag1" name="card" xy="480,120" size="640,660" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff1a1a1a" corner="8">
       <relation target="" sidePair="center-center,middle-middle"/>
     </graph>
-    <text id="n2_wtag1" name="title" xy="304,170" size="480,28" fontSize="18" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="选择标签">
+    <text id="n2_wtag1" name="title" xy="504,140" size="480,28" fontSize="18" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="选择标签">
       <relation target="n1_wtag1" sidePair="left-left,top-top"/>
     </text>
-    <graph id="n3_wtag1" name="bgSearch" xy="304,210" size="480,36" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4">
+    <graph id="n3_wtag1" name="bgSearch" xy="504,180" size="592,36" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4">
       <relation target="n1_wtag1" sidePair="left-left,top-top"/>
     </graph>
-    <text id="n4_wtag1" name="search" xy="316,210" size="456,36" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" input="true" prompt="搜索标签的任意一段">
+    <text id="n4_wtag1" name="search" xy="516,180" size="568,36" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" input="true" prompt="搜索标签的任意一段">
       <relation target="n1_wtag1" sidePair="left-left,top-top"/>
     </text>
-    <list id="n5_wtag1" name="choices" xy="304,258" size="480,400" overflow="scroll" scrollBar="hidden" lineGap="4" defaultItem="ui://unt4p8n2mnu07" autoClearItems="true" selectionMode="none">
+    <list id="n5_wtag1" name="choices" xy="504,228" size="592,400" overflow="scroll" scrollBar="hidden" defaultItem="ui://m5lrgzhjg8bte" autoClearItems="true" selectionMode="none">
       <relation target="n1_wtag1" sidePair="left-left,top-top"/>
     </list>
-    <text id="n6_wtag1" name="empty" xy="304,258" size="480,36" fontSize="14" color="#ff8d887e" vAlign="middle" autoSize="none" singleLine="true" text="没有匹配的标签。">
+    <text id="n6_wtag1" name="empty" xy="504,228" size="592,36" fontSize="14" color="#ff8d887e" vAlign="middle" autoSize="none" singleLine="true" text="没有匹配的标签。">
       <relation target="n1_wtag1" sidePair="left-left,top-top"/>
     </text>
-    <graph id="n7_wtag1" name="split" xy="808,198" size="1,476" type="rect" lineSize="0" fillColor="#ff3a3e48">
+    <text id="n13_wtag1" name="createWarn" xy="504,636" size="592,22" fontSize="13" color="#ffe06a6a" vAlign="middle" autoSize="none" singleLine="true" text="">
+      <relation target="n1_wtag1" sidePair="left-left,top-top"/>
+    </text>
+    <graph id="n10_wtag1" name="bgName" xy="504,668" size="420,36" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4">
       <relation target="n1_wtag1" sidePair="left-left,top-top"/>
     </graph>
-    <text id="n8_wtag1" name="createTitle" xy="832,198" size="456,28" fontSize="18" color="#ffe8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="新建标签">
+    <text id="n11_wtag1" name="inputName" xy="516,668" size="396,36" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" input="true" prompt="名称，/ 表示下一层">
       <relation target="n1_wtag1" sidePair="left-left,top-top"/>
     </text>
-    <text id="n9_wtag1" name="labelName" xy="832,246" size="456,20" fontSize="13" color="#ffb7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="名称">
-      <relation target="n1_wtag1" sidePair="left-left,top-top"/>
-    </text>
-    <graph id="n10_wtag1" name="bgName" xy="832,272" size="456,36" type="rect" lineSize="1" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4">
-      <relation target="n1_wtag1" sidePair="left-left,top-top"/>
-    </graph>
-    <text id="n11_wtag1" name="inputName" xy="844,272" size="432,36" fontSize="14" color="#ffe8e6e3" vAlign="middle" autoSize="none" text="" input="true" prompt="新标签的名称">
-      <relation target="n1_wtag1" sidePair="left-left,top-top"/>
-    </text>
-    <text id="n12_wtag1" name="createHint" xy="832,320" size="456,40" fontSize="13" color="#ff8d887e" autoSize="none" text="创建后加入这条关键帧。">
-      <relation target="n1_wtag1" sidePair="left-left,top-top"/>
-    </text>
-    <text id="n13_wtag1" name="createWarn" xy="832,364" size="456,22" fontSize="13" color="#ffe06a6a" vAlign="middle" autoSize="none" singleLine="true" text="">
-      <relation target="n1_wtag1" sidePair="left-left,top-top"/>
-    </text>
-    <component id="n14_wtag1" name="btnCreate" src="g8bt3" fileName="ButtonPrimary.xml" pkg="m5lrgzhj" xy="832,404" size="160,36">
+    <component id="n14_wtag1" name="btnCreate" src="g8bt3" fileName="ButtonPrimary.xml" pkg="m5lrgzhj" xy="936,668" size="160,36">
       <relation target="n1_wtag1" sidePair="left-left,top-top"/>
       <Button title="创建并使用"/>
     </component>
-    <component id="n15_wtag1" name="btnCancel" src="g8bt1" fileName="ButtonGhost.xml" pkg="m5lrgzhj" xy="1184,698" size="88,32">
+    <component id="n15_wtag1" name="btnCancel" src="g8bt1" fileName="ButtonGhost.xml" pkg="m5lrgzhj" xy="1008,720" size="88,32">
       <relation target="n1_wtag1" sidePair="right-right,bottom-bottom"/>
       <Button title="取消"/>
     </component>

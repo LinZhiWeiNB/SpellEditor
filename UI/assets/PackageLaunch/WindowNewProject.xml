@@ -21,18 +21,18 @@
     <text id="n11_lpw02" name="labelRole" xy="400,256" size="200,28" fontSize="16" color="#e8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="身份"/>
     <list id="n12_lpw02" name="roles" xy="400,292" size="800,160" overflow="scroll" scrollBar="hidden" lineGap="8" defaultItem="ui://mskevjh6lpi03" selectionController="cRole">
       <item title="游戏开发者">
-        <property target="desc" propertyId="0" value="编写游戏本体。不用填写作者 ID，编辑器会为这份存档保存游戏开发者身份。"/>
+        <property target="desc" propertyId="0" value="编写游戏本体。不用填写模组 ID，编辑器会为这份存档保存游戏开发者身份。"/>
       </item>
       <item title="模组作者" controllers="button,1">
-        <property target="desc" propertyId="0" value="在游戏数据之上编写自己的内容。需要一个作者 ID，并选择要一起载入的数据源。"/>
+        <property target="desc" propertyId="0" value="在游戏数据之上编写自己的内容。需要一个模组 ID，并选择要一起载入的数据源。"/>
       </item>
     </list>
-    <text id="n20_lpw02" name="labelAuthor" xy="400,453" size="200,24" group="n40_lpw02" fontSize="14" color="#b7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="作者 ID"/>
+    <text id="n20_lpw02" name="labelAuthor" xy="400,453" size="200,24" group="n40_lpw02" fontSize="14" color="#b7b2a8" vAlign="middle" autoSize="none" singleLine="true" text="模组 ID"/>
     <graph id="n21_lpw02" name="bgAuthor" xy="400,481" size="240,36" group="n40_lpw02" type="rect" lineColor="#ff3a3e48" fillColor="#ff14161b" corner="4"/>
     <text id="n22_lpw02" name="inputAuthor" xy="412,481" size="216,36" group="n40_lpw02" fontSize="15" color="#e8e6e3" vAlign="middle" autoSize="none" text="100" input="true" prompt="1 到 4294967295" maxLength="10" restrict="[0-9]"/>
     <graph id="n23_lpw02" name="calloutBg" xy="400,533" size="800,100" group="n40_lpw02" type="rect" lineSize="0" fillColor="#ff243044" corner="4"/>
     <text id="n24_lpw02" name="calloutTitle" xy="416,541" size="768,22" group="n40_lpw02" fontSize="14" color="#e8e6e3" autoSize="none" bold="true" singleLine="true" text="注意"/>
-    <text id="n25_lpw02" name="calloutBody" xy="416,545" size="768,56" group="n40_lpw02" fontSize="13" color="#b7b2a8" autoSize="height" text="作者 ID 会写在你创建的每条属性、标签和法术标识前面，用来标明内容出自谁。编辑器不分配号码，也不会到网上查询这个号码有没有人用。请自己选一个还没被占用的整数，并一直沿用。两份数据用了同一个作者 ID 再被一起载入时，以后载入的数据源为准，载入顺序通常由游戏的模组管理器复制统筹安排。"/>
+    <text id="n25_lpw02" name="calloutBody" xy="416,545" size="768,56" group="n40_lpw02" fontSize="13" color="#b7b2a8" autoSize="height" text="模组 ID 会写在你创建的每条属性、标签和法术标识前面，用来标明内容出自谁。编辑器不分配号码，也不会到网上查询这个号码有没有人用。请自己选一个还没被占用的整数，并一直沿用。两份数据用了同一个模组 ID 再被一起载入时，以后载入的数据源为准，载入顺序通常由游戏的模组管理器复制统筹安排。"/>
     <text id="n26_lpw02" name="labelSources" xy="400,645" size="240,28" group="n40_lpw02" fontSize="16" color="#e8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="载入的数据源"/>
     <text id="n27_lpw02" name="sourceHint" xy="400,681" size="800,22" group="n40_lpw02" fontSize="13" color="#ffcc00" autoSize="none" singleLine="true" text="选择数据包来添加。此处的数据源仅用于编辑器内显示，并非保证游戏载入时包含此数据源。"/>
     <list id="n28_lpw02" name="sources" xy="400,711" size="800,164" group="n40_lpw02" selectionMode="none" overflow="scroll" scrollBar="hidden" lineGap="8" defaultItem="ui://mskevjh6lpi04" autoClearItems="true">
@@ -41,7 +41,7 @@
         <property target="path" propertyId="0" value="/SpellProjects/Game"/>
       </item>
       <item title="英雄扩展">
-        <property target="kind" propertyId="0" value="模组数据源 · 作者 7"/>
+        <property target="kind" propertyId="0" value="模组数据源 · 模组 ID 7"/>
         <property target="path" propertyId="0" value="/SpellProjects/Heroes"/>
       </item>
     </list>

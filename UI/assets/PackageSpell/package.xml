@@ -24,6 +24,8 @@
     <component id="spin1" name="ComSpineInspect.xml" path="/" exported="true"/>
     <component id="time01" name="ComTimeline.xml" path="/" exported="true"/>
     <component id="tagr1" name="ItemSpellTag.xml" path="/" exported="true"/>
+    <component id="unit1" name="ComUnitInspect.xml" path="/" exported="true"/>
+    <component id="utag1" name="ItemUnitTag.xml" path="/" exported="true"/>
     <component id="linr1" name="ItemSpellLine.xml" path="/" exported="true"/>
     <component id="ptag1" name="PanelTagPick.xml" path="/" exported="true"/>
     <component id="pblk1" name="PanelBlank.xml" path="/" exported="true"/>

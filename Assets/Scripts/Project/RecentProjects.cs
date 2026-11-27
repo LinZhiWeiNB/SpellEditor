@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-namespace SpellEditor
+namespace GameContentEditor
 {
     public sealed class RecentProject
     {

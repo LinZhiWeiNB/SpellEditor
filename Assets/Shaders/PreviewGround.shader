@@ -1,4 +1,4 @@
-Shader "SpellEditor/PreviewGround"
+Shader "GameContentEditor/PreviewGround"
 {
     Properties
     {

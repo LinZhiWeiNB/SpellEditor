@@ -4,7 +4,7 @@ using System.IO;
 using Google.Protobuf;
 using RebornFrame.GameData;
 
-namespace SpellEditor
+namespace GameContentEditor
 {
     /// <summary>
     /// 对其他数据源单位的本地覆盖。文件在项目存档旁边，名字是「存档名.unit-diffs.byte」。

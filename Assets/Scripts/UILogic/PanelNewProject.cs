@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using FairyGUI;
 using PackageLaunch;
-using SpellEditor;
+using GameContentEditor;
 using UnityEngine;
 
 namespace UILogic
@@ -146,7 +146,7 @@ namespace UILogic
             {
                 if (!uint.TryParse(view.m_inputAuthor.text, out authorId) || authorId == 0)
                 {
-                    view.m_sourceHint.text = "模组作者需要填写一个非 0 的作者 ID。";
+                    view.m_sourceHint.text = "模组作者需要填写一个非 0 的模组 ID。";
                     return;
                 }
             }

@@ -1,9 +1,9 @@
 syntax = "proto3";
 
-option csharp_namespace = "SpellEditor";
+option csharp_namespace = "GameContentEditor";
 
 // 编辑器项目存档，也就是打开项目时选定的那个 .byte 文件。
-// 运行时只认 module_data 里的 SpellModuleData。项目名、作者、载入列表和备注名留在编辑器里。
+// 运行时只认 module_data 里的 SpellModuleData。项目名、模组 ID、载入列表和备注名留在编辑器里。
 message ProjectArchive {
   // 本存档格式版本。当前是 1。用来读旧存档，不表示运行时版本。
   uint32 format = 1;
@@ -11,7 +11,7 @@ message ProjectArchive {
   // 项目名称。只在编辑器里显示。
   string name = 2;
 
-  // 作者 ID。游戏开发者是 0。创建项目时写入，之后不改。
+  // 模组 ID。游戏开发者是 0。创建项目时写入，之后不改。
   uint32 author_id = 3;
 
   // 保存时所针对的 com.reborn.spell 版本，例如 "1.0.0"。
@@ -22,7 +22,7 @@ message ProjectArchive {
   // 不包含本文件里的 module_data。顺序就是载入顺序。
   repeated string loaded_sources = 5;
 
-  // 本项目属性的备注名。键是属性完整标识，作者 ID 在高 32 位。
+  // 本项目属性的备注名。键是属性完整标识，模组 ID 在高 32 位。
   // SpellModuleData 里没有备注名，所以只记在这里。
   map<uint64, string> attribute_names = 6;
 
@@ -39,7 +39,7 @@ message ProjectArchive {
   // 游戏开发者启用的渲染插件。位与数据包头的 render_plugins 相同。模组存档不使用。
   uint32 render_plugins = 13;
 
-  // 本项目新建的单位。任何作者身份都可以新建。
+  // 本项目新建的单位。游戏开发者和模组作者都可以新建。
   // 改其他数据源的单位不写在这里，写在存档旁边的 .unit-diffs.byte。
   repeated EditorUnit units = 14;
 

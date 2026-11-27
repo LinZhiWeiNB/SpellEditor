@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using RebornFrame.Spell;
-using SpellEditor;
+using GameContentEditor;
 using Unity.Entities;
 using UnityEngine;
 
@@ -17,6 +17,7 @@ namespace UILogic
             public ulong StableId;
             public Vector3 Position;
             public readonly List<ulong> Tags = new List<ulong>();
+            public readonly List<ulong> CastTags = new List<ulong>();
             public readonly List<EditorUnitValue> Values = new List<EditorUnitValue>();
         }
 
@@ -59,6 +60,9 @@ namespace UILogic
                 startup.Start(world);
 
                 var manager = world.EntityManager;
+                var castMark = 0L;
+                if (NeedsCastMark(seeds))
+                    SpellAccess.TryAllocateCastMark(manager, out castMark);
                 var entities = new List<Entity>(seeds.Count);
                 var owner = 0UL;
                 for (var i = 0; i < seeds.Count; i++)
@@ -75,7 +79,14 @@ namespace UILogic
                     });
                     startup.InitializeUnit(entity, seed.StableId, Overrides(seed));
                     for (var t = 0; t < seed.Tags.Count; t++)
-                        BuffAccess.TryAddIntrinsicTag(manager, entity, new TagId(seed.Tags[t]));
+                    {
+                        var tag = seed.Tags[t];
+                        if (castMark > 0 && seed.CastTags.Contains(tag))
+                            BuffAccess.TryAddCastTag(manager, entity, new TagId(tag), castMark);
+                        else
+                            BuffAccess.TryAddIntrinsicTag(manager, entity, new TagId(tag));
+                    }
+
                     entities.Add(entity);
                     if (owner == 0)
                         owner = seed.StableId;
@@ -89,7 +100,9 @@ namespace UILogic
                     if (data != null && data.Activation == (int)SpellActivation.Passive)
                         passive = true;
                     if (passive)
-                        SpellAccess.TryGrant(manager, spell, owner);
+                        SpellAccess.TryGrant(manager, spell, owner, castMark);
+                    else if (castMark > 0)
+                        SpellAccess.TryBeginCast(manager, spell, owner, castMark);
                     else
                         SpellAccess.TryBeginCast(manager, spell, owner);
                 }
@@ -182,6 +195,21 @@ namespace UILogic
                 found |= TakeKind(ProjectSession.Sources[s].Module, id, ref kind);
             found |= TakeKind(ProjectSession.OwnModule, id, ref kind);
             return found && InLayout(id);
+        }
+
+        static bool NeedsCastMark(IReadOnlyList<Seed> seeds)
+        {
+            for (var i = 0; i < seeds.Count; i++)
+            {
+                var seed = seeds[i];
+                for (var t = 0; t < seed.Tags.Count; t++)
+                {
+                    if (seed.CastTags.Contains(seed.Tags[t]))
+                        return true;
+                }
+            }
+
+            return false;
         }
 
         static bool TakeKind(SpellModuleData module, ulong id, ref AttributeValueKind kind)

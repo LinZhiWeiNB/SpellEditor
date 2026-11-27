@@ -3,7 +3,7 @@ using FairyGUI;
 using PackageLaunch;
 using PackageMain;
 using RebornFrame.GameData;
-using SpellEditor;
+using GameContentEditor;
 using UnityEngine;
 
 namespace UILogic

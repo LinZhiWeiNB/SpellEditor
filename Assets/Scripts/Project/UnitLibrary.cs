@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using RebornFrame.Spell;
 
-namespace SpellEditor
+namespace GameContentEditor
 {
     /// <summary>
     /// 单位列表里的一条。本项目新建的单位在存档里。其他数据源的单位改完写进本地差异。

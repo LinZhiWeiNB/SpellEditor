@@ -11,7 +11,7 @@ using RebornFrame.Spell.Animation;
 using RebornFrame.Spell.Particles;
 using RebornFrame.Spell.Spine;
 using RebornFrame.Spell.Vfx;
-using SpellEditor;
+using GameContentEditor;
 using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
@@ -94,6 +94,7 @@ namespace UILogic
         bool _showingPreview;
         bool _entered;
         bool _editing = true;
+        bool _logicDirty = true;
         ulong _shownOwner;
         readonly List<SpellEventConfig> _extraEvents = new List<SpellEventConfig>();
         readonly List<SpellPresentationTrack> _extraTracks = new List<SpellPresentationTrack>();
@@ -103,6 +104,8 @@ namespace UILogic
         GComponent _inspect;
         GComponent _skillInspect;
         GComponent _spineInspect;
+        GComponent _unitInspect;
+        PreviewActor _unitActor;
         GComponent _timeline;
         Controller _cInspect;
         Controller _cSpine;
@@ -111,6 +114,7 @@ namespace UILogic
         const int InspectEmpty = 0;
         const int InspectSkill = 1;
         const int InspectSpine = 2;
+        const int InspectUnit = 3;
 
         void BindRegions()
         {
@@ -118,6 +122,7 @@ namespace UILogic
             _inspect = view.GetChild("inspect") as GComponent;
             _skillInspect = _inspect == null ? null : _inspect.GetChild("skillInspect") as GComponent;
             _spineInspect = _inspect == null ? null : _inspect.GetChild("spineInspect") as GComponent;
+            _unitInspect = _inspect == null ? null : _inspect.GetChild("unitInspect") as GComponent;
             _timeline = view.GetChild("timeline") as GComponent;
             _cInspect = Control(_inspect, "cInspect");
             _cSpine = Control(_func, "cSpine");
@@ -210,6 +215,7 @@ namespace UILogic
             Stage.inst.onKeyDown.Add(_onDeleteKey);
             Btn(_func, "btnAddClip").onClick.Set(AddSpineClip);
             BindSkillFrame();
+            BindUnitInspect();
             Radio(SpineRoot(), "endPause").onChanged.Add(() => SaveEnd(0, Radio(SpineRoot(), "endPause").selected));
             Radio(SpineRoot(), "endLoop").onChanged.Add(() => SaveEnd(1, Radio(SpineRoot(), "endLoop").selected));
             Radio(SpineRoot(), "pauseFirst").onChanged.Add(() => SavePause(0, Radio(SpineRoot(), "pauseFirst").selected));
@@ -304,7 +310,7 @@ namespace UILogic
             if (_editing)
                 SpellPreviewStage.RestoreDefaults();
             else
-                ApplyWorld();
+                SimulateIfNeeded();
             var actor = SpellPreviewStage.Selected;
             if (actor != null && _key < 0)
                 ShowUnitInspect(actor);
@@ -326,6 +332,7 @@ namespace UILogic
         {
             if (actor == null)
             {
+                _unitActor = null;
                 if (_track >= 0 && _key >= 0 && _track < _tracks.Count)
                     ApplyInspector();
                 else
@@ -343,16 +350,167 @@ namespace UILogic
 
         void ShowUnitInspect(PreviewActor actor)
         {
+            _unitActor = actor;
             _applying = true;
-            _cInspect.selectedIndex = InspectEmpty;
             Label(_inspect, "inspectKind").text = actor.Unit == null
                 ? actor.name
                 : new SpellId(actor.Unit.Id).ToString();
-            var empty = Label(_inspect, "inspectEmpty");
-            empty.singleLine = false;
-            FitEmpty(empty, 496);
-            empty.text = UnitReport(actor);
+            if (UnitInspectReady())
+            {
+                _cInspect.selectedIndex = InspectUnit;
+                var mode = _unitInspect.GetController("cMode");
+                if (mode != null)
+                    mode.selectedIndex = _editing ? 0 : 1;
+                var heading = Label(_unitInspect, "labelTags");
+                if (heading != null)
+                    heading.text = _editing ? "起始标签" : "标签";
+                var add = Btn(_unitInspect, "btnAddTag");
+                if (add != null)
+                    add.visible = _editing;
+                RenderUnitTags();
+                var report = Label(_unitInspect, "report");
+                if (report != null)
+                    report.text = UnitBody(actor);
+            }
+            else
+            {
+                _cInspect.selectedIndex = InspectEmpty;
+                var empty = Label(_inspect, "inspectEmpty");
+                empty.singleLine = false;
+                FitEmpty(empty, 496);
+                empty.text = UnitReport(actor, _editing ? actor.DefaultTags : actor.Tags);
+            }
+
             _applying = false;
+        }
+
+        bool UnitInspectReady()
+        {
+            return _unitInspect != null && _cInspect != null && _cInspect.pageCount > InspectUnit;
+        }
+
+        void BindUnitInspect()
+        {
+            if (_unitInspect == null)
+                return;
+            var add = Btn(_unitInspect, "btnAddTag");
+            if (add != null)
+                add.onClick.Set(AddUnitTag);
+        }
+
+        void RenderUnitTags()
+        {
+            var actor = _unitActor;
+            var list = ListOf(_unitInspect, "tags");
+            if (actor == null || list == null)
+                return;
+            var tags = _editing ? actor.DefaultTags : actor.Tags;
+            var empty = Label(_unitInspect, "empty");
+            if (empty != null)
+                empty.visible = tags.Count == 0;
+            list.itemRenderer = (index, obj) =>
+            {
+                var row = obj.asCom;
+                var id = tags[index];
+                row.SetSize(list.width, _editing ? 76f : 44f);
+                var title = row.GetChild("title") as GTextField;
+                if (title != null)
+                {
+                    title.singleLine = false;
+                    title.SetSize(list.width, 40f);
+                    title.text = TagPath(id);
+                }
+
+                var mode = row.GetController("cMode");
+                if (mode != null)
+                    mode.selectedIndex = _editing ? 0 : 1;
+                var check = row.GetChild("castLink") as GButton;
+                if (check != null)
+                {
+                    check.visible = _editing;
+                    check.onChanged.Set(() => SetUnitCast(actor, id, check.selected));
+                    check.selected = actor.CastTags.Contains(id);
+                }
+
+                var edit = row.GetChild("btnEdit") as GButton;
+                if (edit != null)
+                {
+                    edit.visible = _editing;
+                    edit.onClick.Set(() => EditTag(id));
+                }
+
+                var remove = row.GetChild("btnRemove") as GButton;
+                if (remove != null)
+                {
+                    remove.visible = _editing;
+                    remove.onClick.Set(() => RemoveUnitTag(actor, id));
+                }
+            };
+            list.numItems = tags.Count;
+        }
+
+        void AddUnitTag()
+        {
+            var actor = _unitActor;
+            if (actor == null || !_editing)
+                return;
+            PanelLayer.Dismiss<PanelBlank>();
+            PanelTagPick.Show(id =>
+            {
+                if (id == 0 || actor == null || actor.DefaultTags.Contains(id))
+                    return;
+                actor.DefaultTags.Add(id);
+                SyncStartTags(actor);
+                ShowUnitInspect(actor);
+                OnStageChanged();
+            });
+        }
+
+        void RemoveUnitTag(PreviewActor actor, ulong id)
+        {
+            if (actor == null || !_editing)
+                return;
+            actor.DefaultTags.Remove(id);
+            actor.CastTags.Remove(id);
+            SyncStartTags(actor);
+            ShowUnitInspect(actor);
+            OnStageChanged();
+        }
+
+        void SetUnitCast(PreviewActor actor, ulong id, bool linked)
+        {
+            if (_applying || actor == null || !_editing)
+                return;
+            if (linked)
+            {
+                if (!actor.CastTags.Contains(id))
+                    actor.CastTags.Add(id);
+            }
+            else
+            {
+                actor.CastTags.Remove(id);
+            }
+
+            OnStageChanged();
+        }
+
+        static void SyncStartTags(PreviewActor actor)
+        {
+            actor.Tags.Clear();
+            actor.Tags.AddRange(actor.DefaultTags);
+            var dummy = actor.GetComponent<PreviewDummy>();
+            if (dummy == null)
+                return;
+            var names = new List<string>(actor.DefaultTags.Count);
+            for (var i = 0; i < actor.DefaultTags.Count; i++)
+                names.Add(TagPath(actor.DefaultTags[i]));
+            dummy.SetTags(names);
+        }
+
+        static string TagPath(ulong id)
+        {
+            var path = ComTagEditor.Path(id);
+            return string.IsNullOrEmpty(path) ? id.ToString() : path;
         }
 
         void RestoreInspectEmpty()
@@ -370,7 +528,7 @@ namespace UILogic
                 card.SetSize(304, textHeight + 24);
         }
 
-        static string UnitReport(PreviewActor actor)
+        static string UnitBody(PreviewActor actor)
         {
             var text = new StringBuilder();
             text.Append("属性\n");
@@ -402,22 +560,28 @@ namespace UILogic
 
             if (!any)
                 text.Append("没有属性\n");
-            text.Append("\n标签\n");
-            if (actor.Tags.Count == 0)
-                text.Append("没有标签\n");
-            for (var i = 0; i < actor.Tags.Count; i++)
-            {
-                var id = actor.Tags[i];
-                text.Append(ProjectSession.TagName(id, (uint)id));
-                text.Append('\n');
-            }
-
             text.Append("\nBuff\n");
             if (actor.Buffs.Count == 0)
                 text.Append("没有 Buff\n");
             for (var i = 0; i < actor.Buffs.Count; i++)
             {
                 text.Append(FormatId(actor.Buffs[i]));
+                text.Append('\n');
+            }
+
+            return text.ToString();
+        }
+
+        static string UnitReport(PreviewActor actor, List<ulong> tags)
+        {
+            var text = new StringBuilder();
+            text.Append(UnitBody(actor));
+            text.Append("\n标签\n");
+            if (tags.Count == 0)
+                text.Append("没有标签\n");
+            for (var i = 0; i < tags.Count; i++)
+            {
+                text.Append(TagPath(tags[i]));
                 text.Append('\n');
             }
 
@@ -1737,25 +1901,30 @@ namespace UILogic
                 var row = obj.asCom;
                 var id = tags[index];
                 var captured = index;
+                row.SetSize(list.width, 72f);
                 var title = row.GetChild("title") as GTextField;
                 if (title != null)
-                    title.text = ComTagEditor.Path(id);
-                row.SetSize(list.width, row.height);
+                {
+                    title.singleLine = false;
+                    title.SetXY(0f, 0f);
+                    title.SetSize(list.width, 40f);
+                    title.text = TagPath(id);
+                }
+
                 var search = row.GetChild("btnSearch");
                 if (search != null)
                     search.visible = false;
-                if (title != null)
-                    title.SetSize(188f, title.height);
                 var edit = row.GetChild("btnEdit") as GButton;
                 if (edit != null)
                 {
-                    edit.x = 196f;
+                    edit.SetXY(list.width - 112f, 44f);
                     edit.onClick.Set(() => EditTag(id));
                 }
+
                 var remove = row.GetChild("btnRemove") as GButton;
                 if (remove != null)
                 {
-                    remove.x = 244f;
+                    remove.SetXY(list.width - 56f, 44f);
                     remove.onClick.Set(() => RemoveTag(captured));
                 }
             };
@@ -2178,7 +2347,9 @@ namespace UILogic
         {
             if (!_entered) return;
             SaveLayout();
-            RecordLogic();
+            _logicDirty = true;
+            if (ProjectSession.IsOpen)
+                ProjectSession.Save();
         }
 
         void PoseAll()
@@ -2196,7 +2367,9 @@ namespace UILogic
             if (frame >= _samples.Count) frame = _samples.Count - 1;
             SpellPreviewStage.ApplyFrame(_samples[frame]);
             var actor = SpellPreviewStage.Selected;
-            if (actor != null && _key < 0)
+            if (actor != null && _cInspect != null
+                && _cInspect.selectedIndex != InspectSkill
+                && _cInspect.selectedIndex != InspectSpine)
                 ShowUnitInspect(actor);
         }
 
@@ -2206,14 +2379,32 @@ namespace UILogic
             if (EnsureStartKey())
                 RenderTracks();
             WriteLogic();
+            _logicDirty = true;
+            if (ProjectSession.IsOpen)
+                ProjectSession.Save();
+            if (!_editing)
+                RunPreviewSim();
+        }
+
+        void SimulateIfNeeded()
+        {
+            if (_logicDirty || _samples.Count == 0)
+                RunPreviewSim();
+            else
+                ApplyWorld();
+        }
+
+        void RunPreviewSim()
+        {
+            if (_spellId == 0) return;
             SpellPreviewStage.CopySeeds(_seeds);
             var frames = ContentFrames();
             var next = SpellPreviewSim.Run(_spellId, Mathf.Max(1, frames + 1), _seeds);
             _samples.Clear();
             _samples.AddRange(next);
+            if (next.Count > 0)
+                _logicDirty = false;
             ApplyWorld();
-            if (ProjectSession.IsOpen)
-                ProjectSession.Save();
         }
 
         void RecordRender(TrackKind kind)
@@ -2476,6 +2667,7 @@ namespace UILogic
                 }
 
                 record.Tags.AddRange(seed.Tags);
+                record.CastTags.AddRange(seed.CastTags);
                 record.Values.AddRange(seed.Values);
                 layout.Actors.Add(record);
             }
@@ -2508,6 +2700,8 @@ namespace UILogic
                         actors[a].transform.position = new Vector3(record.X, record.Y, record.Z);
                         actors[a].Tags.Clear();
                         actors[a].Tags.AddRange(record.Tags);
+                        actors[a].CastTags.Clear();
+                        actors[a].CastTags.AddRange(record.CastTags);
                         actors[a].PresetId = record.PresetId;
                         actors[a].InitialValues.Clear();
                         actors[a].InitialValues.AddRange(record.Values);
@@ -2521,6 +2715,7 @@ namespace UILogic
                 var dummy = SpellPreviewStage.SpawnDummy(record.StableId, new Vector3(record.X, record.Y, record.Z));
                 if (dummy == null) continue;
                 dummy.Tags.AddRange(record.Tags);
+                dummy.CastTags.AddRange(record.CastTags);
                 dummy.PresetId = record.PresetId;
                 dummy.InitialValues.AddRange(record.Values);
                 dummy.RememberHome();

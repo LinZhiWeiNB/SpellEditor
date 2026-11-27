@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component size="320,630">
-  <controller name="cInspect" pages="0,空,1,技能关键帧,2,Spine关键帧" selected="1"/>
+  <controller name="cInspect" pages="0,空,1,技能关键帧,2,Spine关键帧,3,单位" selected="1"/>
   <displayList>
     <graph id="n2_mns01" name="inspectPane" xy="0,0" size="320,630" type="rect" lineSize="0" fillColor="#ff1e2128"/>
     <text id="n21_mns01" name="inspectTitle" xy="16,16" size="288,28" fontSize="18" color="#e8e6e3" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="检视"/>
@@ -16,6 +16,9 @@
     </component>
     <component id="n60_spin" name="spineInspect" src="spin1" fileName="ComSpineInspect.xml" xy="8,76" size="304,432">
       <gearDisplay controller="cInspect" pages="2"/>
+    </component>
+    <component id="n70_unit" name="unitInspect" src="unit1" fileName="ComUnitInspect.xml" xy="8,76" size="304,542">
+      <gearDisplay controller="cInspect" pages="3"/>
     </component>
   </displayList>
 </component>

@@ -1,4 +1,4 @@
-namespace SpellEditor
+namespace GameContentEditor
 {
     /// <summary>
     /// 编辑器自己的版本。和 com.reborn.spell 的运行时版本不是一回事。
@@ -6,7 +6,7 @@ namespace SpellEditor
     public static class EditorVersion
     {
         public const string Current = "1.0.0";
-        public const string Repository = "https://github.com/LinZhiWeiNB/SpellEditor";
+        public const string Repository = "https://github.com/LinZhiWeiNB/GameContentEditor";
 
         public static string ReleasePage(string version)
         {

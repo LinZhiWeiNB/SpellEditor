@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using Google.Protobuf;
 
-namespace SpellEditor
+namespace GameContentEditor
 {
     /// <summary>
     /// 编辑器存档里的一条单位预设。字段与 ProjectArchive.proto 的 UnitPreset 一致。

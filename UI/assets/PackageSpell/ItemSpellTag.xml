@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<component size="288,32">
+<component size="288,72">
   <displayList>
-    <text id="n0_tagr1" name="title" xy="0,0" size="196,32" fontSize="13" color="#e8e6e3" vAlign="middle" autoSize="none" singleLine="true" text="标签"/>
-    <component id="n2_tagr1" name="btnEdit" src="g8bt1" fileName="ButtonGhost.xml" pkg="m5lrgzhj" xy="196,2" size="44,28">
+    <text id="n0_tagr1" name="title" xy="0,0" size="288,40" fontSize="13" color="#e8e6e3" autoSize="none" text="标签"/>
+    <component id="n1_tagr1" name="btnEdit" src="g8bt1" fileName="ButtonGhost.xml" pkg="m5lrgzhj" xy="176,44" size="52,28">
       <Button title="编辑"/>
     </component>
-    <component id="n3_tagr1" name="btnRemove" src="g8bt1" fileName="ButtonGhost.xml" pkg="m5lrgzhj" xy="244,2" size="44,28">
-      <Button title="移除"/>
+    <component id="n2_tagr1" name="btnRemove" src="g8bt1" fileName="ButtonGhost.xml" pkg="m5lrgzhj" xy="232,44" size="56,28">
+      <Button title="删除"/>
     </component>
   </displayList>
 </component>

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using FairyGUI;
 using PackageResource;
 using RebornFrame.Spell.Spine;
-using SpellEditor;
+using GameContentEditor;
 using UnityEngine;
 
 namespace UILogic

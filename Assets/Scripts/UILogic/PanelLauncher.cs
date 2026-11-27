@@ -2,7 +2,7 @@ using System;
 using FairyGUI;
 using PackageLaunch;
 using PackageMain;
-using SpellEditor;
+using GameContentEditor;
 
 namespace UILogic
 {

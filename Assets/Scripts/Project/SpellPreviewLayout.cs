@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using Google.Protobuf;
 
-namespace SpellEditor
+namespace GameContentEditor
 {
     /// <summary>
     /// 一个技能的预览布置。只写在项目存档里。
@@ -63,6 +63,7 @@ namespace SpellEditor
         public float Z;
         public ulong PresetId;
         public readonly List<ulong> Tags = new List<ulong>();
+        public readonly List<ulong> CastTags = new List<ulong>();
         public readonly List<EditorUnitValue> Values = new List<EditorUnitValue>();
 
         public ByteString Write()
@@ -91,6 +92,12 @@ namespace SpellEditor
             {
                 output.WriteTag(8, WireFormat.WireType.LengthDelimited);
                 output.WriteBytes(Values[i].Write());
+            }
+
+            for (var i = 0; i < CastTags.Count; i++)
+            {
+                output.WriteTag(9, WireFormat.WireType.Varint);
+                output.WriteUInt64(CastTags[i]);
             }
 
             output.Flush();
@@ -129,6 +136,9 @@ namespace SpellEditor
                         break;
                     case 8:
                         actor.Values.Add(EditorUnitValue.Read(input.ReadBytes()));
+                        break;
+                    case 9:
+                        actor.CastTags.Add(input.ReadUInt64());
                         break;
                     default:
                         input.SkipLastField();

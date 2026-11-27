@@ -1,5 +1,5 @@
 using PackageMain;
-using SpellEditor;
+using GameContentEditor;
 
 namespace UILogic
 {

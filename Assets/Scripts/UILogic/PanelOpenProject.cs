@@ -17,13 +17,13 @@ namespace UILogic
 
         void Pick()
         {
-            var path = SpellEditor.EditorDialog.OpenByteFile("选择存档");
+            var path = GameContentEditor.EditorDialog.OpenByteFile("选择存档");
             if (string.IsNullOrEmpty(path))
             {
                 return;
             }
 
-            if (!SpellEditor.ProjectSession.Open(path, out var error))
+            if (!GameContentEditor.ProjectSession.Open(path, out var error))
             {
                 view.m_lede.text = error;
                 return;

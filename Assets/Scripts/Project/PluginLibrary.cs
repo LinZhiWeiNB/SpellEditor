@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace SpellEditor
+namespace GameContentEditor
 {
     /// <summary>
     /// 项目 plugins 目录里的插件。每个插件是一个子文件夹，里面有 plugin.txt 和入口 lua。

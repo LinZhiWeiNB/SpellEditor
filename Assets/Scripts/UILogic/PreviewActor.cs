@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using SpellEditor;
+using GameContentEditor;
 using UnityEngine;
 
 namespace UILogic
@@ -17,6 +17,7 @@ namespace UILogic
         [System.NonSerialized] public bool HasSample;
         [System.NonSerialized] public Vector3 HomePosition;
         [System.NonSerialized] public readonly List<ulong> DefaultTags = new List<ulong>();
+        [System.NonSerialized] public readonly List<ulong> CastTags = new List<ulong>();
         [System.NonSerialized] public readonly List<ulong> Tags = new List<ulong>();
         [System.NonSerialized] public readonly List<ulong> Buffs = new List<ulong>();
         [System.NonSerialized] public readonly List<EditorUnitValue> InitialValues = new List<EditorUnitValue>();

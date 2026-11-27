@@ -11,7 +11,7 @@ using RebornFrame.Spell.Particles;
 using RebornFrame.Spell.Spine;
 using RebornFrame.Spell.Vfx;
 
-namespace SpellEditor
+namespace GameContentEditor
 {
     public sealed class ResourceAsset
     {

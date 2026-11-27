@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using RebornFrame.Spell;
-using SpellEditor;
+using GameContentEditor;
 
 namespace UILogic
 {

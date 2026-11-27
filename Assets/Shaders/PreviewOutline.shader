@@ -1,4 +1,4 @@
-Shader "SpellEditor/PreviewOutline"
+Shader "GameContentEditor/PreviewOutline"
 {
     Properties
     {

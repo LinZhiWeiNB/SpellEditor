@@ -3,7 +3,7 @@ using System.IO;
 using Google.Protobuf;
 using RebornFrame.Spell;
 
-namespace SpellEditor
+namespace GameContentEditor
 {
     /// <summary>
     /// 编辑器项目存档。字段与 Proto/ProjectArchive.proto 一致。

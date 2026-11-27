@@ -2,6 +2,7 @@
 <component size="1380,20" overflow="scroll" scroll="horizontal">
   <displayList>
     <component id="n87_mns01" name="progress" src="mns04" fileName="SliderFrame.xml" xy="10,0" size="1360,20">
+      <relation target="" sidePair="width-width"/>
       <Slider max="60"/>
     </component>
   </displayList>

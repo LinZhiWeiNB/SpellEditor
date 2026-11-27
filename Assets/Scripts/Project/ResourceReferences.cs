@@ -4,7 +4,7 @@ using System.IO;
 using System.Text;
 using RebornFrame.Spell;
 
-namespace SpellEditor
+namespace GameContentEditor
 {
     /// <summary>
     /// 本项目资源引用。写在项目目录的 resource-references.txt，不进导出的数据包。

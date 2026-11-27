@@ -25,6 +25,10 @@ namespace PackageSpell
             /// null
             /// <summary>
             Spine关键帧 = 2,
+            /// <summary>
+            /// null
+            /// <summary>
+            单位 = 3,
         }
 
         public EcInspect GetSelectedIndexEcInspect()
@@ -39,6 +43,7 @@ namespace PackageSpell
         public GTextField m_inspectEmpty;
         public UI_ComSkillInspect m_skillInspect;
         public UI_ComSpineInspect m_spineInspect;
+        public UI_ComUnitInspect m_unitInspect;
         public const string URL = "ui://skl4p8n2insp01";
 
         public static UI_ComInspect CreateInstance()
@@ -58,6 +63,7 @@ namespace PackageSpell
             m_inspectEmpty = (GTextField)GetChildAt(4);
             m_skillInspect = (UI_ComSkillInspect)GetChildAt(5);
             m_spineInspect = (UI_ComSpineInspect)GetChildAt(6);
+            m_unitInspect = (UI_ComUnitInspect)GetChildAt(7);
         }
     }
 }

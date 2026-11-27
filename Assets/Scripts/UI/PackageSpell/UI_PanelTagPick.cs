@@ -16,13 +16,9 @@ namespace PackageSpell
         public GTextInput m_search;
         public GList m_choices;
         public GTextField m_empty;
-        public GGraph m_split;
-        public GTextField m_createTitle;
-        public GTextField m_labelName;
+        public GTextField m_createWarn;
         public GGraph m_bgName;
         public GTextInput m_inputName;
-        public GTextField m_createHint;
-        public GTextField m_createWarn;
         public PackageAtrribute.UI_ButtonPrimary m_btnCreate;
         public PackageAtrribute.UI_ButtonGhost m_btnCancel;
         public const string URL = "ui://skl4p8n2ptag1";
@@ -43,15 +39,11 @@ namespace PackageSpell
             m_search = (GTextInput)GetChildAt(4);
             m_choices = (GList)GetChildAt(5);
             m_empty = (GTextField)GetChildAt(6);
-            m_split = (GGraph)GetChildAt(7);
-            m_createTitle = (GTextField)GetChildAt(8);
-            m_labelName = (GTextField)GetChildAt(9);
-            m_bgName = (GGraph)GetChildAt(10);
-            m_inputName = (GTextInput)GetChildAt(11);
-            m_createHint = (GTextField)GetChildAt(12);
-            m_createWarn = (GTextField)GetChildAt(13);
-            m_btnCreate = (PackageAtrribute.UI_ButtonPrimary)GetChildAt(14);
-            m_btnCancel = (PackageAtrribute.UI_ButtonGhost)GetChildAt(15);
+            m_createWarn = (GTextField)GetChildAt(7);
+            m_bgName = (GGraph)GetChildAt(8);
+            m_inputName = (GTextInput)GetChildAt(9);
+            m_btnCreate = (PackageAtrribute.UI_ButtonPrimary)GetChildAt(10);
+            m_btnCancel = (PackageAtrribute.UI_ButtonGhost)GetChildAt(11);
         }
     }
 }

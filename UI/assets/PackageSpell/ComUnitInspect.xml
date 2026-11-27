@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="304,542">
+  <controller name="cMode" pages="0,编辑,1,预览" selected="0"/>
+  <displayList>
+    <graph id="n0_unit" name="card" xy="0,0" size="304,542" type="rect" lineSize="0" fillColor="#ff32363f" corner="8">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <text id="n1_unit" name="labelTags" xy="8,8" size="176,28" fontSize="13" color="#b7b2a8" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="起始标签"/>
+    <component id="n2_unit" name="btnAddTag" src="g8bt5" fileName="ButtonSecondary.xml" pkg="m5lrgzhj" xy="192,8" size="104,28">
+      <gearDisplay controller="cMode" pages="0"/>
+      <Button title="添加"/>
+    </component>
+    <text id="n3_unit" name="empty" xy="8,48" size="288,24" fontSize="13" color="#8d887e" vAlign="middle" autoSize="none" singleLine="true" text="没有标签"/>
+    <list id="n4_unit" name="tags" xy="8,48" size="288,240" overflow="scroll" defaultItem="ui://skl4p8n2utag1" autoClearItems="true"/>
+    <text id="n5_unit" name="report" xy="8,300" size="288,230" fontSize="13" color="#e8e6e3" autoSize="none" text=""/>
+  </displayList>
+</component>

@@ -1,4 +1,4 @@
-namespace SpellEditor
+namespace GameContentEditor
 {
     /// <summary>
     /// 编辑器在 Unity 里运行时使用的系统文件选择。

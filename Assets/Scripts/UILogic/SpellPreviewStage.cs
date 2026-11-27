@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using FairyGUI;
 using RebornFrame.Spell.Spine;
-using SpellEditor;
+using GameContentEditor;
 using Spine.Unity;
 using UnityEngine;
 
@@ -195,6 +195,16 @@ namespace UILogic
         public static event Action Changed;
         public static bool AllowDrag { get; private set; } = true;
 
+        public static Camera ViewCamera
+        {
+            get
+            {
+                if (_stage != null && _stage._camera != null)
+                    return _stage._camera;
+                return Camera.main;
+            }
+        }
+
         public static void SetPlacement(bool allowDrag)
         {
             AllowDrag = allowDrag;
@@ -227,7 +237,7 @@ namespace UILogic
                     continue;
                 var names = new List<string>(actor.DefaultTags.Count);
                 for (var t = 0; t < actor.DefaultTags.Count; t++)
-                    names.Add(ProjectSession.TagName(actor.DefaultTags[t], (uint)actor.DefaultTags[t]));
+                    names.Add(TagPath(actor.DefaultTags[t]));
                 dummy.SetTags(names);
             }
         }
@@ -267,6 +277,7 @@ namespace UILogic
                     Position = actor.HomePosition,
                 };
                 seed.Tags.AddRange(actor.DefaultTags);
+                seed.CastTags.AddRange(actor.CastTags);
                 if (actor.InitialValues.Count > 0)
                 {
                     for (var v = 0; v < actor.InitialValues.Count; v++)
@@ -315,7 +326,7 @@ namespace UILogic
                 {
                     var names = new List<string>(unit.Tags.Count);
                     for (var t = 0; t < unit.Tags.Count; t++)
-                        names.Add(ProjectSession.TagName(unit.Tags[t], (uint)unit.Tags[t]));
+                        names.Add(TagPath(unit.Tags[t]));
                     dummy.SetTags(names);
                 }
             }
@@ -745,6 +756,12 @@ namespace UILogic
             }
 
             return source;
+        }
+
+        static string TagPath(ulong id)
+        {
+            var path = ComTagEditor.Path(id);
+            return string.IsNullOrEmpty(path) ? id.ToString() : path;
         }
 
         static bool GroundAt(Ray ray, float y, out Vector3 point)

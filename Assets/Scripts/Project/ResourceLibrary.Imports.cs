@@ -4,7 +4,7 @@ using System.IO;
 using RebornFrame.GameData;
 using UnityEngine;
 
-namespace SpellEditor
+namespace GameContentEditor
 {
     public sealed class ResourcePrefab
     {

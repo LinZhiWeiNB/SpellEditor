@@ -2,7 +2,7 @@ using System.IO;
 using Google.Protobuf;
 using RebornFrame.GameData;
 
-namespace SpellEditor
+namespace GameContentEditor
 {
     public static class ProjectExport
     {

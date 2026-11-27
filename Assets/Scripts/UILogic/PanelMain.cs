@@ -3,7 +3,7 @@ using PackageMain;
 using PackageResource;
 using PackageSpell;
 using PackageUnit;
-using SpellEditor;
+using GameContentEditor;
 
 namespace UILogic
 {

@@ -3,7 +3,7 @@ using System.IO;
 using Google.Protobuf;
 using RebornFrame.GameData;
 
-namespace SpellEditor
+namespace GameContentEditor
 {
     /// <summary>
     /// 单位预设写在数据包的 unit-presets 条目里。其他项目载入这份数据包后，从这里读出预设。

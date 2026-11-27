@@ -1,4 +1,4 @@
-Shader "SpellEditor/PreviewPlate"
+Shader "GameContentEditor/PreviewPlate"
 {
     Properties
     {
